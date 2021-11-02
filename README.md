@@ -106,9 +106,9 @@ print("To open the first tutorial, point your Julia-integrated editor to $file")
 
 ## Additional resources
 
-# - [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
-# - [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
-# - [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)
-# - [Data Science Tutorials in Julia](https://juliaai.github.io/DataScienceTutorials.jl/)
+- [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
+- [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
+- [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)
+- [Data Science Tutorials in Julia](https://juliaai.github.io/DataScienceTutorials.jl/)
 
 

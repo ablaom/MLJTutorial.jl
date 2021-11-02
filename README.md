@@ -7,7 +7,7 @@ Notebooks for introducing the machine learning toolbox
 Learning in Julia) 
 
 <div align="center">
-	<img src="data/MLJLogo2.svg" alt="MLJ" width="200">
+	<img src="assets/MLJLogo2.svg" alt="MLJ" width="200">
 </div>
 
 Based on tutorials originally part of a 3.5 hour [online

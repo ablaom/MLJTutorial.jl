@@ -8,7 +8,7 @@ const DATASETS = [:horse, :house, :small]
 const ROOT = joinpath(@__DIR__, "..")
 const NOTEBOOKS = joinpath(ROOT, "notebooks")
 
-export go, load_house, load_horse, load_small
+export go, remove, load_house, load_horse, load_small
 
 
 go() = begin

@@ -46,7 +46,7 @@ solutions.
 
 ## Options for running the tutorials
 
-### 1. Launch Juptyer notebooks from the Julia REPL
+### 1. To launch Juptyer notebooks from the Julia REPL
 
 Assuming you have [Julia installed](https://julialang.org/downloads/),
 launch the Julia REPL and enter these commands:
@@ -60,13 +60,16 @@ Pkg.instantiate()
 
 using MLJTutorial
 go()
+
 ```
 
 This should launch a Jupyter session in your browser. Navigate to
-`01_data_representation.unexecuted.ipymb` to start Part 1.
+`01_data_representation.unexecuted.ipymb` to start Part 1. The other
+parts exist in parallel directories, to which you can navigate from
+within the Juptyer browser.
 
 
-### 2. Run .jl scripts from an IDE (advanced option)
+### 2. To run .jl scripts from an IDE (advanced option)
 
 If you know how to do so, clone this repo and open the file
 [/notebooks/01_data_representation/notebook.jl](/notebooks/01_data_representation/notebook.jl),
@@ -83,7 +86,7 @@ Pkg.instantiate()
 
 using MLJTutorial
 file = joinpath(dir, "notebooks", "01_data_representation", "notebook.jl")
-print("Point your Julia-integrated editor to $file")
+print("To open the first tutorial, point your Julia-integrated editor to $file")
 ```
 
 ## More about the tutorials 

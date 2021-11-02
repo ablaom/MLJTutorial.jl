@@ -1,7 +1,8 @@
-# # Machine Learning in Julia, JuliaCon2020
+# # Machine Learning in Julia
 
-# A workshop introducing the machine learning toolbox
-# [MLJ](https://alan-turing-institute.github.io/MLJ.jl/stable/).
+# An introduction to the
+# [MLJ](https://alan-turing-institute.github.io/MLJ.jl/stable/)
+# toolbox.
 
 
 # ### Set-up
@@ -22,7 +23,6 @@ Pkg.instantiate()
 
 # ## General resources
 
-# - [List of methods introduced in this tutorial](methods.md)
 # - [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
 # - [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
 # - [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)

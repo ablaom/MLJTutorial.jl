@@ -4,8 +4,8 @@ function runcommand(cmd)
     run(cmd)
 end
 
-# `env` is the environment directory 
-function generate(env)
+# `env` is the environment directory
+function generate(env; execute=true)
     quote
         using Pkg
         Pkg.activate(temp=true)
@@ -23,7 +23,7 @@ function generate(env)
         Literate.notebook(INFILE, OUTDIR, execute=false)
         runcommand(
             `mv $OUTDIR/notebook.ipynb $OUTDIR/notebook.unexecuted.ipynb`)
-        Literate.notebook(INFILE, OUTDIR, execute=true)
+        $execute && Literate.notebook(INFILE, OUTDIR, execute=true)
 
     end |> eval
 end

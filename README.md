@@ -66,7 +66,7 @@ go()
 This should launch a Jupyter session in your browser. Navigate to
 `01_data_representation/notebook.unexecuted.ipynb` to start Part 1. The other
 parts exist in parallel directories, to which you can navigate from
-within the Juptyer.
+within Juptyer.
 
 
 ### 2. To run .jl scripts from an IDE (advanced option)
@@ -75,7 +75,7 @@ If you know how to do so, clone this repo and open the file
 [/notebooks/01_data_representation/notebook.jl](/notebooks/01_data_representation/notebook.jl),
 relative to the root directory of your clone.
 
-Otherwise, enter these commands at the Julia REPL, and follow the instructions
+Otherwise, enter these commands at the Julia REPL, and follow the instructions generated.
 
 ```julia
 using Pkg

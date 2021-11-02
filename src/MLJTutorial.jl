@@ -11,7 +11,7 @@ const NOTEBOOKS = joinpath(ROOT, "notebooks")
 export load_house, load_horse, load_small
 
 
-jupyter() = begin
+go() = begin
     IJulia.notebook(dir=joinpath(NOTEBOOKS, "notebooks"))
 end
 

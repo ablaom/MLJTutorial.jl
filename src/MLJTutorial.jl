@@ -12,7 +12,7 @@ export go, load_house, load_horse, load_small
 
 
 go() = begin
-    IJulia.notebook(dir=joinpath(NOTEBOOKS, "notebooks"))
+    IJulia.notebook(dir=NOTEBOOKS)
 end
 
 # pluto() = begin

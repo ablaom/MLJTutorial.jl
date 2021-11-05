@@ -45,7 +45,7 @@ Pkg.instantiate()
 # `OrderedFactor`. The other basic "scalar" scientific types are
 # illustrated below:
 
-# ![](https://github.com/ablaom/MachineLearningInJulia2020/blob/for-MLJ-version-0.16/assets/scitypes.png)
+# ![](scitypes.png)
 
 # A scientific type is an ordinary Julia type (so it can be used for
 # method dispatch, for example) but it usually has no instances. The

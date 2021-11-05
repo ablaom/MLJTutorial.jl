@@ -4,13 +4,14 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ a05a4f6d-c831-4fb1-9bca-7c69b794f8ce
-md"# Machine Learning in Julia, JuliaCon2020"
+# ╔═╡ 24abafc3-0e26-4cd2-9bca-7c69b794f8ce
+md"# Machine Learning in Julia"
 
-# ╔═╡ bea73bf9-96c0-42fb-b795-033f6f2a0674
+# ╔═╡ b67c62c2-15ab-4328-b795-033f6f2a0674
 md"""
-A workshop introducing the machine learning toolbox
-[MLJ](https://alan-turing-institute.github.io/MLJ.jl/stable/).
+An introduction to the
+[MLJ](https://alan-turing-institute.github.io/MLJ.jl/stable/)
+toolbox.
 """
 
 # ╔═╡ bc689638-fd19-4c9f-935f-ddf6a6bfbbdd
@@ -72,8 +73,8 @@ instead of machine types. An example of a scientific type is
 illustrated below:
 """
 
-# ╔═╡ a29a0133-566e-41e3-a0de-1721c1bc2df2
-md"![](https://github.com/ablaom/MachineLearningInJulia2020/blob/for-MLJ-version-0.16/assets/scitypes.png)"
+# ╔═╡ 675753b1-786e-4344-a0de-1721c1bc2df2
+md"![](scitypes.png)"
 
 # ╔═╡ 74e167cd-bc94-486c-bca8-7eec7950fd82
 md"""
@@ -508,8 +509,8 @@ md"""
 """
 
 # ╔═╡ Cell order:
-# ╟─a05a4f6d-c831-4fb1-9bca-7c69b794f8ce
-# ╟─bea73bf9-96c0-42fb-b795-033f6f2a0674
+# ╟─24abafc3-0e26-4cd2-9bca-7c69b794f8ce
+# ╟─b67c62c2-15ab-4328-b795-033f6f2a0674
 # ╟─bc689638-fd19-4c9f-935f-ddf6a6bfbbdd
 # ╟─197fd00e-9068-46ea-af2a-25235e544a31
 # ╠═f6d4f8c4-e441-45c4-8af5-148d95ea2900
@@ -522,7 +523,7 @@ md"""
 # ╟─da747378-24c9-4b9c-8d7e-8e449afd1c48
 # ╟─fe0ead17-c3f5-4f3c-a949-7f3bd292fe31
 # ╟─4ff58cc5-ea99-4e9d-8514-99938a2932db
-# ╟─a29a0133-566e-41e3-a0de-1721c1bc2df2
+# ╟─675753b1-786e-4344-a0de-1721c1bc2df2
 # ╟─74e167cd-bc94-486c-bca8-7eec7950fd82
 # ╠═45c7e17a-63c8-4fb3-9873-1b1430e635cc
 # ╠═1a742c64-61e8-4fbf-b43e-d0ebe87da176

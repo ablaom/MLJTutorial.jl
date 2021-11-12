@@ -1,23 +1,23 @@
 module MLJTutorial
 
 import IJulia
-using CSV
-using DataFrames
+import Pluto
 
 const DATASETS = [:horse, :house, :small]
 const ROOT = joinpath(@__DIR__, "..")
 const NOTEBOOKS = joinpath(ROOT, "notebooks")
+const FIRST_PLUTO_NOTEBOOK =
+    joinpath(NOTEBOOKS, "01_data_representation", "notebook.pluto.jl")
 
-export go, remove, load_house, load_horse, load_small
+export jupyter, pluto, go, remove, load_house, load_horse, load_small
 
-go() = begin
+jupyter() = begin
     IJulia.notebook(dir=NOTEBOOKS)
 end
+const go = jupyter
 
 pluto() = begin
-    Pluto.run(notebook=joinpath(NOTEBOOKS, "sandbox", "notebook.pluto.jl")
+    Pluto.run(FIRST_PLUTO_NOTEBOOK)
 end
-
-include("datasets.jl")
 
 end # module

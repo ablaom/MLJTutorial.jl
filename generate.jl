@@ -20,7 +20,7 @@ function generate(env; execute=true, pluto=false)
         if pluto
             Literate.notebook(INFILE, ENVDIR, flavor=Literate.PlutoFlavor())
             runcommand(`mv $ENVDIR/notebook.jl $OUTDIR/notebook.pluto.jl`)
-        end 
+        end
 
         Literate.notebook(INFILE, OUTDIR, execute=false)
         runcommand(

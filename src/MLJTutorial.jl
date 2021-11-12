@@ -10,14 +10,13 @@ const NOTEBOOKS = joinpath(ROOT, "notebooks")
 
 export go, remove, load_house, load_horse, load_small
 
-
 go() = begin
     IJulia.notebook(dir=NOTEBOOKS)
 end
 
-# pluto() = begin
-#     Pluto.run(notebook=joinpath(NOTEBOOKS, "sandbox", "notebook.pluto.jl")
-# end
+pluto() = begin
+    Pluto.run(notebook=joinpath(NOTEBOOKS, "sandbox", "notebook.pluto.jl")
+end
 
 include("datasets.jl")
 

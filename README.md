@@ -13,6 +13,9 @@ Learning in Julia)
 Based on tutorials originally part of a 3.5 hour [online
 workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
+#### [Options for running the tutorials](#options-for-running-the-tutorials).
+
+
 ### Prerequisites
 
 - Familiarity with basic data manipulation in Julia: vectors, tuples,
@@ -21,9 +24,6 @@ workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
 - Familiarity with Machine Learning fundamentals
   ([disclaimer](#more-about-the-tutorials)).
-
-Click [here](#options-for-running-the-tutorials) for options for
-running the tutorials
 
 
 ### Topics covered

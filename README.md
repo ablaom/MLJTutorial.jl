@@ -22,8 +22,7 @@ workshop](https://github.com/ablaom/MachineLearningInJulia2020).
   dictionaries, arrays, generating random numbers, tabular data (e.g.,
   DataDrames.jl) basic stats, Distributions.jl.
 
-- Familiarity with Machine Learning fundamentals
-  ([disclaimer](#more-about-the-tutorials)).
+- Familiarity with Machine Learning fundamentals and best practice.
 
 
 ### Topics covered

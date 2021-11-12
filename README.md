@@ -15,13 +15,15 @@ workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
 ### Prerequisites
 
-- Familiarity with basic data manipulation in Julia (vectors, tuples,
-dictionaries, arrays, generating random numbers, tabular data - such
-as DataDrames.jl, basic stats, Distributions.jl).
+- Familiarity with basic data manipulation in Julia: vectors, tuples,
+  dictionaries, arrays, generating random numbers, tabular data (e.g.,
+  DataDrames.jl) basic stats, Distributions.jl.
 
-- Familiarity with [Machine Learning fundamentals](#more-about-the-tutorials). 
+- Familiarity with Machine Learning fundamentals
+  ([disclaimer](#more-about-the-tutorials)).
 
-### [Options for running the tutorials](#options-for-running-the-tutorials)
+Click [here](#options-for-running-the-tutorials) for options for
+running the tutorials
 
 
 ### Topics covered
@@ -46,7 +48,7 @@ solutions.
 
 ## Options for running the tutorials
 
-### 1. To launch Juptyer notebooks from the Julia REPL
+### 1. To launch Juptyer or Pluto notebooks from the Julia REPL
 
 Assuming you have [Julia installed](https://julialang.org/downloads/),
 launch the Julia REPL and enter these commands:
@@ -59,14 +61,29 @@ Pkg.activate(dir)
 Pkg.instantiate()
 
 using MLJTutorial
-go()
-
 ```
 
-This should launch a Jupyter session in your browser. Navigate to
-`01_data_representation/notebook.unexecuted.ipynb` to start Part 1. The other
-parts exist in parallel directories, to which you can navigate from
-within Juptyer.
+### For Juptyer
+
+Run 
+
+```julia
+juptyer() # or go()
+```
+
+This should launch a Jupyter session in your browser, with a directory
+of the available notebooks.
+
+### For Pluto
+
+Run
+
+```julia
+pluto()
+```
+
+This should launch the first tutorial as a Pluto notebook in your
+browser.
 
 
 ### 2. To run .jl scripts from an IDE (advanced option)

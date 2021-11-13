@@ -8,6 +8,9 @@ CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
 Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
 
+[compat]
+Pluto = "0.17"
+
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 

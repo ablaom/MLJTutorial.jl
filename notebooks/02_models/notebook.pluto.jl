@@ -382,7 +382,7 @@ increased:
 """
 
 # ╔═╡ 7547798a-24c9-4c5f-9961-a09632c33fb0
-begin
+with_terminal() do
   model.epochs = model.epochs + 4
   fit!(mach, rows=train, verbosity=2)
 end
@@ -394,7 +394,7 @@ without triggering a cold restart:
 """
 
 # ╔═╡ 04255053-ed5f-48d6-90fb-7f2721f6fcc7
-begin
+with_terminal() do
   model.epochs = model.epochs + 4
   model.optimiser.eta = 10 * model.optimiser.eta
   fit!(mach, rows=train, verbosity=2)
@@ -407,7 +407,7 @@ scratch:
 """
 
 # ╔═╡ 55531d1d-31e9-4e61-8890-979691212d9b
-begin
+with_terminal() do
   model.lambda = 0.001
   fit!(mach, rows=train, verbosity=2)
 end

@@ -110,7 +110,7 @@ instantiate properly for other Julia versions.
 
 # ╔═╡ 99cbb473-2785-48ad-bcba-9840c8a65923
 md"""
-The follwing is a temporary fix until the macro-free pipline mechanism will be included in an offical release of MLJ (then the cell above can be used):
+The follwing is a temporary fix until the macro-free pipeline mechanism will be included in an offical release of MLJ (then the cell above can be used):
 """
 
 # ╔═╡ 499cbc31-83ba-4583-ba1f-6363f43ec697
@@ -281,12 +281,19 @@ transformation to `XHouseCont`, we can combine both the encoding and the
 dimension-reducing models into a single model, known as a
 *pipeline*. While MLJ offers a powerful interface for composing
 models in a variety of ways, we'll stick to these simplest class of
-composite models for now. The easiest way to construct them is using
-the `Pipeline` type:
+composite models for now. The simplest "hard-wired" composite type is the `Pipeline` type, which is for linear (non-branching) sequences of models. At most one of these can be a supervised model (which often appears last):
 """
 
 # ╔═╡ 5ed77309-afa6-4c94-88c0-761fe6b5a5d4
-pipe1 = Pipeline(ContinuousEncoder, PCA)
+pipe0 = Pipeline(ContinuousEncoder, PCA)
+
+# ╔═╡ d45ff6ec-2dd6-4a9c-a97e-79337b0be5c8
+md"""
+Notice that component models now appear as *hyper-parameters* of the pipeline model,  and these have automatically generated field names (which can be overwritten, as in `Pipeline(enc=ContinuousEncoder, reducer=PCA)`). There is also an "arrow" syntax for constructing pipelines. The following defines the same pipeline as above:
+"""
+
+# ╔═╡ 380a3bb6-535d-4f4b-8e7c-18148f7cc0b8
+pipe1 = ContinuousEncoder |> PCA
 
 # ╔═╡ eee1bcc8-ff0b-4238-950d-551d88aab415
 md"""
@@ -317,7 +324,7 @@ md"Want to combine this pre-processing with ridge regression?"
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 
 # ╔═╡ f96a84ec-1cc0-400c-9493-9c2a2e3c5b51
-pipe2 = Pipeline(ContinuousEncoder, PCA, RidgeRegressor)
+pipe2 = pipe1 |> RidgeRegressor
 
 # ╔═╡ e9a2070b-41b5-41bd-9994-5929469b8436
 md"""
@@ -396,83 +403,16 @@ md"## Incorporating target transformations"
 
 # ╔═╡ 667917e3-25d2-435c-bb0e-3a45761c733a
 md"""
-Next, suppose that instead of using the raw `:price` as the
-training target, we want to use the log-price (a common practice in
-dealing with house price data). However, suppose that we still want
-to report final *predictions* on the original linear scale (and use
-these for evaluation purposes). Then we supply appropriate functions
-to key-word arguments `target` and `inverse`.
+Target transformations are not supported by the `Pipeline` type, only the `@pipeline` macro, which does not currently work from Pluto notebooks. Refer to the Juptyer notebook or plain julia script for a demonstration. Target transformations can also be implemented using MLJ's generic model composition syntax introduced in Part 5. 
+
+In the future you will be able to conveniently implement target transformations with a separate model wrapper. 
 """
-
-# ╔═╡ 72d314eb-74ef-4555-9979-7044b2f2df33
-md"First we'll overload `log` and `exp` for broadcasting:"
-
-# ╔═╡ bc2bdda0-8fe3-4ef0-b2a1-fbbde543f620
-begin
-  Base.log(v::AbstractArray) = log.(v)
-  Base.exp(v::AbstractArray) = exp.(v)
-end
 
 # ╔═╡ 0398adfe-721a-4b97-910b-f8a9a217eff2
 md"Now for the new pipeline:"
 
-# ╔═╡ 9d044fe7-b62e-4b51-bb69-47ebf84b4ea4
-pipe3 = Pipeline(encoder = ContinuousEncoder, reducer = PCA, rgs = RidgeRegressor, target = log, inverse = exp)
-
-# ╔═╡ 89251d28-6c54-4b2f-829e-9cefd6f19d95
-md"""
-!!! note
-
-    In the former macro-based version this was
-
-    `pipe3 = @pipeline encoder reducer rgs target=log inverse=exp`
-"""
-
-# ╔═╡ e183ea7a-172f-49c2-a47e-30edcce038f2
-mach5 = machine(pipe3, XHouse, yHouse)
-
-# ╔═╡ df510e0a-ef23-4858-83f0-b50c129e6ef8
-evaluate!(mach5, measure = mae)
-
-# ╔═╡ e98fef59-a5cb-4c24-88a1-a2bf91434413
-md"""
-MLJ will also allow you to insert *learned* target
-transformations. For example, we might want to apply
-`Standardizer()` to the target, to standardize it, or
-`UnivariateBoxCoxTransformer()` to make it look Gaussian. Then
-instead of specifying a *function* for `target`, we specify a
-unsupervised *model* (or model type). One does not specify `inverse`
-because only models implementing `inverse_transform` are
-allowed.
-"""
-
 # ╔═╡ 4fd0807d-61e5-4b4b-a1cb-54e34396a855
 md"Let's see which of these two options results in a better outcome:"
-
-# ╔═╡ 271f5dae-38ad-4e5b-8037-0de5806e1a54
-begin
-  box = UnivariateBoxCoxTransformer(n=20)
-  stand = Standardizer()
-  pipe4 = Pipeline(encoder = ContinuousEncoder, reducer = PCA, 
-	  rgs = RidgeRegressor, target = box)
-  mach6 = machine(pipe4, XHouse, yHouse)
-  evaluate!(mach6, measure=mae)
-end
-
-# ╔═╡ 60177e97-7b28-487a-8264-9ba66dede674
-md"""
-!!! note
-
-    In the former macro-based version this was
-
-    `pipe4 = @pipeline encoder reducer rgs target=box`
-"""
-
-# ╔═╡ 3d8a2959-63c5-4bee-9961-a09632c33fb0
-begin
-  pipe4.target = stand
-  evaluate!(mach6, measure=mae)
-end
 
 # ╔═╡ a0488295-9642-4156-b7cc-46f4ef988c68
 md"# Resources for Part 3"
@@ -597,6 +537,8 @@ md"""
 # ╠═1e780939-abf0-4203-97a7-88e3af4f10ee
 # ╟─8e76b5a5-7c80-4684-b372-8c9866e51852
 # ╠═5ed77309-afa6-4c94-88c0-761fe6b5a5d4
+# ╟─d45ff6ec-2dd6-4a9c-a97e-79337b0be5c8
+# ╠═380a3bb6-535d-4f4b-8e7c-18148f7cc0b8
 # ╟─eee1bcc8-ff0b-4238-950d-551d88aab415
 # ╟─e68044d8-42b4-49cd-86cf-35420d9e6995
 # ╠═26d649a8-3d96-4479-a29a-8d0445351914
@@ -620,18 +562,8 @@ md"""
 # ╠═92c5bc62-b430-41b8-8378-5aa686f0b407
 # ╟─adcb0506-e89d-43b0-9f43-49763e8691a1
 # ╟─667917e3-25d2-435c-bb0e-3a45761c733a
-# ╟─72d314eb-74ef-4555-9979-7044b2f2df33
-# ╠═bc2bdda0-8fe3-4ef0-b2a1-fbbde543f620
 # ╟─0398adfe-721a-4b97-910b-f8a9a217eff2
-# ╠═9d044fe7-b62e-4b51-bb69-47ebf84b4ea4
-# ╟─89251d28-6c54-4b2f-829e-9cefd6f19d95
-# ╠═e183ea7a-172f-49c2-a47e-30edcce038f2
-# ╠═df510e0a-ef23-4858-83f0-b50c129e6ef8
-# ╟─e98fef59-a5cb-4c24-88a1-a2bf91434413
 # ╟─4fd0807d-61e5-4b4b-a1cb-54e34396a855
-# ╠═271f5dae-38ad-4e5b-8037-0de5806e1a54
-# ╟─60177e97-7b28-487a-8264-9ba66dede674
-# ╠═3d8a2959-63c5-4bee-9961-a09632c33fb0
 # ╟─a0488295-9642-4156-b7cc-46f4ef988c68
 # ╟─d59d9e91-b26d-4342-90fb-7f2721f6fcc7
 # ╟─c4f30527-c9b4-44e9-af65-ccd25ecb9818

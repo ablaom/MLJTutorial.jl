@@ -148,7 +148,7 @@ schema(iris)
 md"""
 This schema fits well for our purposes, so there is nothing to fix here.
 
-*Note*: In older versions MLJ/CategoricalArrays came up at this point with the scientifc types `Union{Missing,Continuous}` and `Union{Missing,Multiclass}`. Therefore tho following coercion was necessary:
+*Note*: In older versions MLJ/CategoricalArrays came up at this point with the scientifc types `Union{Missing,Continuous}` and `Union{Missing,Multiclass}`. Therefore the following coercion was necessary:
 
     coerce!(iris,
          Union{Missing,Continuous}=>Continuous,

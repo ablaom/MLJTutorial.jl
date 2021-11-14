@@ -61,13 +61,7 @@ first(iris, 4)
 
 schema(iris)
 
-#-
-
-coerce!(iris,
-        Union{Missing,Continuous}=>Continuous,
-        Union{Missing,Multiclass}=>Multiclass)
-schema(iris)
-
+# These look fine.
 
 # ### Step 2. Split data into input and target parts
 

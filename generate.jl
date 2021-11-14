@@ -17,7 +17,7 @@ function generate(env; execute=true, pluto=false)
         const INFILE = joinpath(OUTDIR, "notebook.jl")
 
         # generate pluto notebook:
-        if pluto
+        if $pluto
             Literate.notebook(INFILE, ENVDIR, flavor=Literate.PlutoFlavor())
             runcommand(`mv $ENVDIR/notebook.jl $OUTDIR/notebook.pluto.jl`)
         end

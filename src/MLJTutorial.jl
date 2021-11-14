@@ -17,7 +17,7 @@ end
 const go = jupyter
 
 pluto() = begin
-    Pluto.run(FIRST_PLUTO_NOTEBOOK)
+    Pluto.run(notebook=FIRST_PLUTO_NOTEBOOK)
 end
 
 end # module

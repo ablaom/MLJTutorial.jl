@@ -1,11 +1,77 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.17.1
 
 using Markdown
 using InteractiveUtils
 
+# ╔═╡ bbe90636-9d1f-4ee0-8e35-c285f7b922d0
+begin
+    import Pkg
+    # activate a temporary environment
+    Pkg.activate(mktempdir())
+    Pkg.add([
+		Pkg.PackageSpec(name="MLJ"),
+        Pkg.PackageSpec(name="MLJBase", rev="for-0-point-19-release"),
+		Pkg.PackageSpec(name="MLJModelInterface"),
+		Pkg.PackageSpec(name="MLJMultivariateStatsInterface"),
+		Pkg.PackageSpec(name="MLJLinearModels"),
+		Pkg.PackageSpec(name="UrlDownload"),
+		Pkg.PackageSpec(name="CSV"),
+		Pkg.PackageSpec(name="DataFrames"),
+        Pkg.PackageSpec(name="PlutoUI"),
+    ])
+    using MLJ, MLJLinearModels, MLJModelInterface, MLJMultivariateStatsInterface
+	using MLJBase
+	using UrlDownload
+	import CSV, DataFrames
+	using PlutoUI
+end
+
+
+# ╔═╡ 83a7b4d7-6442-44b2-9388-8330b19cd537
+html"""
+<div style="
+position: absolute;
+width: calc(100% - 30px);
+border: 50vw solid SteelBlue;
+border-top: 500px solid SteelBlue;
+border-bottom: none;
+box-sizing: content-box;
+left: calc(-50vw + 15px);
+top: -500px;
+height: 300px;
+pointer-events: none;
+"></div>
+
+<div style="
+height: 300px;
+width: 100%;
+background: SteelBlue;
+color: #88BBD6;
+padding-top: 68px;
+padding-left: 5px;
+">
+
+<span style="
+font-family: Vollkorn, serif;
+font-weight: 700;
+font-feature-settings: 'lnum', 'pnum';
+"> 
+
+<p style="
+font-family: Alegreya sans;
+font-size: 1.4rem;
+font-weight: 300;
+opacity: 1.0;
+color: #CDCDCD;
+">Tutorial - Part 3</p>
+<p style="text-align: left; font-size: 2.5rem;">
+Machine Learning in Julia
+</p>
+"""
+
 # ╔═╡ 24abafc3-0e26-4cd2-9bca-7c69b794f8ce
-md"# Machine Learning in Julia"
+PlutoUI.TableOfContents(title = "MLJ Tutorial - Part 3")
 
 # ╔═╡ b67c62c2-15ab-4328-b795-033f6f2a0674
 md"""
@@ -15,7 +81,7 @@ toolbox.
 """
 
 # ╔═╡ bc689638-fd19-4c9f-935f-ddf6a6bfbbdd
-md"### Set-up"
+md"## Set-up"
 
 # ╔═╡ 197fd00e-9068-46ea-af2a-25235e544a31
 md"Inspect Julia version:"
@@ -33,11 +99,19 @@ instantiate properly for other Julia versions.
 """
 
 # ╔═╡ d09256dd-6c0d-4e28-9e54-3f7b3ca87ecb
-begin
-  using Pkg
-  Pkg.activate("env")
-  Pkg.instantiate()
-end
+# begin
+# 	using MLJ  
+# 	using MLJModelInterface
+# 	using MLJLinearModels
+# 	using UrlDownload
+# 	import CSV, DataFrames
+# 	using MLJMultivariateStatsInterface
+# end
+
+# ╔═╡ 99cbb473-2785-48ad-bcba-9840c8a65923
+md"""
+The follwing is a temporary fix until the macro-free pipline mechanism will be included in an offical release of MLJ (then the cell above can be used):
+"""
 
 # ╔═╡ 499cbc31-83ba-4583-ba1f-6363f43ec697
 md"## General resources"
@@ -51,10 +125,10 @@ md"""
 """
 
 # ╔═╡ 1e248249-5629-412f-b1b3-dd47e367ba54
-md"## Part 3 - Transformers and Pipelines"
+md"# Part 3 - Transformers and Pipelines"
 
 # ╔═╡ d055d24f-1b2d-48a6-8d7e-8e449afd1c48
-md"### Transformers"
+md"## Transformers"
 
 # ╔═╡ 0dc40881-6163-4948-a949-7f3bd292fe31
 md"""
@@ -69,31 +143,29 @@ Otherwise, they are handled much like supervised models.
 # ╔═╡ 0d066909-c9bf-4ae3-8514-99938a2932db
 md"Here's a simple standardization example:"
 
+# ╔═╡ 29ea6531-1337-4527-92bd-6ebccf75659a
+ x = rand(100)
+
 # ╔═╡ ad63ad4b-04c0-491b-a0de-1721c1bc2df2
-begin
-  using MLJ
-  
-  x = rand(100);
-  @show mean(x) std(x);
-end
+(mean(x), std(x))
 
 # ╔═╡ f86b62eb-6853-482a-bca8-7eec7950fd82
 begin
   model = Standardizer() # a built-in model
-  mach = machine(model, x)
-  fit!(mach)
-  xhat = transform(mach, x);
-  @show mean(xhat) std(xhat);
+  mach1 = machine(model, x)
+  fit!(mach1)
+  xhat = MLJ.transform(mach1, x);
+  (mean(xhat), std(xhat))
 end
 
 # ╔═╡ 58686fe6-088a-4751-9873-1b1430e635cc
 md"This particular model has an `inverse_transform`:"
 
 # ╔═╡ 8b90b209-cb98-4116-b43e-d0ebe87da176
-inverse_transform(mach, xhat) ≈ x
+inverse_transform(mach1, xhat) ≈ x
 
 # ╔═╡ f1b47e75-0ce3-4e90-9009-4cfb2012998f
-md"### Re-encoding the King County House data as continuous"
+md"## Re-encoding the King County House data as continuous"
 
 # ╔═╡ e904fcb3-7603-40d2-abd3-cb77d7a79683
 md"""
@@ -117,7 +189,7 @@ md"First, we reload the data and fix the scitypes (Exercise 3):"
 
 # ╔═╡ 7e23f8f6-1634-45c8-bf32-94657e65284e
 begin
-  using UrlDownload, CSV, DataFrames
+ 
   house_csv = urldownload("https://raw.githubusercontent.com/ablaom/"*
                           "MachineLearningInJulia2020/for-MLJ-version-0.16/"*
                           "data/house.csv");
@@ -128,7 +200,7 @@ begin
 end
 
 # ╔═╡ 348ff9a2-89ab-434a-9afd-65a5b5facac9
-y, X = unpack(house, ==(:price), name -> true, rng=123);
+yHouse, XHouse = unpack(house, ==(:price), name -> true, rng=123);
 
 # ╔═╡ c7e83ce7-f067-4049-b6c8-54f5ed90a964
 md"Instantiate the unsupervised model (transformer):"
@@ -140,19 +212,19 @@ encoder = ContinuousEncoder() # a built-in model; no need to @load it
 md"Bind the model to the data and fit!"
 
 # ╔═╡ 5d976f7e-45ee-4cbb-8a29-32f11452654a
-mach = machine(encoder, X) |> fit!;
+mach2 = machine(encoder, XHouse) |> fit!
 
 # ╔═╡ aad55579-14f3-439a-a5f1-151fcbe229a2
 md"Transform and inspect the result:"
 
+# ╔═╡ a6c1d3ea-6f43-42c7-8950-2f4327f23c1f
+XHouseCont = MLJ.transform(mach2, XHouse)
+
 # ╔═╡ 9f2f583a-e90a-43f6-81bc-2d5603785a09
-begin
-  Xcont = transform(mach, X);
-  schema(Xcont)
-end
+schema(XHouseCont)
 
 # ╔═╡ 828460a7-7d4e-444e-9d87-1d1fbb0e3997
-md"### More transformers"
+md"## More transformers"
 
 # ╔═╡ 12631f23-8262-475d-b950-fddef2a1fb10
 md"Here's how to list all of MLJ's unsupervised models:"
@@ -166,7 +238,7 @@ md"Some commonly used ones are built-in (do not require `@load`ing):"
 # ╔═╡ 7a6df9e6-89f1-4117-8cb0-de601961bc02
 md"""
 model type                  | does what?
-----------------------------|----------------------------------------------
+:----------------------------|:----------------------------------------------
 ContinuousEncoder | transform input table to a table of `Continuous` features (see above)
 FeatureSelector | retain or dump selected features
 FillImputer | impute missing values
@@ -187,10 +259,10 @@ for how to define your own static transformers.
 """
 
 # ╔═╡ d45a81ec-f978-4483-8448-4bcb089096cd
-md"### Pipelines"
+md"## Pipelines"
 
 # ╔═╡ b454845b-3b3b-4c46-a012-a84240254fb6
-length(schema(Xcont).names)
+length(schema(XHouseCont).names)
 
 # ╔═╡ 28cf44d4-3f4b-485f-bbdd-9799f7bb2e60
 md"""
@@ -200,29 +272,31 @@ our data.  A model that will do this is `PCA` from
 """
 
 # ╔═╡ 1e780939-abf0-4203-97a7-88e3af4f10ee
-begin
-  PCA = @load PCA
-  reducer = PCA()
-end
+PCA = @load PCA
 
 # ╔═╡ 8e76b5a5-7c80-4684-b372-8c9866e51852
 md"""
 Now, rather simply repeating the work-flow above, applying the new
-transformation to `Xcont`, we can combine both the encoding and the
+transformation to `XHouseCont`, we can combine both the encoding and the
 dimension-reducing models into a single model, known as a
 *pipeline*. While MLJ offers a powerful interface for composing
 models in a variety of ways, we'll stick to these simplest class of
 composite models for now. The easiest way to construct them is using
-the `@pipeline` macro:
+the `Pipeline` type:
 """
 
-# ╔═╡ f11094fb-b54b-4bb2-8f3d-b82f1e7b6f7a
-pipe = @pipeline encoder reducer
+# ╔═╡ 5ed77309-afa6-4c94-88c0-761fe6b5a5d4
+pipe1 = Pipeline(ContinuousEncoder, PCA)
 
-# ╔═╡ 4afc9625-b262-48e0-ab04-579e5608ae53
+# ╔═╡ eee1bcc8-ff0b-4238-950d-551d88aab415
 md"""
-Notice that `pipe` is an *instance* of an automatically generated
-type (called `Pipeline<some digits>`).
+!!! note 
+
+    In the former macro-based version this was 
+    
+    `pipe1 = @pipeline encoder reducer`, 
+
+    where `encoder` was instance of `ContinuousEncoder` and `reducer` an instance of `PCA`.
 """
 
 # ╔═╡ e68044d8-42b4-49cd-86cf-35420d9e6995
@@ -230,21 +304,31 @@ md"The new model behaves like any other transformer:"
 
 # ╔═╡ 26d649a8-3d96-4479-a29a-8d0445351914
 begin
-  mach = machine(pipe, X)
-  fit!(mach)
-  Xsmall = transform(mach, X)
-  schema(Xsmall)
+  mach3 = machine(pipe1, XHouse)
+  fit!(mach3)
+  XHouseSmall = transform(mach3, XHouse)
+  schema(XHouseSmall)
 end
 
 # ╔═╡ 7f60c74e-b708-46f4-be65-28d0fcca50a8
 md"Want to combine this pre-processing with ridge regression?"
 
-# ╔═╡ 5b5c1d2a-1f9b-4cc7-9a2e-c468345d87d1
-begin
-  RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
-  rgs = RidgeRegressor()
-  pipe2 = @pipeline encoder reducer rgs
-end
+# ╔═╡ c8c960f0-2a46-42c2-8754-8bd531c8db8e
+RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
+
+# ╔═╡ f96a84ec-1cc0-400c-9493-9c2a2e3c5b51
+pipe2 = Pipeline(ContinuousEncoder, PCA, RidgeRegressor)
+
+# ╔═╡ e9a2070b-41b5-41bd-9994-5929469b8436
+md"""
+!!! note
+
+    In the former macro-based version this was
+
+    `pipe2 = @pipeline encoder reducer rgs`
+
+    where `rgs` was an instance of `RidgeRegressor`.
+"""
 
 # ╔═╡ fbb24be1-fe01-4489-b5fa-cb79ebf595ef
 md"""
@@ -252,14 +336,14 @@ Now our pipeline is a supervised model, instead of a transformer,
 whose performance we can evaluate:
 """
 
+# ╔═╡ 958f9a9a-23d5-446b-aa54-f7a086cb0264
+mach4 = machine(pipe2, XHouse, yHouse)
+
 # ╔═╡ ea64dbb5-963a-4da4-91c5-524da38aa391
-begin
-  mach = machine(pipe2, X, y)
-  evaluate!(mach, measure=mae, resampling=Holdout()) # CV(nfolds=6) is default
-end
+evaluate!(mach4, measure=mae, resampling=Holdout()) # CV(nfolds=6) is default
 
 # ╔═╡ 1ce36a90-ea25-48d6-ad90-b4405b216771
-md"### Training of composite models is \"smart\""
+md"## Training of composite models is \"smart\""
 
 # ╔═╡ 4270976f-1207-4086-895b-997a92b731e0
 md"""
@@ -268,12 +352,12 @@ regressor hyper-parameter and retrain:
 """
 
 # ╔═╡ 1d0bce6b-ffff-4f30-a525-e9b04a4bd246
-fit!(mach)
+fit!(mach4)
 
 # ╔═╡ 64a648e0-d5c9-4c3d-80f0-ba7781e173cf
-begin
+with_terminal() do
   pipe2.ridge_regressor.lambda = 0.1
-  fit!(mach)
+  fit!(mach4)
 end
 
 # ╔═╡ 5dcd0d55-bb5d-459a-9cbc-9a2c39793333
@@ -286,13 +370,13 @@ the `ContinuousEncoder` (which comes before it will be retrained):
 """
 
 # ╔═╡ b8e84a2c-2c7f-41f5-9452-5298a8a4a401
-begin
+with_terminal() do
   pipe2.pca.pratio = 0.9999
-  fit!(mach)
+  fit!(mach4)
 end
 
 # ╔═╡ 95b75a71-47b5-49b1-b017-96f1602f2cad
-md"### Inspecting composite models"
+md"## Inspecting composite models"
 
 # ╔═╡ 5de9f9a0-ad8f-47de-8be2-2a4017c45345
 md"""
@@ -302,13 +386,13 @@ parameters and report generated when training a composite model:
 """
 
 # ╔═╡ aa7bdff7-7d1b-43b1-a7ad-80d84f5b0070
-fitted_params(mach).ridge_regressor
+fitted_params(mach4).ridge_regressor
 
 # ╔═╡ 92c5bc62-b430-41b8-8378-5aa686f0b407
-report(mach).pca
+report(mach4).pca
 
 # ╔═╡ adcb0506-e89d-43b0-9f43-49763e8691a1
-md"### Incorporating target transformations"
+md"## Incorporating target transformations"
 
 # ╔═╡ 667917e3-25d2-435c-bb0e-3a45761c733a
 md"""
@@ -332,12 +416,23 @@ end
 # ╔═╡ 0398adfe-721a-4b97-910b-f8a9a217eff2
 md"Now for the new pipeline:"
 
-# ╔═╡ 943cbab6-cbe2-4054-aa36-d2e8546da46a
-begin
-  pipe3 = @pipeline encoder reducer rgs target=log inverse=exp
-  mach = machine(pipe3, X, y)
-  evaluate!(mach, measure=mae)
-end
+# ╔═╡ 9d044fe7-b62e-4b51-bb69-47ebf84b4ea4
+pipe3 = Pipeline(encoder = ContinuousEncoder, reducer = PCA, rgs = RidgeRegressor, target = log, inverse = exp)
+
+# ╔═╡ 89251d28-6c54-4b2f-829e-9cefd6f19d95
+md"""
+!!! note
+
+    In the former macro-based version this was
+
+    `pipe3 = @pipeline encoder reducer rgs target=log inverse=exp`
+"""
+
+# ╔═╡ e183ea7a-172f-49c2-a47e-30edcce038f2
+mach5 = machine(pipe3, XHouse, yHouse)
+
+# ╔═╡ df510e0a-ef23-4858-83f0-b50c129e6ef8
+evaluate!(mach5, measure = mae)
 
 # ╔═╡ e98fef59-a5cb-4c24-88a1-a2bf91434413
 md"""
@@ -358,20 +453,29 @@ md"Let's see which of these two options results in a better outcome:"
 begin
   box = UnivariateBoxCoxTransformer(n=20)
   stand = Standardizer()
-  
-  pipe4 = @pipeline encoder reducer rgs target=box
-  mach = machine(pipe4, X, y)
-  evaluate!(mach, measure=mae)
+  pipe4 = Pipeline(encoder = ContinuousEncoder, reducer = PCA, 
+	  rgs = RidgeRegressor, target = box)
+  mach6 = machine(pipe4, XHouse, yHouse)
+  evaluate!(mach6, measure=mae)
 end
+
+# ╔═╡ 60177e97-7b28-487a-8264-9ba66dede674
+md"""
+!!! note
+
+    In the former macro-based version this was
+
+    `pipe4 = @pipeline encoder reducer rgs target=box`
+"""
 
 # ╔═╡ 3d8a2959-63c5-4bee-9961-a09632c33fb0
 begin
   pipe4.target = stand
-  evaluate!(mach, measure=mae)
+  evaluate!(mach6, measure=mae)
 end
 
 # ╔═╡ a0488295-9642-4156-b7cc-46f4ef988c68
-md"### Resources for Part 3"
+md"# Resources for Part 3"
 
 # ╔═╡ d59d9e91-b26d-4342-90fb-7f2721f6fcc7
 md"""
@@ -383,7 +487,7 @@ md"""
 """
 
 # ╔═╡ c4f30527-c9b4-44e9-af65-ccd25ecb9818
-md"### Exercises for Part 3"
+md"# Exercises for Part 3"
 
 # ╔═╡ 25a6fd3c-60d1-44dd-8890-979691212d9b
 md"#### Exercise 7"
@@ -410,8 +514,8 @@ begin
           :outcome               => Multiclass,
           :cp_data               => Multiclass);
   
-  y, X = unpack(horse, ==(:outcome), name -> true);
-  schema(X)
+  yHorse, XHorse = unpack(horse, ==(:outcome), name -> true);
+  schema(XHorse)
 end
 
 # ╔═╡ 9abf25a8-7231-43f5-9e90-09023d201062
@@ -427,22 +531,16 @@ md"""
   algorithm in `EvoTrees.jl`) on the reduced data, using
   `nrounds=50` and default values for the other
    hyper-parameters
-"""
 
-# ╔═╡ 246a00c8-8c05-4ec6-b7bb-2f33ef765cc0
-md"""
 (b) Evaluate the pipeline on all data, using 6-fold cross-validation
 and `cross_entropy` loss.
-"""
 
-# ╔═╡ 9cfb86c0-0283-4e85-9625-01172c4a0081
-md"""
-&star;(c) Plot a learning curve which examines the effect on this loss
+ $\star$ (c) Plot a learning curve which examines the effect on this loss
 as the tree booster parameter `max_depth` varies from 2 to 10.
 """
 
 # ╔═╡ 6cce6530-0d12-4862-af4f-11c7de9e21dd
-md"<a id='part-4-tuning-hyper-parameters'></a>"
+html"<a id='part-4-tuning-hyper-parameters'></a>"
 
 # ╔═╡ 135dac9b-0bd9-4e1d-8dba-241d9b744683
 md"""
@@ -452,6 +550,7 @@ md"""
 """
 
 # ╔═╡ Cell order:
+# ╟─83a7b4d7-6442-44b2-9388-8330b19cd537
 # ╟─24abafc3-0e26-4cd2-9bca-7c69b794f8ce
 # ╟─b67c62c2-15ab-4328-b795-033f6f2a0674
 # ╟─bc689638-fd19-4c9f-935f-ddf6a6bfbbdd
@@ -460,12 +559,15 @@ md"""
 # ╟─45740c4d-b789-45dc-a6bf-47194d7e8e12
 # ╟─42b0f1e1-16c9-4238-828a-4cc485149963
 # ╠═d09256dd-6c0d-4e28-9e54-3f7b3ca87ecb
+# ╟─99cbb473-2785-48ad-bcba-9840c8a65923
+# ╠═bbe90636-9d1f-4ee0-8e35-c285f7b922d0
 # ╟─499cbc31-83ba-4583-ba1f-6363f43ec697
 # ╟─db5821e8-956a-4a46-95ea-2955abd45275
 # ╟─1e248249-5629-412f-b1b3-dd47e367ba54
 # ╟─d055d24f-1b2d-48a6-8d7e-8e449afd1c48
 # ╟─0dc40881-6163-4948-a949-7f3bd292fe31
 # ╟─0d066909-c9bf-4ae3-8514-99938a2932db
+# ╠═29ea6531-1337-4527-92bd-6ebccf75659a
 # ╠═ad63ad4b-04c0-491b-a0de-1721c1bc2df2
 # ╠═f86b62eb-6853-482a-bca8-7eec7950fd82
 # ╟─58686fe6-088a-4751-9873-1b1430e635cc
@@ -481,6 +583,7 @@ md"""
 # ╟─703d4ac3-116e-4e05-ae5e-4b83dcbc9675
 # ╠═5d976f7e-45ee-4cbb-8a29-32f11452654a
 # ╟─aad55579-14f3-439a-a5f1-151fcbe229a2
+# ╠═a6c1d3ea-6f43-42c7-8950-2f4327f23c1f
 # ╠═9f2f583a-e90a-43f6-81bc-2d5603785a09
 # ╟─828460a7-7d4e-444e-9d87-1d1fbb0e3997
 # ╟─12631f23-8262-475d-b950-fddef2a1fb10
@@ -493,13 +596,16 @@ md"""
 # ╟─28cf44d4-3f4b-485f-bbdd-9799f7bb2e60
 # ╠═1e780939-abf0-4203-97a7-88e3af4f10ee
 # ╟─8e76b5a5-7c80-4684-b372-8c9866e51852
-# ╠═f11094fb-b54b-4bb2-8f3d-b82f1e7b6f7a
-# ╟─4afc9625-b262-48e0-ab04-579e5608ae53
+# ╠═5ed77309-afa6-4c94-88c0-761fe6b5a5d4
+# ╟─eee1bcc8-ff0b-4238-950d-551d88aab415
 # ╟─e68044d8-42b4-49cd-86cf-35420d9e6995
 # ╠═26d649a8-3d96-4479-a29a-8d0445351914
 # ╟─7f60c74e-b708-46f4-be65-28d0fcca50a8
-# ╠═5b5c1d2a-1f9b-4cc7-9a2e-c468345d87d1
+# ╠═c8c960f0-2a46-42c2-8754-8bd531c8db8e
+# ╠═f96a84ec-1cc0-400c-9493-9c2a2e3c5b51
+# ╟─e9a2070b-41b5-41bd-9994-5929469b8436
 # ╟─fbb24be1-fe01-4489-b5fa-cb79ebf595ef
+# ╠═958f9a9a-23d5-446b-aa54-f7a086cb0264
 # ╠═ea64dbb5-963a-4da4-91c5-524da38aa391
 # ╟─1ce36a90-ea25-48d6-ad90-b4405b216771
 # ╟─4270976f-1207-4086-895b-997a92b731e0
@@ -517,10 +623,14 @@ md"""
 # ╟─72d314eb-74ef-4555-9979-7044b2f2df33
 # ╠═bc2bdda0-8fe3-4ef0-b2a1-fbbde543f620
 # ╟─0398adfe-721a-4b97-910b-f8a9a217eff2
-# ╠═943cbab6-cbe2-4054-aa36-d2e8546da46a
+# ╠═9d044fe7-b62e-4b51-bb69-47ebf84b4ea4
+# ╟─89251d28-6c54-4b2f-829e-9cefd6f19d95
+# ╠═e183ea7a-172f-49c2-a47e-30edcce038f2
+# ╠═df510e0a-ef23-4858-83f0-b50c129e6ef8
 # ╟─e98fef59-a5cb-4c24-88a1-a2bf91434413
 # ╟─4fd0807d-61e5-4b4b-a1cb-54e34396a855
 # ╠═271f5dae-38ad-4e5b-8037-0de5806e1a54
+# ╟─60177e97-7b28-487a-8264-9ba66dede674
 # ╠═3d8a2959-63c5-4bee-9961-a09632c33fb0
 # ╟─a0488295-9642-4156-b7cc-46f4ef988c68
 # ╟─d59d9e91-b26d-4342-90fb-7f2721f6fcc7
@@ -529,7 +639,5 @@ md"""
 # ╟─aed2b274-cc0c-42f2-a6fa-eaf14df5d44b
 # ╠═0df6be04-24fe-4417-8025-5084804a9f6c
 # ╟─9abf25a8-7231-43f5-9e90-09023d201062
-# ╟─246a00c8-8c05-4ec6-b7bb-2f33ef765cc0
-# ╟─9cfb86c0-0283-4e85-9625-01172c4a0081
 # ╟─6cce6530-0d12-4862-af4f-11c7de9e21dd
 # ╟─135dac9b-0bd9-4e1d-8dba-241d9b744683

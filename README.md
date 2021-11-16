@@ -62,6 +62,7 @@ solutions.
 
 ### Additional resources
 
+- [Slides](slides/slides.pdf) from workshop given at ResBaz 2021 (Auckland)
 - [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
 - [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
 - [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)

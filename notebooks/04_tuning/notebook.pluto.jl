@@ -359,7 +359,7 @@ begin
 	xlabel!(tuned_plot[1, 1], "factors")
 	ylabel!(tuned_plot[1, 1], "cross entropy")
 	xlabel!(tuned_plot[2, 1], "factors")
-	ylabel!(tuned_plot[2, 1], "factors unbounded")
+	ylabel!(tuned_plot[2, 1], "lambda unbounded")
 	xlabel!(tuned_plot[2, 2], "lambda")
 	ylabel!(tuned_plot[2, 2], "cross entropy")
     savefig("tuning.png")

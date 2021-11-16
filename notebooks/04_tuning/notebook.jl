@@ -78,6 +78,7 @@ iterator(r, 5)
 #-
 
 using Plots
+gr(size=(490,300))
 _, _, lambdas, losses = learning_curve(mach,
                                        range=r,
                                        resampling=CV(nfolds=6),
@@ -142,9 +143,10 @@ r = range(model,
           unit=5,
           scale=:log10)
 
-# The `scale` in a range makes no in a `RandomSearch` (unless it is a
-# function) but this will effect later plots but it does effect the
-# later plots.
+# The `scale` in a range is ignored in a `RandomSearch`, unless it is a
+# function. (It *is* relevant in a `Grid` search, not demonstrated
+# here.) Note however, the choice of scale *does* effect how later plots
+# will look.
 
 # Let's see what sampling using a Gamma distribution is going to mean
 # for this range:
@@ -188,8 +190,6 @@ predict(tuned_mach, rows=1:3)
 
 rep = report(tuned_mach);
 rep.best_model
-
-# By default, sampling of a bounded range is uniform. Lets
 
 # In the special case of two-parameters, you can also plot the results:
 

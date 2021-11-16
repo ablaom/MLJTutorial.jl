@@ -175,7 +175,7 @@ md"Now for a pipeline model:"
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
 
 # ╔═╡ df32389d-809d-4927-9380-d0b65e00252c
- base_model = Pipeline(Standardizer, ContinuousEncoder, LogisticClassifier)
+ base_model = Standardizer |> ContinuousEncoder |> LogisticClassifier
 
 # ╔═╡ a4225c7f-bb3f-479b-a0cd-3f0d573aca2f
  base_mach = machine(base_model, XHorse, yHorse)
@@ -282,9 +282,8 @@ r_lambda_unbound = range(base_model,
 
 # ╔═╡ 8729b9a8-ac7a-485a-b950-fddef2a1fb10
 md"""
-The `scale` in a range makes no **???** in a `RandomSearch` (unless it is a
-function) $(HTML("<del>but this will effect later plots</del>")) but it does effect the
-later plots.
+The `scale` in a range is ignored in a `RandomSearch`, unless it is a
+function. (It *is* relevant in a `Grid` search, not demonstrated here.) Note however, the choice of scale *does* effect how later plots will look.
 """
 
 # ╔═╡ 28aaf005-792c-46a4-951b-64cb2a36c8e3
@@ -350,9 +349,6 @@ rep = report(tuned_mach)
 
 # ╔═╡ e938da11-be0e-4c4a-ab04-579e5608ae53
 rep.best_model
-
-# ╔═╡ f3738cb7-872f-4618-86cf-35420d9e6995
-md"By default, sampling of a bounded range is uniform. Lets"
 
 # ╔═╡ 5b72bfac-40e2-4f84-a29a-8d0445351914
 md"In the special case of two-parameters, you can also plot the results:"
@@ -560,7 +556,6 @@ md"""
 # ╟─22392335-e988-49b9-8f3d-b82f1e7b6f7a
 # ╠═4d54c007-95eb-4897-90a0-060e4b5a56de
 # ╠═e938da11-be0e-4c4a-ab04-579e5608ae53
-# ╟─f3738cb7-872f-4618-86cf-35420d9e6995
 # ╟─5b72bfac-40e2-4f84-a29a-8d0445351914
 # ╠═89dfc4b1-37dc-4f77-be65-28d0fcca50a8
 # ╟─efa202a5-5256-473c-9a2e-c468345d87d1

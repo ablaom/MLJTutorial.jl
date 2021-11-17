@@ -351,7 +351,7 @@ rep = report(tuned_mach)
 rep.best_model
 
 # ╔═╡ 5b72bfac-40e2-4f84-a29a-8d0445351914
-md"In the special case of two-parameters, you can also plot the results:"
+md"You can also plot the results:"
 
 # ╔═╡ 89dfc4b1-37dc-4f77-be65-28d0fcca50a8
 begin

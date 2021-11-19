@@ -63,6 +63,8 @@ solutions.
 ### Additional resources
 
 - [Slides](slides/slides.pdf) from workshop given at ResBaz 2021 (Auckland)
+- [HelloJulia.jl](https://github.com/ablaom/HelloJulia.jl) - Resources from an Introduction to Julia workshop 
+- [DataFrames.jl Cheatsheets](https://ahsmart.com/pub/data-wrangling-with-data-frames-jl-cheat-sheet/index.html)
 - [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
 - [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
 - [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)

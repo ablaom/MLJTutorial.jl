@@ -49,7 +49,7 @@ OpenML.describe_dataset(61)
 
 iris = OpenML.load(61); # a column dictionary table
 
-using DataFrames
+import DataFrames
 iris = DataFrames.DataFrame(iris);
 first(iris, 4)
 
@@ -86,9 +86,15 @@ scitype(y)
 
 all_models = models()
 
-# Each entry contains metadata for a model whose defining code is not yet loaded:
+# If you already have an idea about the name of the model, you could
+# search by string or regex:
 
-meta = all_models[3]
+some_models = models("LinearRegressor") # sic
+
+# Each entry contains metadata for a model whose defining code is not
+# yet loaded:
+
+meta = some_models[1]
 
 #-
 
@@ -105,11 +111,6 @@ filter_julia_classifiers(meta) =
     meta.is_pure_julia
 
 models(filter_julia_classifiers)
-
-# Find all models with "Classifier" in `name` (or `docstring`):
-
-models("Classifier")
-
 
 # Find all (supervised) models that match my data!
 
@@ -159,7 +160,7 @@ mach = machine(model, X, y)
 # set. Let's start by dividing all row indices into `train` and `test`
 # subsets:
 
-train, test = partition(eachindex(y), 0.7)
+train, test = partition(1:length(y), 0.7)
 
 # Now we can `fit!`...
 
@@ -292,19 +293,19 @@ measures()
 # evaluation above and add an extra measure, `brier_score`:
 
 evaluate!(mach, resampling=Holdout(fraction_train=0.7),
-          measures=[cross_entropy, brier_score])
+          measures=[cross_entropy, misclassification_rate, brier_score])
 
 # Or applying cross-validation instead:
 
 evaluate!(mach, resampling=CV(nfolds=6),
-          measures=[cross_entropy, brier_score])
+          measures=[cross_entropy, misclassification_rate, brier_score])
 
 # Or, Monte Carlo cross-validation (cross-validation repeated
 # randomized folds)
 
 e = evaluate!(mach, resampling=CV(nfolds=6, rng=123),
               repeats=3,
-              measures=[cross_entropy, brier_score])
+              measures=[cross_entropy, misclassification_rate, brier_score])
 
 # One can access the following properties of the output `e` of an
 # evaluation: `measure`, `measurement`, `per_fold` (measurement for
@@ -334,7 +335,7 @@ predict(mach, rows=test); # and predict missing targets
 # starts by defining a one-dimensional range object for the parameter
 # (more on this when we discuss tuning in Part 4):
 
-r = range(model, :epochs, lower=1, upper=50, scale=:log)
+r = range(model, :epochs, lower=1, upper=50, scale=:log10)
 
 #-
 
@@ -342,6 +343,8 @@ curve = learning_curve(mach,
                        range=r,
                        resampling=Holdout(fraction_train=0.7), # (default)
                        measure=cross_entropy)
+
+#-
 
 using Plots
 gr(size=(490,300))

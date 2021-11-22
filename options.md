@@ -3,7 +3,8 @@
 ### 1. To launch Juptyer or Pluto notebooks from the Julia REPL
 
 Assuming you have [Julia installed](https://julialang.org/downloads/),
-launch the Julia REPL and at the `julia> ` promptenter these commands:
+launch a new Julia session (REPL) and at the `julia> ` prompt enter
+these commands:
 
 ```julia
 using Pkg

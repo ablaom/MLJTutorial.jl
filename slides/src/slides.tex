@@ -44,7 +44,7 @@
 % \end{frame}
 
 \begin{frame}
-	\titlepage
+        \titlepage
 \end{frame}
 
 \begin{frame}
@@ -52,11 +52,11 @@
   \begin{center}
     \includegraphics[scale=0.2]{Turing_logo.png}
     \includegraphics[scale=0.35]{UoA_logo.png}
-    
+
     \includegraphics[scale=0.2]{IQVIA_logo.png}
     \includegraphics[scale=0.12]{NESI-logo.jpg}
     \includegraphics[scale=0.12]{warwick.png}
-    \includegraphics[scale=0.12]{julia.png}    
+    \includegraphics[scale=0.12]{julia.png}
   \end{center}
 \end{frame}
 
@@ -69,9 +69,9 @@
     {\dff Lead development:} A. B., Thibaut Lienart \\[1\baselineskip]
 
     {\dff Other contributors:} Diego Arenas, Samuel Okon, Yiannis Simillides, Julian Samaroo, Ayush Shridar, Geoffroy Dolphin, Mosè Giordano\ldots \\[1\baselineskip]
-    
+
     {\dff Julia language consultants:} Avik Sengupta\\[1\baselineskip]}
-  
+
 \end{frame}
 
 % \begin{frame}
@@ -87,7 +87,7 @@
 % \begin{frame}
 %   \frametitle{Interacting}
 %    Zoom Webinar provides {\bf two} ways to interact:
-  
+
 %   \begin{block}{Q/A}
 %     For asking panelists questions
 %   \end{block}
@@ -107,17 +107,34 @@
 %     \begin{itemize}
 %     \item familiar with machine learning principles
 %     \item basic Julia skills
-%     \item experience using DataFrames or similar a plus 
+%     \item experience using DataFrames or similar a plus
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
 
 \begin{frame}
+  \frametitle{Some machine learning libraries in Julia}
+   \begin{center}
+    \includegraphics[scale=0.2]{ML_packages_in_julia.png}
+   \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some multi-paradigm machine learning toolboxes in Julia}
+  \begin{itemize}
+  \item {\df ScikitLearn.jl} - thin wrapper for Python's scikit-learn
+  \item {\df AutoMLPipeline.jl} - IBM
+  \item {\df MLJ.jl}
+  \item FastAI.jl - specific to neural networks (interface to {\df Flux.jl})
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{What?}
-  \begin{block}{What is MLJ?}\pause
+  \begin{block}{What's a machine learning toolbox?}\pause
      \begin{itemize}
-     \item A toolbox providing a {\df uniform interface} for {\df fitting}, {\df
-         evaluating} and {\df tuning} machine learning models. 
+     \item A toolbox provides a {\df uniform interface} for {\df fitting}, {\df
+         evaluating} and {\df tuning} machine learning models.
           \item Provides common {\df preprocessing tasks} (such as data cleaning
             and type coercion )
           \item Allows for model {\df composition} (e.g., pipelining)
@@ -129,7 +146,7 @@
   \frametitle{Why?}
   \begin{block}{Why learn the MLJ toolbox?}
     \begin{itemize}
-    \item Written in Julia (but bootstraps off sk-learn):\pause
+    \item Written in Julia (but does wrap non-native models):\pause
       \begin{itemize}
       \item Easy access to core algorithms
       \item Easier to customize
@@ -157,7 +174,7 @@
 
   \item Part 2 - {\df Selecting, Training and Evaluating Models} + exercises
 
-  \item  Break 
+  \item  Break
 
   \item Part 3 - {\df Transformers and Pipelines} + exercises
 
@@ -256,7 +273,7 @@
 
 
 \begin{frame}
-	\finalpage
+        \finalpage
 \end{frame}
 
 \end{document}
@@ -281,7 +298,7 @@
   \item Want {\df usability}, interoperability,
        extensibility and reproducibility\pause
   \item Want avoid common {\df pain-points}:
-    \begin{itemize} 
+    \begin{itemize}
        \item Identifying all models that solve a given task\pause
        \item Routine operations requiring a lot of code
 %       \item Passage from data source to algorithm-specific
@@ -297,7 +314,7 @@
 %   \frametitle{Advanced toolbox features}
 %   \begin{block}{We want toolboxes that:}\pause
 %     \begin{itemize}
-      
+
 %     \item Combine models in more flexible ways, e.g., ensembling,
 %       stacking: pipelines $\rightarrow $ {\df learning
 %         networks}.\pause
@@ -353,7 +370,7 @@
   \item Want {\df usability}, interoperability,
        extensibility and reproducibility
   \item Want avoid common {\df pain-points}:
-    \begin{itemize} 
+    \begin{itemize}
        \item Identifying all models that solve a given task
        \item Routine operations requiring a lot of code\pause
        \item Passage from data source to algorithm-specific
@@ -399,7 +416,7 @@
 %   \frametitle{Probabilistic predictors}
 % {\small
 % \begin{table}[]
-% \centering  
+% \centering
 % \caption{Conventions for representing probabilistic predictions}
 % \label{tab:my-table}
 % \begin{tabular}{lll}
@@ -419,7 +436,7 @@
   \item Want {\df usability}, interoperability,
        extensibility and reproducibility
   \item Want avoid common {\df pain-points}:
-    \begin{itemize} 
+    \begin{itemize}
        \item Identifying all models that solve a given task
        \item Routine operations requiring a lot of code
        \item Passage from data source to algorithm-specific
@@ -443,7 +460,7 @@
   \item Want {\df usability}, interoperability,
        extensibility and reproducibility
   \item Want avoid common {\df pain-points}:
-    \begin{itemize} 
+    \begin{itemize}
        \item Identifying all models that solve a given task
        \item Routine operations requiring a lot of code
        \item Passage from data source to algorithm-specific
@@ -616,7 +633,7 @@
   \item Want {\df usability}, interoperability,
        extensibility and reproducibility
   \item Want avoid common {\df pain-points}:
-    \begin{itemize} 
+    \begin{itemize}
        \item Identifying all models that solve a given task
        \item Routine operations requiring a lot of code
        \item Passage from data source to algorithm-specific
@@ -650,7 +667,7 @@
        \item {\df Flux.jl} deep learning (A.~Shridhar)
        \item {\df Turing.jl} probabilistic programming (M.~Trapp)
        \item {\df Geostats.jl} (J.~Hoffimann)
-       \item Data cleaning? Feature engineering (featuretools?)\pause  
+       \item Data cleaning? Feature engineering (featuretools?)\pause
     \end{itemize}
   \end{block}
 \end{frame}
@@ -689,7 +706,7 @@
     \end{itemize}
   \end{block}
 \end{frame}
-  
+
 \begin{frame}
   \vspace{2\baselineskip}
   \begin{center}
@@ -711,12 +728,12 @@
     Mohammed Nook, Piotr Oleśkiewicz, Julian Samaroo, Ayush Shridar,
     Yiannis Simillides, Annika Stechemesser
     }
-    
+
 
 \end{frame}
 
 \begin{frame}
-	\finalpage
+        \finalpage
 \end{frame}
 
 \end{document}

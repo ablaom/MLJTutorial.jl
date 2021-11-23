@@ -1,10 +1,8 @@
 # MLJTutorial.jl
 
-UNDER CONSTRUCTION
-
-Notebooks for introducing the machine learning toolbox
-[MLJ](https://alan-turing-institute.github.io/MLJ.jl/dev/) (Machine
-Learning in Julia) 
+Jupyter and Pluto notebooks for introducing the machine learning
+toolbox [MLJ](https://alan-turing-institute.github.io/MLJ.jl/dev/)
+(Machine Learning in Julia)
 
 <div align="center">
 	<img src="assets/MLJLogo2.svg" alt="MLJ" width="200">

@@ -148,11 +148,14 @@ schema(iris)
 md"""
 This schema fits well for our purposes, so there is nothing to fix here.
 
-*Note*: In older versions MLJ/CategoricalArrays came up at this point with the scientifc types `Union{Missing,Continuous}` and `Union{Missing,Multiclass}`. Therefore the following coercion was necessary:
+*Note*: In older versions MLJ/CategoricalArrays came up at this point with the scientifc types `Union{Missing,Continuous}` and `Union{Missing,Multiclass}`.  
+Therefore the following coercion was necessary:
 
-    coerce!(iris,
-         Union{Missing,Continuous}=>Continuous,
-         Union{Missing,Multiclass}=>Multiclass)
+```julia
+coerce!(iris,
+  Union{Missing,Continuous} => Continuous,
+  Union{Missing,Multiclass} => Multiclass)
+```
 """
 
 # ╔═╡ 992ca8fb-1a20-4664-abd3-cb77d7a79683
@@ -189,11 +192,19 @@ md"Here's how to see *all* models (not immediately useful):"
 # ╔═╡ 95d1dc5f-75d9-4297-ae5e-4b83dcbc9675
 all_models = models()
 
+# ╔═╡ c2ce1680-24a7-4a9e-908f-d77bb7f9a509
+md"""
+If you already have an idea about the name of the model, you could search by string or regex:
+"""
+
+# ╔═╡ aa58b3e3-bdda-433a-9c3d-3b151b04c0c3
+some_models = models("LinearRegressor") # sic
+
 # ╔═╡ d31909f8-f5f1-4773-8a29-32f11452654a
 md"Each entry contains metadata for a model whose defining code is not yet loaded:"
 
 # ╔═╡ c1f7376d-6f42-497f-a5f1-151fcbe229a2
-meta = all_models[3]
+meta = some_models[1]
 
 # ╔═╡ 2640cb64-bc0e-4bca-81bc-2d5603785a09
 targetscitype = meta.target_scitype
@@ -211,12 +222,6 @@ filter_julia_classifiers(meta) =
 
 # ╔═╡ 2eb78823-0a9b-436d-b723-723d7e329376
 models(filter_julia_classifiers)
-
-# ╔═╡ bd5206ab-a4f8-4bb2-b0e6-441461cc8770
-md"Find all models with \"Classifier\" in `name` (or `docstring`):"
-
-# ╔═╡ 66bd66a0-05d9-48eb-8cb0-de601961bc02
-models("Classifier")
 
 # ╔═╡ a42a2993-098f-4943-a87d-950c50fb2955
 md"Find all (supervised) models that match my data!"
@@ -296,7 +301,7 @@ subsets:
 """
 
 # ╔═╡ 5b8d30eb-bd5c-4b09-80f0-ba7781e173cf
-train, test = partition(eachindex(yIris), 0.7)
+train, test = partition(1:length(yIris), 0.7)
 
 # ╔═╡ a232a792-8692-45cc-9cbc-9a2c39793333
 md"Now we can `fit!`..."
@@ -360,13 +365,6 @@ begin
   mach3 = machine("neural_net.jlso", XIris, yIris)
   fit!(mach3)
 end
-
-# ╔═╡ 053e9e37-b923-4370-b6e1-8a766b090ecd
-md"""
-!!! note
-
-	If the retrieve operations result in an `EOFError: read end of file`, you can manually repeat the save operation and restart then the retrieve operations. Pluto seems to read the machines before they have been saved completely.
-"""
 
 # ╔═╡ b5918685-f6f7-49fd-8f4c-cb29f1b270ce
 md"""
@@ -532,14 +530,14 @@ evaluation above and add an extra measure, `brier_score`:
 
 # ╔═╡ c63ed6db-6d2a-4ee7-9b21-6d4eb642d87e
 evaluate!(mach, resampling=Holdout(fraction_train=0.7),
-          measures=[cross_entropy, brier_score])
+          measures=[cross_entropy, misclassification_rate, brier_score])
 
 # ╔═╡ f829c00b-f082-4ec4-b98c-3df1f31879bf
 md"Or applying cross-validation instead:"
 
 # ╔═╡ 727ecfae-2e87-4e05-92b7-4ceba56e97ad
 evaluate!(mach, resampling=CV(nfolds=6),
-          measures=[cross_entropy, brier_score])
+          measures=[cross_entropy, misclassification_rate, brier_score])
 
 # ╔═╡ 31359fe0-8d95-4740-b122-214de244406c
 md"""
@@ -550,7 +548,7 @@ randomized folds)
 # ╔═╡ 1383b285-59f2-4652-8a4b-c83694978e38
 e = evaluate!(mach, resampling=CV(nfolds=6, rng=123),
               repeats=3,
-              measures=[cross_entropy, brier_score])
+              measures=[cross_entropy, misclassification_rate, brier_score])
 
 # ╔═╡ 3c3b7c0f-ef92-4eeb-a8b6-f7ff516dedc4
 md"""
@@ -572,11 +570,11 @@ you might have a work-flow like this:
 let
   train, test = partition(eachindex(yIris), 0.7)
   mach = machine(model, XIris, yIris)
-  evaluate!(mach, resampling=CV(nfolds=6),
-            measures=[cross_entropy, brier_score],
-            rows=train)     # cv estimate, resampling from `train`
-  fit!(mach, rows=train)    # re-train using all of `train` observations
-  predict(mach, rows=test); # and predict missing targets
+  evaluate!(mach, resampling = CV(nfolds = 6),
+            measures = [cross_entropy, misclassification_rate, brier_score],
+            rows = train)     # cv estimate, resampling from `train`
+  fit!(mach, rows = train)    # re-train using all of `train` observations
+  predict(mach, rows = test); # and predict missing targets
 end
 
 # ╔═╡ 51f56327-7309-4aa2-b979-3458f2f26667
@@ -593,18 +591,18 @@ starts by defining a one-dimensional range object for the parameter
 """
 
 # ╔═╡ 1d65816d-d818-434d-b10e-562ce21caa04
-r = range(model, :epochs, lower=1, upper=50, scale=:log)
+r = range(model, :epochs, lower=1, upper=50, scale=:log10)
+
+# ╔═╡ 91cefb80-4c5b-4a1a-837b-47e9cebfb913
+curve = learning_curve(mach,
+                    	range = r,
+                        resampling = Holdout(fraction_train = 0.7), # (default)
+                        measure = cross_entropy)
 
 # ╔═╡ 97400000-e067-4c66-8f78-ab549ef1544e
-begin
-  curve = learning_curve(mach,
-                         range=r,
-                         resampling=Holdout(fraction_train=0.7), # (default)
-                         measure=cross_entropy)
-  
-  
+begin  
   gr(size=(490,300))
-  plt = plot(curve.parameter_values, curve.measurements)
+  plt = plot(curve.parameter_values, curve.measurements, leg = false)
   xlabel!(plt, "epochs")
   ylabel!(plt, "cross entropy on holdout set")
   savefig("learning_curve.png")
@@ -1400,9 +1398,9 @@ uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 
 [[Libffi_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "761a393aeccd6aa92ec3515e428c26bf99575b3b"
+git-tree-sha1 = "0b4a5d71f3e5200a7dff793393e09dfc2d874290"
 uuid = "e9f186c6-92d2-5b65-8a66-fee21dc1b490"
-version = "3.2.2+0"
+version = "3.2.2+1"
 
 [[Libgcrypt_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgpg_error_jll", "Pkg"]
@@ -2251,6 +2249,8 @@ version = "0.9.1+5"
 # ╟─2f1d872a-8471-4e85-b6c8-54f5ed90a964
 # ╟─ce0ec15e-a419-4517-9292-fe822525fc77
 # ╠═95d1dc5f-75d9-4297-ae5e-4b83dcbc9675
+# ╟─c2ce1680-24a7-4a9e-908f-d77bb7f9a509
+# ╠═aa58b3e3-bdda-433a-9c3d-3b151b04c0c3
 # ╟─d31909f8-f5f1-4773-8a29-32f11452654a
 # ╠═c1f7376d-6f42-497f-a5f1-151fcbe229a2
 # ╠═2640cb64-bc0e-4bca-81bc-2d5603785a09
@@ -2258,8 +2258,6 @@ version = "0.9.1+5"
 # ╟─5e706d1f-93f3-4d50-b950-fddef2a1fb10
 # ╠═7de5633e-8d59-4ad8-951b-64cb2a36c8e3
 # ╠═2eb78823-0a9b-436d-b723-723d7e329376
-# ╟─bd5206ab-a4f8-4bb2-b0e6-441461cc8770
-# ╠═66bd66a0-05d9-48eb-8cb0-de601961bc02
 # ╟─a42a2993-098f-4943-a87d-950c50fb2955
 # ╠═db2d9ba2-1fc4-4a7f-8448-4bcb089096cd
 # ╟─34feba2c-e700-423a-a012-a84240254fb6
@@ -2296,7 +2294,6 @@ version = "0.9.1+5"
 # ╠═de239414-32a8-4691-aa36-d2e8546da46a
 # ╟─2a1d3e22-d17c-452d-88a1-a2bf91434413
 # ╠═ef2282bc-db28-4d54-a1cb-54e34396a855
-# ╟─053e9e37-b923-4370-b6e1-8a766b090ecd
 # ╟─b5918685-f6f7-49fd-8f4c-cb29f1b270ce
 # ╟─9dbeeed8-d882-4e04-8037-0de5806e1a54
 # ╠═7547798a-24c9-4c5f-9961-a09632c33fb0
@@ -2342,6 +2339,7 @@ version = "0.9.1+5"
 # ╟─51f56327-7309-4aa2-b979-3458f2f26667
 # ╟─f2becd33-0b66-4b13-97e3-6677afc6ca9f
 # ╠═1d65816d-d818-434d-b10e-562ce21caa04
+# ╠═91cefb80-4c5b-4a1a-837b-47e9cebfb913
 # ╠═97400000-e067-4c66-8f78-ab549ef1544e
 # ╟─e80b6400-2c9e-4198-a8a4-a53f5149481e
 # ╟─fc268355-011e-44d5-8704-dbab8e09b4f1

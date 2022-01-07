@@ -11,8 +11,6 @@ begin
   	import Distributions
 	using ScientificTypes
 	using MLJ
-	import MLJModelInterface  # to get vers. 1.3.5
-	using MLJBase 			# to get vers. 0.19.2
 	using MLJFlux
 	using Plots
 	using Tables
@@ -803,9 +801,7 @@ CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 MLJ = "add582a8-e3ab-11e8-2d5e-e98b27df1bc7"
-MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 MLJFlux = "094fc8d1-fd35-5302-93ea-dabda2abf845"
-MLJModelInterface = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
@@ -817,9 +813,7 @@ CSV = "~0.9.11"
 DataFrames = "~1.3.1"
 Distributions = "~0.25.37"
 MLJ = "~0.17.0"
-MLJBase = "~0.19.2"
 MLJFlux = "~0.2.6"
-MLJModelInterface = "~1.3.5"
 Plots = "~1.25.4"
 PlutoUI = "~0.7.27"
 ScientificTypes = "~3.0.0"
@@ -856,9 +850,9 @@ version = "0.3.4"
 
 [[Adapt]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "9faf218ea18c51fcccaf956c8d39614c9d30fe8b"
+git-tree-sha1 = "af92965fb30777147966f58acb05da51c5616b5f"
 uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
-version = "3.3.2"
+version = "3.3.3"
 
 [[ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"

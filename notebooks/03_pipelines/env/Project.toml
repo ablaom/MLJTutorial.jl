@@ -6,3 +6,6 @@ MLJ = "add582a8-e3ab-11e8-2d5e-e98b27df1bc7"
 MLJLinearModels = "6ee0df7b-362f-4a72-a706-9e79364fb692"
 MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
 UrlDownload = "856ac37a-3032-4c1c-9122-f86d88358c8b"
+
+[compat]
+julia = "1.6"

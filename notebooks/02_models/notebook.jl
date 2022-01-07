@@ -13,7 +13,7 @@ VERSION
 
 # The following instantiates a package environment.
 
-# The package environment has been created using **Julia 1.7** and may not
+# The package environment has been created using **Julia 1.6** and may not
 # instantiate properly for other Julia versions.
 
 using Pkg

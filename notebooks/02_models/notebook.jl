@@ -66,11 +66,14 @@ schema(iris)
 # ### Step 2. Split data into input and target parts
 
 # Here's how we split the data into target and input features, which
-# is needed for MLJ supervised models. We randomize the data at the
-# same time:
+# is needed for MLJ supervised models. We can randomize the data at
+# the same time:
 
-y, X = unpack(iris, ==(:class), name->true; rng=123);
+y, X = unpack(iris, ==(:class), rng=123);
 scitype(y)
+
+# This puts the `:class` column into a vector `y`, and all remaining
+# columns into a table `X`.
 
 # Here's one way to access the documentation (at the REPL, `?unpack`
 # also works):
@@ -89,7 +92,7 @@ all_models = models()
 # If you already have an idea about the name of the model, you could
 # search by string or regex:
 
-some_models = models("LinearRegressor") # sic
+some_models = models("LinearRegressor")
 
 # Each entry contains metadata for a model whose defining code is not
 # yet loaded:
@@ -104,7 +107,7 @@ targetscitype = meta.target_scitype
 
 scitype(y) <: targetscitype
 
-# So this model won't do. Let's  find all pure julia classifiers:
+# So this model won't do. Let's find all pure julia classifiers:
 
 filter_julia_classifiers(meta) =
     AbstractVector{Finite} <: meta.target_scitype &&
@@ -239,9 +242,13 @@ yhat[1]
 
 info(model).prediction_type
 
-# **Important**:
-# - In MLJ, a model that can predict probabilities (and not just point values) will do so by default.
-# - For most probabilistic predictors, the predicted object is a `Distributions.Distribution` object, supporting the `Distributions.jl` [API](https://juliastats.org/Distributions.jl/latest/extends/#Create-a-Distribution-1) for such objects. In particular, the methods `rand`,  `pdf`, `logpdf`, `mode`, `median` and `mean` will apply, where appropriate.
+# **Important**: - In MLJ, a model that can predict probabilities (and
+# not just point values) will do so by default.  - For most
+# probabilistic predictors, the predicted object is a
+# `Distributions.Distribution` object or a
+# `CategoricalDistributions.UnivariateFinite` object (the case here)
+# which all support the following methods: `rand`, `pdf`, `logpdf`;
+# and, where appropriate: `mode`, `median` and `mean`.
 
 # So, to obtain the probability of "Iris-virginica" in the first test
 # prediction, we do
@@ -415,8 +422,7 @@ using Tables
 
 y, X, w = unpack(data,
                  ==(:a),
-                 name -> elscitype(Tables.getcolumn(data, name)) == Continuous,
-                 name -> true);
+                 name -> elscitype(Tables.getcolumn(data, name)) == Continuous);
 
 # ...attempt to guess the evaluations of the following:
 

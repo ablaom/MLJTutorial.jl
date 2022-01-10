@@ -166,12 +166,17 @@ md"## Step 2. Split data into input and target parts"
 # ╔═╡ bf7f99f5-7096-441f-879e-dc128f3db7b3
 md"""
 Here's how we split the data into target and input features, which
-is needed for MLJ supervised models. We randomize the data at the
+is needed for MLJ supervised models. We can randomize the data at the
 same time:
 """
 
 # ╔═╡ 933cc42f-6be5-4b9b-a367-9aa3c6cf34d0
-yIris, XIris = unpack(iris, ==(:class), name->true; rng=123)
+yIris, XIris = unpack(iris, ==(:class), rng=123)
+
+# ╔═╡ 8ad6eede-d717-4779-b8b2-fbca000635df
+md"""
+This puts the `:class` column into a vector `yIris`, and all remaining columns into a table `XIris`.
+"""
 
 # ╔═╡ f35ad4f4-2f4b-4a05-a9b5-48d93ef82b89
 scitype(yIris)
@@ -200,7 +205,7 @@ If you already have an idea about the name of the model, you could search by str
 """
 
 # ╔═╡ aa58b3e3-bdda-433a-9c3d-3b151b04c0c3
-some_models = models("LinearRegressor") # sic
+some_models = models("LinearRegressor")
 
 # ╔═╡ d31909f8-f5f1-4773-8a29-32f11452654a
 md"Each entry contains metadata for a model whose defining code is not yet loaded:"
@@ -457,7 +462,7 @@ info(model).prediction_type
 md"""
 **Important**:
 - In MLJ, a model that can predict probabilities (and not just point values) will do so by default.
-- For most probabilistic predictors, the predicted object is a `Distributions.Distribution` object, supporting the `Distributions.jl` [API](https://juliastats.org/Distributions.jl/latest/extends/#Create-a-Distribution-1) for such objects. In particular, the methods `rand`,  `pdf`, `logpdf`, `mode`, `median` and `mean` will apply, where appropriate.
+- For most probabilistic predictors, the predicted object is a `Distributions.Distribution` object (supporting the `Distributions.jl` [API](https://juliastats.org/Distributions.jl/latest/extends/#Create-a-Distribution-1)) or a `CategoricalDistributions.UnivariateFinite` object (the case here), which all support the follwing methods: `rand`,  `pdf`, `logpdf`; and, where appropriate: `mode`, `median` and `mean`.
 """
 
 # ╔═╡ 9653dbb8-a168-4a07-8dba-241d9b744683
@@ -689,8 +694,7 @@ data = (a = [1, 2, 3, 4],
 # ╔═╡ a1c60d89-5d61-4a26-b61c-748aec38e674
 y5, X5, w = unpack(data,
                    ==(:a),
-                   name -> elscitype(Tables.getcolumn(data, name)) == Continuous,
-                   name -> true);
+                   name -> elscitype(Tables.getcolumn(data, name)) == Continuous);
 
 # ╔═╡ b5b23e79-35ce-4857-9727-ed822e4fd85d
 md"...attempt to guess the evaluations of the following (uncomment to see the results):"
@@ -2258,6 +2262,7 @@ version = "0.9.1+5"
 # ╟─992ca8fb-1a20-4664-abd3-cb77d7a79683
 # ╟─bf7f99f5-7096-441f-879e-dc128f3db7b3
 # ╠═933cc42f-6be5-4b9b-a367-9aa3c6cf34d0
+# ╟─8ad6eede-d717-4779-b8b2-fbca000635df
 # ╠═f35ad4f4-2f4b-4a05-a9b5-48d93ef82b89
 # ╟─b081e89d-3ded-4061-bf32-94657e65284e
 # ╠═325b5554-5521-48da-9afd-65a5b5facac9

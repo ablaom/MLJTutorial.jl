@@ -174,7 +174,7 @@ begin
 end
 
 # ╔═╡ 348ff9a2-89ab-434a-9afd-65a5b5facac9
-yHouse, XHouse = unpack(house, ==(:price), name -> true, rng=123);
+yHouse, XHouse = unpack(house, ==(:price), rng=123);
 
 # ╔═╡ c7e83ce7-f067-4049-b6c8-54f5ed90a964
 md"Instantiate the unsupervised model (transformer):"
@@ -248,6 +248,9 @@ our data.  A model that will do this is `PCA` from
 # ╔═╡ 1e780939-abf0-4203-97a7-88e3af4f10ee
 PCA = @load PCA
 
+# ╔═╡ 09ece795-72e1-4240-a833-1b098ab27d3f
+reducer = PCA()
+
 # ╔═╡ 8e76b5a5-7c80-4684-b372-8c9866e51852
 md"""
 Now, rather simply repeating the work-flow above, applying the new
@@ -255,33 +258,25 @@ transformation to `XHouseCont`, we can combine both the encoding and the
 dimension-reducing models into a single model, known as a
 *pipeline*. While MLJ offers a powerful interface for composing
 models in a variety of ways, we'll stick to these simplest class of
-composite models for now. The simplest "hard-wired" composite type is the `Pipeline` type, which is for linear (non-branching) sequences of models. At most one of these can be a supervised model (which often appears last):
+composite models for now. The simplest way to construct a pipeline is using the Julia's `|>` syntax:
 """
 
 # ╔═╡ 5ed77309-afa6-4c94-88c0-761fe6b5a5d4
-pipe0 = Pipeline(ContinuousEncoder, PCA)
+pipe1 = encoder |> reducer
 
 # ╔═╡ d45ff6ec-2dd6-4a9c-a97e-79337b0be5c8
 md"""
-Notice that component models now appear as *hyper-parameters* of the pipeline model,  and these have automatically generated field names (which can be overwritten, as in `Pipeline(enc=ContinuousEncoder, reducer=PCA)`). There is also an "arrow" syntax for constructing pipelines. The following defines the same pipeline as above:
+Notice that the model `pipe` has other models as hyperparameters (with names automatically generated based on the mode type name). The hyperparameters of the component models are are now nested, but we can still access them:
 """
 
-# ╔═╡ 380a3bb6-535d-4f4b-8e7c-18148f7cc0b8
-pipe1 = ContinuousEncoder |> PCA
+# ╔═╡ 4a0b7419-d9ae-4570-b9b6-029e155045c0
+pipe1.pca.pratio
 
-# ╔═╡ eee1bcc8-ff0b-4238-950d-551d88aab415
-md"""
-!!! note 
-
-    In the former macro-based version this was 
-    
-    `pipe1 = @pipeline encoder reducer`, 
-
-    where `encoder` was instance of `ContinuousEncoder` and `reducer` an instance of `PCA`.
-"""
+# ╔═╡ 3958b3df-51cd-4920-8f28-382c4a088a8f
+pipe1.pca.pratio = 0.85
 
 # ╔═╡ e68044d8-42b4-49cd-86cf-35420d9e6995
-md"The new model behaves like any other transformer:"
+md"The pipeline model behaves like any other transformer:"
 
 # ╔═╡ 26d649a8-3d96-4479-a29a-8d0445351914
 begin
@@ -297,19 +292,11 @@ md"Want to combine this pre-processing with ridge regression?"
 # ╔═╡ c8c960f0-2a46-42c2-8754-8bd531c8db8e
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 
+# ╔═╡ 4e327bb5-8abc-4e68-9832-d4c16415df30
+rgs = RidgeRegressor()
+
 # ╔═╡ f96a84ec-1cc0-400c-9493-9c2a2e3c5b51
-pipe2 = pipe1 |> RidgeRegressor
-
-# ╔═╡ e9a2070b-41b5-41bd-9994-5929469b8436
-md"""
-!!! note
-
-    In the former macro-based version this was
-
-    `pipe2 = @pipeline encoder reducer rgs`
-
-    where `rgs` was an instance of `RidgeRegressor`.
-"""
+pipe2 = pipe1 |> rgs
 
 # ╔═╡ fbb24be1-fe01-4489-b5fa-cb79ebf595ef
 md"""
@@ -381,8 +368,8 @@ Next, suppose that instead of using the raw `:price` as the
 training target, we want to use the log-price (a common practice in
 dealing with house price data). However, suppose that we still want
 to report final *predictions* on the original linear scale (and use
-these for evaluation purposes). Then we supply appropriate functions
-to key-word arguments `target` and `inverse`.
+these for evaluation purposes). Then we wrap our unsupervised model using `TransformedTargetModel`, which has
+the key-word arguments `target` and `inverse`.
 """
 
 # ╔═╡ f71e4957-b6aa-480f-8acf-0c1d237fe9f9
@@ -399,8 +386,11 @@ end
 # ╔═╡ 0398adfe-721a-4b97-910b-f8a9a217eff2
 md"Now for the new pipeline:"
 
+# ╔═╡ 85f71232-0ec4-40a8-81b7-e11a56b42313
+rgs_log = TransformedTargetModel(rgs, target = log, inverse = exp)
+
 # ╔═╡ d1af0582-9074-4355-9d03-7ceec3db5d7f
-pipe3 = @pipeline ContinuousEncoder PCA RidgeRegressor target=log inverse=exp
+pipe3 = pipe1 |> rgs_log
 
 # ╔═╡ 06fac83d-ec17-4503-b3b1-670e16d4251a
 mach5 = machine(pipe3, XHouse, yHouse)
@@ -429,8 +419,11 @@ box = UnivariateBoxCoxTransformer(n=20)
 # ╔═╡ 7b59b396-daac-4dea-bc51-54fafe346cd8
 stand = Standardizer()
 
+# ╔═╡ 2efdfa9c-8e70-4c09-b9f9-85c873edc16a
+rgs_box = TransformedTargetModel(rgs, target=box)
+
 # ╔═╡ dcf51860-a300-453e-87fc-345e741f94d0
-pipe4 = @pipeline ContinuousEncoder PCA RidgeRegressor target=box
+pipe4 = pipe1 |> rgs_box
 
 # ╔═╡ c54f41ee-75e6-4181-8de7-d194004c9700
 mach6 = machine(pipe4, XHouse, yHouse)
@@ -439,7 +432,7 @@ mach6 = machine(pipe4, XHouse, yHouse)
 evaluate!(mach6, measure = mae)
 
 # ╔═╡ e073f936-f2a0-4609-83fe-bd8afb87cfc1
-pipe4.target = stand
+pipe4.transformed_target_model_deterministic.target = stand
 
 # ╔═╡ 91cca9cb-db5f-4d9f-983b-3f2b20444662
 evaluate!(mach6, measure = mae)
@@ -484,7 +477,7 @@ begin
           :outcome               => Multiclass,
           :cp_data               => Multiclass);
   
-  yHorse, XHorse = unpack(horse, ==(:outcome), name -> true);
+  yHorse, XHorse = unpack(horse, ==(:outcome));
   schema(XHorse)
 end
 
@@ -1526,17 +1519,18 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═b454845b-3b3b-4c46-a012-a84240254fb6
 # ╟─28cf44d4-3f4b-485f-bbdd-9799f7bb2e60
 # ╠═1e780939-abf0-4203-97a7-88e3af4f10ee
+# ╠═09ece795-72e1-4240-a833-1b098ab27d3f
 # ╟─8e76b5a5-7c80-4684-b372-8c9866e51852
 # ╠═5ed77309-afa6-4c94-88c0-761fe6b5a5d4
 # ╟─d45ff6ec-2dd6-4a9c-a97e-79337b0be5c8
-# ╠═380a3bb6-535d-4f4b-8e7c-18148f7cc0b8
-# ╟─eee1bcc8-ff0b-4238-950d-551d88aab415
+# ╠═4a0b7419-d9ae-4570-b9b6-029e155045c0
+# ╠═3958b3df-51cd-4920-8f28-382c4a088a8f
 # ╟─e68044d8-42b4-49cd-86cf-35420d9e6995
 # ╠═26d649a8-3d96-4479-a29a-8d0445351914
 # ╟─7f60c74e-b708-46f4-be65-28d0fcca50a8
 # ╠═c8c960f0-2a46-42c2-8754-8bd531c8db8e
+# ╠═4e327bb5-8abc-4e68-9832-d4c16415df30
 # ╠═f96a84ec-1cc0-400c-9493-9c2a2e3c5b51
-# ╟─e9a2070b-41b5-41bd-9994-5929469b8436
 # ╟─fbb24be1-fe01-4489-b5fa-cb79ebf595ef
 # ╠═958f9a9a-23d5-446b-aa54-f7a086cb0264
 # ╠═ea64dbb5-963a-4da4-91c5-524da38aa391
@@ -1556,6 +1550,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╟─f71e4957-b6aa-480f-8acf-0c1d237fe9f9
 # ╠═dc119abd-72a1-4781-811d-5998beb56406
 # ╟─0398adfe-721a-4b97-910b-f8a9a217eff2
+# ╠═85f71232-0ec4-40a8-81b7-e11a56b42313
 # ╠═d1af0582-9074-4355-9d03-7ceec3db5d7f
 # ╠═06fac83d-ec17-4503-b3b1-670e16d4251a
 # ╠═9335bbb6-7169-47a2-8ccb-85c839a68433
@@ -1563,6 +1558,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╟─4fd0807d-61e5-4b4b-a1cb-54e34396a855
 # ╠═1957f387-aee4-4c08-9838-327b915082f8
 # ╠═7b59b396-daac-4dea-bc51-54fafe346cd8
+# ╠═2efdfa9c-8e70-4c09-b9f9-85c873edc16a
 # ╠═dcf51860-a300-453e-87fc-345e741f94d0
 # ╠═c54f41ee-75e6-4181-8de7-d194004c9700
 # ╠═cb026565-6c5c-4f7a-91b6-417cfea74d41

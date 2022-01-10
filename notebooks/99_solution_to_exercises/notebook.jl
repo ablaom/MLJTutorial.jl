@@ -220,10 +220,10 @@ err_forest = evaluate!(mach, resampling=Holdout(),
 
 KMeans = @load KMeans pkg=Clustering
 EvoTreeClassifier = @load EvoTreeClassifier
-pipe = @pipeline(Standardizer,
-                 ContinuousEncoder,
-                 KMeans(k=10),
-                 EvoTreeClassifier(nrounds=50))
+pipe = Standardizer |>
+    ContinuousEncoder |>
+    KMeans(k=10) |>
+    EvoTreeClassifier(nrounds=50)
 
 # (b)
 
@@ -283,11 +283,11 @@ plt #!md
 
 # From the question statement:
 
-y, X = unpack(house, ==(:price), name -> true, rng=123); # from Exercise 3
+y, X = unpack(house, ==(:price), rng=123); # from Exercise 3
 
 EvoTreeRegressor = @load EvoTreeRegressor
 tree_booster = EvoTreeRegressor(nrounds = 70)
-model = @pipeline ContinuousEncoder tree_booster
+model = ContinuousEncoder |> tree_booster
 
 r2 = range(model,
            :(evo_tree_regressor.nbins),

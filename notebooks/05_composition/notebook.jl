@@ -35,11 +35,11 @@ Pkg.instantiate()
 # > 1. Learn how to build a prototypes of a composite model, called a *learning network*
 # > 2. Learn how to use the `@from_network` macro to export a learning network as a new stand-alone model type
 
-# `@pipeline` is great for composing models in an unbranching
+# Pipelines are great for composing models in an unbranching
 # sequence. Another built-in type of model composition is a model
 # *stack*; see
 # [here](https://alan-turing-institute.github.io/MLJ.jl/dev/model_stacking/#Model-Stacking)
-# for details. For other complicated model compositions you'll want to
+# for details. For other more complicated model compositions you'll want to
 # use MLJ's generic model composition syntax. There are two main
 # steps:
 
@@ -60,7 +60,7 @@ Pkg.instantiate()
 
 using MLJ
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
-pipe = @pipeline Standardizer LogisticClassifier;
+pipe = Standardizer |> LogisticClassifier;
 
 # using the generic syntax.
 
@@ -253,11 +253,8 @@ evaluate!(mach,
 # - From Data Science Tutorials:
 #     - [Learning Networks](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/learning-networks/)
 #     - [Learning Networks 2](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/learning-networks-2/)
-
 #     - [Stacking](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/stacking/): an advanced example of model composition
-
 #     - [Finer Control](https://alan-turing-institute.github.io/MLJ.jl/dev/composing_models/#Method-II:-Finer-control-(advanced)-1):
 #       exporting learning networks without a macro for finer control
 
 # <a id='solutions-to-exercises'></a>
-

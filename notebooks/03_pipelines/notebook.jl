@@ -75,7 +75,8 @@ inverse_transform(mach, xhat) ≈ x
 
 # First, we reload the data and fix the scitypes (Exercise 3):
 
-using UrlDownload, CSV, DataFrames
+using UrlDownload, CSV
+import DataFrames
 house_csv = urldownload("https://raw.githubusercontent.com/ablaom/"*
                         "MachineLearningInJulia2020/for-MLJ-version-0.16/"*
                         "data/house.csv");
@@ -86,7 +87,7 @@ schema(house)
 
 #-
 
-y, X = unpack(house, ==(:price), name -> true, rng=123);
+y, X = unpack(house, ==(:price), rng=123);
 
 # Instantiate the unsupervised model (transformer):
 
@@ -145,15 +146,20 @@ reducer = PCA()
 # dimension-reducing models into a single model, known as a
 # *pipeline*. While MLJ offers a powerful interface for composing
 # models in a variety of ways, we'll stick to these simplest class of
-# composite models for now. The easiest way to construct them is using
-# the `@pipeline` macro:
+# composite models for now. The simplest way to construct a pipeline
+# is using the Julia's `|>` syntax:
 
-pipe = @pipeline encoder reducer
+pipe = encoder |> reducer
 
-# Notice that `pipe` is an *instance* of an automatically generated
-# type (called `Pipeline<some digits>`).
+# Notice that the model `pipe` has other models as hyperparameters
+# (with names automatically generated based on the mode type
+# name). The hyperparameters of the component models are are now
+# *nested*, but we can still access them:
 
-# The new model behaves like any other transformer:
+@show pipe.pca.pratio
+pipe.pca.pratio = 0.85
+
+# The pipeline model behaves like any other transformer:
 
 mach = machine(pipe, X)
 fit!(mach)
@@ -164,7 +170,7 @@ schema(Xsmall)
 
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 rgs = RidgeRegressor()
-pipe2 = @pipeline encoder reducer rgs
+pipe2 = pipe |> rgs
 
 # Now our pipeline is a supervised model, instead of a transformer,
 # whose performance we can evaluate:
@@ -209,12 +215,13 @@ report(mach).pca
 
 # ### Incorporating target transformations
 
-# Next, suppose that instead of using the raw `:price` as the
-# training target, we want to use the log-price (a common practice in
-# dealing with house price data). However, suppose that we still want
-# to report final *predictions* on the original linear scale (and use
-# these for evaluation purposes). Then we supply appropriate functions
-# to key-word arguments `target` and `inverse`.
+# Next, suppose that instead of using the raw `:price` as the training
+# target, we want to use the log-price (a common practice in dealing
+# with house price data). However, suppose that we still want to
+# report final *predictions* on the original linear scale (and use
+# these for evaluation purposes). Then we wrap our supervised model
+# using `TransformedTargetModel`, which has to key-word arguments
+# `target` and `inverse`.
 
 # First we'll overload `log` and `exp` for broadcasting:
 Base.log(v::AbstractArray) = log.(v)
@@ -222,7 +229,9 @@ Base.exp(v::AbstractArray) = exp.(v)
 
 # Now for the new pipeline:
 
-pipe3 = @pipeline encoder reducer rgs target=log inverse=exp
+rgs_log = TransformedTargetModel(rgs, target=log, inverse=exp)
+
+pipe3 = pipe |> rgs_log
 mach = machine(pipe3, X, y)
 evaluate!(mach, measure=mae)
 
@@ -240,13 +249,14 @@ evaluate!(mach, measure=mae)
 box = UnivariateBoxCoxTransformer(n=20)
 stand = Standardizer()
 
-pipe4 = @pipeline encoder reducer rgs target=box
+rgs_box = TransformedTargetModel(rgs, target=box)
+pipe4 = pipe |> rgs_box
 mach = machine(pipe4, X, y)
 evaluate!(mach, measure=mae)
 
 #-
 
-pipe4.target = stand
+pipe4.transformed_target_model_deterministic.target = stand
 evaluate!(mach, measure=mae)
 
 
@@ -280,7 +290,7 @@ coerce!(horse,
         :outcome               => Multiclass,
         :cp_data               => Multiclass);
 
-y, X = unpack(horse, ==(:outcome), name -> true);
+y, X = unpack(horse, ==(:outcome));
 schema(X)
 
 # (a) Define a pipeline that:

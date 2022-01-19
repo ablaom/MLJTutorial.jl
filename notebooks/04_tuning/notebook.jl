@@ -57,13 +57,13 @@ coerce!(horse,
         :outcome               => Multiclass,
         :cp_data               => Multiclass);
 
-y, X = unpack(horse, ==(:outcome), name -> true);
+y, X = unpack(horse, ==(:outcome));
 schema(X)
 
 # Now for a pipeline model:
 
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
-model = @pipeline Standardizer ContinuousEncoder LogisticClassifier
+model = Standardizer |> ContinuousEncoder |> LogisticClassifier
 mach = machine(model, X, y)
 
 #-
@@ -242,7 +242,7 @@ house_csv = urldownload("https://raw.githubusercontent.com/ablaom/"*
 house = DataFrames.DataFrame(house_csv)
 coerce!(house, autotype(house_csv));
 coerce!(house, Count => Continuous, :zipcode => Multiclass);
-y, X = unpack(house, ==(:price), name -> true, rng=123);
+y, X = unpack(house, ==(:price), rng=123);
 schema(X)
 
 # Your task will be to tune the following pipeline regression model,
@@ -250,7 +250,7 @@ schema(X)
 
 EvoTreeRegressor = @load EvoTreeRegressor
 tree_booster = EvoTreeRegressor(nrounds = 70)
-model = @pipeline ContinuousEncoder tree_booster
+model = ContinuousEncoder |> tree_booster
 
 # (a) Construct a bounded range `r1` for the `evo_tree_booster`
 # parameter `max_depth`, varying between 1 and 12.

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.4
+# v0.17.5
 
 using Markdown
 using InteractiveUtils
@@ -132,7 +132,7 @@ md"To warm up, we'll do the equivalent of"
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
 
 # ╔═╡ cebd7290-ff85-4ebd-a89d-0aa1492fb1e0
-pipe = Standardizer |> LogisticClassifier
+pipe = Standardizer |> LogisticClassifier(lambda = 0.001)
 
 # ╔═╡ 9e3a5fcf-8959-440c-abd3-cb77d7a79683
 md"using the generic syntax."
@@ -154,7 +154,7 @@ prediction:
 # ╔═╡ 48692370-0c4b-4080-9afd-65a5b5facac9
 begin
   stand = Standardizer();
-  linear = LogisticClassifier();
+  linear = LogisticClassifier(lambda = 0.001);
   
   mach1 = machine(stand, X);
   fit!(mach1);
@@ -178,8 +178,8 @@ begin
   X_node = source(X)  # or X = source() if not testing
   y_node = source(y)  # or y = source()
   
-  # stand = Standardizer(); 		# already defined
-  # linear = LogisticClassifier(); 	# already defined
+  # stand = Standardizer(); 						# already defined in step 0
+  # linear = LogisticClassifier(lambda = 0.001); 	# already defined in step 0
   
   mach1_node = machine(stand, X_node);
   Xstand_node = transform(mach1_node, X_node);

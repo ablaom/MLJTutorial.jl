@@ -60,7 +60,7 @@ Pkg.instantiate()
 
 using MLJ
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
-pipe = Standardizer |> LogisticClassifier;
+pipe = Standardizer |> LogisticClassifier(lambda=0.001);
 
 # using the generic syntax.
 
@@ -74,7 +74,7 @@ pretty(X)
 # prediction:
 
 stand = Standardizer();
-linear = LogisticClassifier();
+linear = LogisticClassifier(lambda=0.001);
 
 mach1 = machine(stand, X);
 fit!(mach1);
@@ -94,7 +94,7 @@ X = source(X)  # or X = source() if not testing
 y = source(y)  # or y = source()
 
 stand = Standardizer();
-linear = LogisticClassifier();
+linear = LogisticClassifier(lambda=0.001);
 
 mach1 = machine(stand, X);
 Xstand = transform(mach1, X);

@@ -11,6 +11,7 @@ Learning in Julia)
 Based on tutorials originally part of a 3.5 hour [online
 workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
+
 #### [Options for running the tutorials](options.md)
 
 
@@ -68,4 +69,6 @@ solutions.
 - [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)
 - [Data Science Tutorials in Julia](https://juliaai.github.io/DataScienceTutorials.jl/)
 
+### Credits
 
+The author and maintainer of this repository is @ablaom. Pluto notebooks have been adapted from the julia scripts by @roland-KA who is also a maintainer.

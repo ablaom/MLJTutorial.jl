@@ -1,0 +1,11 @@
+[workspace]
+projects = ["src/notebooks/01_data_representation", "src/notebooks/02_models", "src/notebooks/03_pipelines", "src/notebooks/04_tuning", "src/notebooks/05_composition", "src/notebooks/99_solution_to_exercises", "src/notebooks/lightning_tour"]
+
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+DocumenterCodeBlocks = "b6400b83-267f-4b55-9fd8-bffc853bdfd8"
+NotebookManagementTools = "5f7a4451-2f7d-477b-8022-3bb7ed7b80c0"
+
+[compat]
+Documenter = "1"
+DocumenterCodeBlocks = "1.1"

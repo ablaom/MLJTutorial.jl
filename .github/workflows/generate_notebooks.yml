@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # get entire commit history, needed for changed-files to work
 
@@ -85,8 +85,9 @@ jobs:
 
             **Instructions**
 
-            **Close and immediately re-open this pull request** to regenerate documentation.
-            If successful, merge this pull request to trigger deployment of the new docs to gh-pages.
+            **If given the option to execute CI, do so. Otherwise, close and immediately
+            re-open this pull request** to regenerate documentation.  If successful, merge
+            this pull request to trigger deployment of the new docs to gh-pages.
 
             You can check repository "Actions" to check when deployment is complete.
             You should see: ✅ **pages build and deployment**

@@ -8,4 +8,3 @@ NotebookManagementTools = "5f7a4451-2f7d-477b-8022-3bb7ed7b80c0"
 
 [compat]
 Documenter = "1"
-DocumenterCodeBlocks = "1.1"

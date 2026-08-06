@@ -1,4 +1,4 @@
-using Documenter, DocumenterCodeBlocks
+using Documenter
 
 const REPO_NAME = "MLJTutorials.jl"
 const  REPO = Remotes.GitHub("ablaom", REPO_NAME)

@@ -289,23 +289,22 @@ EvoTreeRegressor = @load EvoTreeRegressor
 tree_booster = EvoTreeRegressor(nrounds = 70)
 model = ContinuousEncoder |> tree_booster
 
-r2 = range(model,
-           :(evo_tree_regressor.nbins),
-           lower = 2.5,
-           upper= 7.5, scale=x->2^round(Int, x))
+r2 = range(model, :(evo_tree_regressor.colsample), lower = 0.5, upper=1.0)
 
 # (a)
 
 r1 = range(model, :(evo_tree_regressor.max_depth), lower=1, upper=12)
 
-# (c)
+# (b)
 
-tuned_model = TunedModel(model=model,
-                         ranges=[r1, r2],
-                         resampling=Holdout(),
-                         measures=mae,
-                         tuning=RandomSearch(rng=123),
-                         n=40)
+tuned_model = TunedModel(
+    model=model,
+    ranges=[r1, r2],
+    resampling=Holdout(),
+    measures=mae,
+    tuning=RandomSearch(rng=123),
+    n=40,
+)
 
 tuned_mach = machine(tuned_model, X, y) |> fit!
 plt = plot(tuned_mach)

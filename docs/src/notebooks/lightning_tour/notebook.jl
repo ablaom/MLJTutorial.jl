@@ -1,24 +1,12 @@
-# # Lightning tour of MLJ
+# # Lightning Tour of MLJ
 
-# *For a more elementary introduction to MLJ, see [Getting
-# Started](https://alan-turing-institute.github.io/MLJ.jl/dev/getting_started/).*
-
-# Install required packages (beginners needn't worry about
-# understanding this cell):
-
-using Pkg
-Pkg.activate("env")
-Pkg.instantiate()
-
-# In MLJ a *model* is just a container for hyper-parameters, and that's
-# all. Here we will apply several kinds of model composition before
-# binding the resulting "meta-model" to data in a *machine* for
-# evaluation, using cross-validation.
+# In MLJ a *model* is just a container for hyper-parameters, and that's all. Here we will
+# apply several kinds of model composition before binding the resulting "meta-model" to
+# data in a *machine* for evaluation, using cross-validation.
 
 # Loading and instantiating a gradient tree-boosting model:
 
 using MLJ
-MLJ.color_off()
 
 Booster = @load EvoTreeRegressor # loads code defining a model type
 booster = Booster(max_depth=2)   # specify hyper-parameter at construction
@@ -38,18 +26,19 @@ booster
 # using the `NumberSinceBest(3)` criterion, as applied to an
 # out-of-sample `l1` loss:
 
-using MLJIteration
-iterated_booster = IteratedModel(model=booster,
-                                 resampling=Holdout(fraction_train=0.8),
-                                 controls=[Step(2), NumberSinceBest(3), NumberLimit(300)],
-                                 measure=l1,
-                                 retrain=true)
+iterated_booster = IteratedModel(
+    model=booster,
+    resampling=Holdout(fraction_train=0.8),
+    controls=[Step(2), NumberSinceBest(3), NumberLimit(300)],
+    measure=l1,
+    retrain=true,
+)
 
 # ### Composition 2: Preprocess the input features
 
 # Combining the model with categorical feature encoding:
 
-pipe = @pipeline ContinuousEncoder iterated_booster
+pipe = ContinuousEncoder |> iterated_booster
 
 
 # ### Composition 3: Wrapping the model to make it "self-tuning"
@@ -57,39 +46,61 @@ pipe = @pipeline ContinuousEncoder iterated_booster
 # First, we define a hyper-parameter range for optimization of a
 # (nested) hyper-parameter:
 
-max_depth_range = range(pipe,
-                        :(deterministic_iterated_model.model.max_depth),
-                        lower = 1,
-                        upper = 10)
+max_depth_range = range(
+    pipe,
+    :(deterministic_iterated_model.model.max_depth),
+    lower = 1,
+    upper = 10,
+)
 
-# Now we can wrap the pipeline model in an optimization strategy to make
-# it "self-tuning":
+# Now we can wrap the pipeline model in an optimization strategy to make it "self-tuning":
 
-self_tuning_pipe = TunedModel(model=pipe,
-                              tuning=RandomSearch(),
-                              ranges = max_depth_range,
-                              resampling=CV(nfolds=3, rng=456),
-                              measure=l1,
-                              acceleration=CPUThreads(),
-                              n=50)
+self_tuning_pipe = TunedModel(
+    model=pipe,
+    tuning=RandomSearch(),
+    ranges = max_depth_range,
+    resampling=CV(nfolds=3, rng=456),
+    measure=l1,
+    acceleration=CPUThreads(),
+    n=50,
+)
 
 # ### Binding to data and evaluating performance
 
-# Loading a selection of features and labels from the Ames
-# House Price dataset:
+# Generating some synthetic data:
 
 X, y = make_regression();
 
-# Binding the "self-tuning" pipeline model to data in a *machine* (which
-# will additionally store *learned* parameters):
+# Binding the "self-tuning" pipeline model to data in a *machine* (which will additionally
+# store *learned* parameters):
 
 mach = machine(self_tuning_pipe, X, y)
 
+# Fit and predict:
 
-# Evaluating the "self-tuning" pipeline model's performance using 5-fold
+fit!(mach, rows=1:60)
+yhat = predict(mach, rows=61:100)
+first(yhat, 3)
+
+# Evaluating the "self-tuning" pipeline model's performance using all data and 5-fold
 # cross-validation (implies multiple layers of nested resampling):
 
-evaluate!(mach,
-          measures=[l1, l2],
-          resampling=CV(nfolds=5, rng=123),
-          acceleration=CPUThreads())
+evaluate!(
+    mach,
+    measures=[l1, rsquared],
+    resampling=CV(nfolds=5, rng=123),
+    acceleration=CPUThreads(),
+)
+
+# Compare to a dummy model:
+
+evaluations = evaluate(
+    ["booster" => self_tuning_pipe, "dummy" => ConstantRegressor()],
+    X,
+    y;
+    measures=[l1, rsquared],
+    resampling=CV(nfolds=5, rng=123),
+    acceleration=CPUThreads(),
+)
+
+describe.(evaluations) |> pretty

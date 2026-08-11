@@ -19,13 +19,18 @@ workshop](https://github.com/ablaom/MachineLearningInJulia2020). Updated August 
 
 ## The tutorials
 
-- [1. Data Representation](@ref)
-- [2. Models](@ref)
-- [3. Pipelines](@ref)
-- [4. Tuning](@ref)
-- [5. Composition](@ref)
+### Basic
+
+- [Tutorial 1. Data Representation](@ref)
+- [Tutorial 2. Selecting, Training and Evaluating Models](@ref)
+- [Tutorial 3. Transformers and Pipelines](@ref)
+
+### Advanced
+
+- [Tutorial 4. Tuning hyperparameters](@ref)
+- [Tutorial 5. Composition](@ref)
 - [Solutions to Exercises](@ref)
-- [Lightning Tour](@ref)
+- [Lightning Tour of MLJ](@ref)
 
 ## Running tutorial code for yourself
 

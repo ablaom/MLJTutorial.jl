@@ -1,47 +1,21 @@
-# # Machine Learning in Julia (continued)
+# # Tutorial 5. Advanced Model Composition
 
-# An introduction to the
-# [MLJ](https://alan-turing-institute.github.io/MLJ.jl/stable/)
-# toolbox.
-
-
-# ### Set-up
-
-# Inspect Julia version:
-
-VERSION
-
-# The following instantiates a package environment.
-
-# The package environment has been created using **Julia 1.6** and may not
-# instantiate properly for other Julia versions.
-
-using Pkg
-Pkg.activate("env")
-Pkg.instantiate()
-
-
-# ## General resources
-
-# - [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
-# - [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
-# - [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)
-# - [Data Science Tutorials in Julia](https://juliaai.github.io/DataScienceTutorials.jl/)
-
-
-# ## Part 5 - Advanced Model Composition
+# !!! warning
+#
+#     This is an advanced MLJ feature. For extensive documentation and further examples,
+#     see [the manual](https://juliaai.github.io/MLJ.jl/dev/learning_networks/).
 
 # > **Goals:**
 # > 1. Learn how to build a prototypes of a composite model, called a *learning network*
 # > 2. Learn how to use the `@from_network` macro to export a learning network as a new stand-alone model type
 
-# Pipelines are great for composing models in an unbranching
-# sequence. Another built-in type of model composition is a model
-# *stack*; see
-# [here](https://alan-turing-institute.github.io/MLJ.jl/dev/model_stacking/#Model-Stacking)
-# for details. For other more complicated model compositions you'll want to
-# use MLJ's generic model composition syntax. There are two main
-# steps:
+# Pipelines are great for composing models in an unbranching sequence. Another built-in
+# type of model composition is a model *stack*; see
+# [here](https://juliaai.github.io/MLJ.jl/dev/model_stacking/#Model-Stacking) for
+# details. For other more complicated model compositions you'll want to use MLJ's generic
+# model composition syntax.
+
+# There are two main steps:
 
 # - **Prototype** the composite model by building a *learning
 #   network*, which can be tested on some (dummy) data as you build
@@ -69,14 +43,13 @@ pipe = Standardizer |> LogisticClassifier(lambda=0.001);
 X, y = make_blobs(5, 3)
 pretty(X)
 
-# **Step 0** - Proceed as if you were combining the models "by hand",
-# using all the data available for training, transforming and
-# prediction:
+# **Step 0** - Proceed as if you were combining the models "by hand", using all the data
+# available for training, transforming and prediction:
 
-stand = Standardizer();
+standardizer = Standardizer();
 linear = LogisticClassifier(lambda=0.001);
 
-mach1 = machine(stand, X);
+mach1 = machine(standardizer, X);
 fit!(mach1);
 Xstand = transform(mach1, X);
 
@@ -86,17 +59,17 @@ yhat = predict(mach2, Xstand)
 
 # **Step 1** - Edit your code as follows:
 
-# - pre-wrap the data in `Source` nodes
+# - wrap the data in `Source` nodes
 
 # - delete the `fit!` calls
 
 X = source(X)  # or X = source() if not testing
 y = source(y)  # or y = source()
 
-stand = Standardizer();
+standardizer = Standardizer();
 linear = LogisticClassifier(lambda=0.001);
 
-mach1 = machine(stand, X);
+mach1 = machine(standardizer, X);
 Xstand = transform(mach1, X);
 
 mach2 = machine(linear, Xstand, y);
@@ -113,13 +86,13 @@ Xstand() |> pretty
 
 #-
 
-fit!(yhat);
+fit!(yhat)
 yhat()
 
 # The node `yhat` is the "descendant" (in an associated DAG we have
 # defined) of a unique source node:
 
-sources(yhat)
+origins(yhat)
 
 #-
 
@@ -132,129 +105,179 @@ yhat(Xnew)
 
 # **Step 2** - Export the learning network as a new stand-alone model type
 
-# Now, somewhat paradoxically, we can wrap the whole network in a
-# special machine - called a *learning network machine* - before have
-# defined the new model type. Indeed doing so is a necessary step in
-# the export process, for this machine will tell the export macro:
+# We start by defining a new model type for our composite. We subtype
+# `ProbabilisticNetworkComposite` because our composite is to be a probabilistic
+# predictor. If it were a deterministic predictor, we would use
+# `DeterminisiticNetworkComposite` instead. There is also a `UnsupervisedNetworkComposite`
+# for transformers.
 
-# - what kind of model the composite will be (`Deterministic`,
-#   `Probabilistic` or `Unsupervised`)a
+mutable struct YourPipe <: ProbabilisticNetworkComposite
+    standardizer
+    classifier
+end
 
-# - which source nodes are input nodes and which are for the target
+# Next, we make our learning network above generic by substituting each model instance
+# with the corresponding symbol representing a property (field) of the new model struct:
 
-# - which nodes correspond to each operation (`predict`, `transform`,
-#   etc) that we might want to define
+mach1 = machine(:standardizer, X);
+Xstand = transform(mach1, X);
 
-surrogate = Probabilistic()     # a model with no fields!
-mach = machine(surrogate, X, y; predict=yhat)
+mach2 = machine(:classifier, Xstand, y);
+yhat = predict(mach2, Xstand)
 
-# Although we have no real need to use it, this machine behaves like
-# you'd expect it to:
+# Incidentally, this network can be used as before except we must provide an instance of
+# `YourPipe` in our fit! calls, to indicate which actual models replace the symbols:
 
-Xnew, _ = make_blobs(2, 3)
+your_pipe = YourPipe(standardizer, linear)
+fit!(yhat, composite=your_pipe)
+
+# In this case `:standardizer` is being substituted by `standardizer` and :classifier by
+# `linear` in training.
+
+# The final step is to wrap our learning network code in a method called `prefit`
+# dispatched on `YourPipe`. This method returns a "learning network interface" which is a
+# named tuple telling the method which node of the network returns predictions for the
+# composite model.
+
+import MLJ.MLJBase
+function MLJBase.prefit(composite::YourPipe, verbosity, X, y)
+    ## the learning network from above:
+    X = source(X)
+    y = source(y)
+    mach1 = machine(:standardizer, X);
+    Xstand = transform(mach1, X);
+    mach2 = machine(:classifier, Xstand, y);
+    yhat = predict(mach2, Xstand)
+
+    verbosity > 0 && @info "I'm a noisy fellow!"
+
+    ## return "learning network interface":
+    return (; predict=yhat)
+end
+
+# Instantiating and training on some new data:
+
+pipe = YourPipe(standardizer, linear)
+X, y = @load_iris;   # built-in data set
+mach = machine(pipe, X, y)
 fit!(mach)
-predict(mach, Xnew)
+
+# The learned parameters and report (where non-empty) for each component model are
+# accessible:
+
+fitted_params(mach).classifier.coefs
 
 #-
 
-# Now we create a new model type using a Julia `struct` definition
-# appropriately decorated:
+report(mach).standardizer
 
-@from_network mach begin
-    mutable struct YourPipe
-        standardizer = stand
-        classifier = linear::Probabilistic
-    end
-end
+# Component models can be swapped out for new ones:
 
-# Instantiating and evaluating on some new data:
-
-pipe = YourPipe()
-X, y = @load_iris;   # built-in data set
-mach = machine(pipe, X, y)
-evaluate!(mach, measure=misclassification_rate, operation=predict_mode)
+pipe.classifier = ConstantClassifier()
+fit!(mach)
+fitted_params(mach).classifier.target_distribution
 
 
 # ### A composite model to average two regressor predictors
 
-# The following is condensed version of
-# [this](https://github.com/alan-turing-institute/MLJ.jl/blob/master/binder/MLJ_demo.ipynb)
-# tutorial. We will define a composite model that:
+# Next, we define a composite model that:
 
 # - standardizes the input data
 
 # - learns and applies a Box-Cox transformation to the target variable
 
-# - blends the predictions of two supervised learning models - a ridge
-#  regressor and a random forest regressor; we'll blend using a simple
-#  average (for a more sophisticated stacking example, see
-#  [here](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/stacking/))
+# - averages the predictions of two supervised learning models - a ridge regressor and a
+#   random forest regressor - using a simple average
 
 # - applies the *inverse* Box-Cox transformation to this blended prediction
+
+# We'll start with a learning network, with source nodes bound to some dummy test data:
 
 RandomForestRegressor = @load RandomForestRegressor pkg=DecisionTree
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 
-# **Input layer**
+# **Input layer with dummy data**
 
-X = source()
-y = source()
+X, y = make_regression()
+y = abs.(y)
+X = source(X)
+y = source(y)
 
 # **First layer and target transformation**
 
-std_model = Standardizer()
-stand = machine(std_model, X)
-W = MLJ.transform(stand, X)
+standardizer = Standardizer()
+mach1 = machine(standardizer, X)
+W = MLJ.transform(mach1, X)
 
 box_model = UnivariateBoxCoxTransformer()
-box = machine(box_model, y)
-z = MLJ.transform(box, y)
+mach2 = machine(box_model, y)
+z = MLJ.transform(mach2, y)
 
 # **Second layer**
 
-ridge_model = RidgeRegressor(lambda=0.1)
-ridge = machine(ridge_model, W, z)
+regressor1 = RidgeRegressor(lambda=0.1)
+mach3 = machine(regressor1, W, z)
 
-forest_model = RandomForestRegressor(n_trees=50)
-forest = machine(forest_model, W, z)
+regressor2 = RandomForestRegressor(n_trees=50)
+mach4 = machine(regressor2, W, z)
 
-ẑ = 0.5*predict(ridge, W) + 0.5*predict(forest, W)
+zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)
 
 # **Output**
 
-ŷ = inverse_transform(box, ẑ)
+yhat = inverse_transform(mach2, zhat)
 
-# With the learning network defined, we're ready to export:
+# Let's test this learning network (always a good idea!):
 
-@from_network machine(Deterministic(), X, y, predict=ŷ) begin
-    mutable struct CompositeModel
-        rgs1 = ridge_model
-        rgs2 = forest_model
-    end
+fit!(yhat)
+yhat(rows=1:3)
+
+# Now for the new model type:
+
+mutable struct CompositeModel <: DeterministicNetworkComposite
+    standardizer
+    box_cox
+    regressor1
+    regressor2
 end
 
-# Let's instantiate the new model type and try it out on some data:
+# And the `prefit` function wrapping our learning network code, with model substitutions
 
-composite = CompositeModel()
+function MLJBase.prefit(composite::CompositeModel, verbosity, X, y)
+    X = source(X)
+    y = source(y)
 
-#-
+    ## First layer and target transformation
+    mach1 = machine(:standardizer, X)
+    W = MLJ.transform(mach1, X)
+    mach2 = machine(:box_cox, y)
+    z = MLJ.transform(mach2, y)
 
+    ## Second layer
+    mach3 = machine(:regressor1, W, z)
+    mach4 = machine(:regressor2, W, z)
+    zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)
+
+    ## Output
+    yhat = inverse_transform(mach2, zhat)
+
+    return (; predict=yhat)
+end
+
+# We instantiate the new model type and try it out on some new data:
+
+composite = CompositeModel(standardizer, box_model, regressor1, regressor2)
 X, y = @load_boston;
-mach = machine(composite, X, y);
-evaluate!(mach,
-          resampling=CV(nfolds=6, shuffle=true),
-          measures=[rms, mae])
+evaluate(composite, X, y; resampling=CV(nfolds=6, shuffle=true), measures=[rms, mae])
 
 
-# ### Resources for Part 5
+# ### Tutorial 5 Resources
 #
 # - From the MLJ manual:
-#    - [Learning Networks](https://alan-turing-institute.github.io/MLJ.jl/stable/composing_models/#Learning-Networks-1)
+#    - [Learning Networks](https://juliaai.github.io/MLJ.jl/stable/composing_models/#Learning-Networks-1)
 # - From Data Science Tutorials:
 #     - [Learning Networks](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/learning-networks/)
 #     - [Learning Networks 2](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/learning-networks-2/)
 #     - [Stacking](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/stacking/): an advanced example of model composition
-#     - [Finer Control](https://alan-turing-institute.github.io/MLJ.jl/dev/composing_models/#Method-II:-Finer-control-(advanced)-1):
+#     - [Finer Control](https://juliaai.github.io/MLJ.jl/dev/composing_models/#Method-II:-Finer-control-(advanced)-1):
 #       exporting learning networks without a macro for finer control
-
-# <a id='solutions-to-exercises'></a>

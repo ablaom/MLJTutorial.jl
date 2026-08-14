@@ -6,8 +6,11 @@
 #     see [the manual](https://juliaai.github.io/MLJ.jl/dev/learning_networks/).
 
 # > **Goals:**
-# > 1. Learn how to build a prototypes of a composite model, called a *learning network*
-# > 2. Learn how to use the `@from_network` macro to export a learning network as a new stand-alone model type
+# > 1. Learn how to build a prototypes of a composite model, called *learning networks*
+# > 2. Learn how to "export" a learning network as a new stand-alone model type
+
+# To run the code in this tutorial in a live Julia session, first follow the instructions
+# given [here](@ref instructions).
 
 # Pipelines are great for composing models in an unbranching sequence. Another built-in
 # type of model composition is a model *stack*; see
@@ -34,9 +37,10 @@
 
 using MLJ
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
-pipe = Standardizer |> LogisticClassifier(lambda=0.001);
+pipe = Standardizer |> LogisticClassifier(lambda=0.001)
+nothing #hide
 
-# using the generic syntax.
+# by building and exporting a learning network.
 
 # Here's some dummy data we'll be using to test our learning network:
 
@@ -86,7 +90,10 @@ Xstand() |> pretty
 
 #-
 
-fit!(yhat)
+fit!(yhat); # training is smart and so `Standardizer` is not retrained
+
+#-
+
 yhat()
 
 # The node `yhat` is the "descendant" (in an associated DAG we have
@@ -126,10 +133,10 @@ mach2 = machine(:classifier, Xstand, y);
 yhat = predict(mach2, Xstand)
 
 # Incidentally, this network can be used as before except we must provide an instance of
-# `YourPipe` in our fit! calls, to indicate which actual models replace the symbols:
+# `YourPipe` in our `fit!` calls, to indicate which models replace the symbols:
 
 your_pipe = YourPipe(standardizer, linear)
-fit!(yhat, composite=your_pipe)
+fit!(yhat, composite=your_pipe);
 
 # In this case `:standardizer` is being substituted by `standardizer` and :classifier by
 # `linear` in training.
@@ -160,7 +167,7 @@ end
 pipe = YourPipe(standardizer, linear)
 X, y = @load_iris;   # built-in data set
 mach = machine(pipe, X, y)
-fit!(mach)
+fit!(mach);
 
 # The learned parameters and report (where non-empty) for each component model are
 # accessible:
@@ -183,12 +190,9 @@ fitted_params(mach).classifier.target_distribution
 # Next, we define a composite model that:
 
 # - standardizes the input data
-
 # - learns and applies a Box-Cox transformation to the target variable
-
 # - averages the predictions of two supervised learning models - a ridge regressor and a
 #   random forest regressor - using a simple average
-
 # - applies the *inverse* Box-Cox transformation to this blended prediction
 
 # We'll start with a learning network, with source nodes bound to some dummy test data:
@@ -196,14 +200,14 @@ fitted_params(mach).classifier.target_distribution
 RandomForestRegressor = @load RandomForestRegressor pkg=DecisionTree
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 
-# **Input layer with dummy data**
+# **Input layer with dummy data:**
 
 X, y = make_regression()
 y = abs.(y)
 X = source(X)
 y = source(y)
 
-# **First layer and target transformation**
+# **First layer and target transformation:**
 
 standardizer = Standardizer()
 mach1 = machine(standardizer, X)
@@ -213,7 +217,7 @@ box_model = UnivariateBoxCoxTransformer()
 mach2 = machine(box_model, y)
 z = MLJ.transform(mach2, y)
 
-# **Second layer**
+# **Second layer:**
 
 regressor1 = RidgeRegressor(lambda=0.1)
 mach3 = machine(regressor1, W, z)
@@ -223,7 +227,7 @@ mach4 = machine(regressor2, W, z)
 
 zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)
 
-# **Output**
+# **Output:**
 
 yhat = inverse_transform(mach2, zhat)
 
@@ -247,18 +251,18 @@ function MLJBase.prefit(composite::CompositeModel, verbosity, X, y)
     X = source(X)
     y = source(y)
 
-    ## First layer and target transformation
+    ## First layer and target transformation:
     mach1 = machine(:standardizer, X)
     W = MLJ.transform(mach1, X)
     mach2 = machine(:box_cox, y)
     z = MLJ.transform(mach2, y)
 
-    ## Second layer
+    ## Second layer:
     mach3 = machine(:regressor1, W, z)
     mach4 = machine(:regressor2, W, z)
     zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)
 
-    ## Output
+    ## Output:
     yhat = inverse_transform(mach2, zhat)
 
     return (; predict=yhat)
@@ -267,7 +271,7 @@ end
 # We instantiate the new model type and try it out on some new data:
 
 composite = CompositeModel(standardizer, box_model, regressor1, regressor2)
-X, y = @load_boston;
+X, y = @load_boston
 evaluate(composite, X, y; resampling=CV(nfolds=6, shuffle=true), measures=[rms, mae])
 
 
@@ -276,8 +280,5 @@ evaluate(composite, X, y; resampling=CV(nfolds=6, shuffle=true), measures=[rms, 
 # - From the MLJ manual:
 #    - [Learning Networks](https://juliaai.github.io/MLJ.jl/stable/composing_models/#Learning-Networks-1)
 # - From Data Science Tutorials:
-#     - [Learning Networks](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/learning-networks/)
-#     - [Learning Networks 2](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/learning-networks-2/)
-#     - [Stacking](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/stacking/): an advanced example of model composition
-#     - [Finer Control](https://juliaai.github.io/MLJ.jl/dev/composing_models/#Method-II:-Finer-control-(advanced)-1):
-#       exporting learning networks without a macro for finer control
+#     - [Model ensembles via learning networks](https://juliaai.github.io/DataScienceTutorials.jl/advanced/ensembles-3/)
+#     - [Model stacking via learning networks](https://juliaai.github.io/DataScienceTutorials.jl/advanced/stacking/)

@@ -1,5 +1,14 @@
 # # Tutorial 3. Transformers and Pipelines
 
+# > **Goals:** Learn how to:
+# > 1. Apply common data preprocessing tasks using an MLJ **transformer**.
+# > 2. Combine a sequence of transformers with a supervised model in a single standalone model called a **pipelines**
+# > 3. Wrap a supervised model in transformations/inverse transformations of the target variable
+
+# To run the code in this tutorial in a live Julia session, first follow the instructions
+# given [here](@ref instructions).
+
+
 # ### Transformers
 
 # Unsupervised models, which receive no target `y` during training, always have a
@@ -32,9 +41,8 @@ inverse_transform(mach, xhat) ≈ x
 # ### Re-encoding the King County House data as continuous
 
 # For further illustrations of transformers, let's re-encode *all* of the King County
-# House input features (see [Ex 3](#exercise-3-fixing-scitypes-in-a-table)) into a set of
-# `Continuous` features. We do this with the `ContinuousEncoder` model, which, by default,
-# will:
+# House input features (see Exercise 3) into a set of `Continuous` features. We do this
+# with the `ContinuousEncoder` model, which, by default, will:
 
 # - one-hot encode all `Multiclass` features
 # - coerce all `OrderedFactor` features to `Continuous` ones
@@ -126,7 +134,10 @@ pipe = encoder |> reducer
 # *nested*, but we can still access them:
 
 @show pipe.pca.variance_ratio
-pipe.pca.variance_ratio = 0.85
+
+#-
+
+pipe.pca.variance_ratio = 0.9995
 
 # The pipeline model behaves like any other transformer:
 
@@ -153,12 +164,12 @@ evaluate!(mach, measure=mae, resampling=Holdout()) # `CV(nfolds=6)` is `resampli
 # Now notice what happens if we train on all the data, then change a
 # regressor hyperparameter and retrain:
 
-fit!(mach)
+fit!(mach);
 
 #-
 
 pipe2.ridge_regressor.lambda = 0.1
-fit!(mach)
+fit!(mach);
 
 # Second time only the ridge regressor is retrained!
 
@@ -166,7 +177,7 @@ fit!(mach)
 # the `ContinuousEncoder` (which comes before it will be retrained):
 
 pipe2.pca.variance_ratio = 0.9999
-fit!(mach)
+fit!(mach);
 
 
 # ### Inspecting composite models
@@ -275,5 +286,5 @@ schema(X)
 # (b) Evaluate the pipeline on all data, using 6-fold cross-validation
 # and `cross_entropy` loss.
 
-# &star;(c) Plot a learning curve which examines the effect on this loss
+# (c) Plot a learning curve which examines the effect on this loss
 # as the tree booster parameter `max_depth` varies from 2 to 10.

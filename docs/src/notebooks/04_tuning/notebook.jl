@@ -1,5 +1,13 @@
 # # Tutorial 4. Tuning hyperparameters
 
+# > **Goals:** Learn how to:
+# > 1. Tune (optimize) a single model hyperparameter visually, by plotting learning curves
+# > 2. Implement the optimization of one or more hyperparameters by wrapping a model in a tuning strategy
+
+
+# To run the code in this tutorial in a live Julia session, first follow the instructions
+# given [here](@ref instructions).
+
 # ### Naive tuning of a single parameter
 
 # The most naive way to tune a single hyperparameter is to use
@@ -44,7 +52,7 @@ mach = machine(model, X, y);
 
 # We now specify a hyperparameter range for this pipeline model:
 
-r = range(model, :(logistic_classifier.lambda), lower = 1e-2, upper=100, scale=:log10)
+r = range(model, :(logistic_classifier.lambda), lower = 1e-4, upper=0.1, scale=:log10)
 
 # If you're curious, you can see what `lambda` values this range will
 # generate for a given resolution:
@@ -75,11 +83,12 @@ best_lambda = lambdas[argmin(losses)]
 
 # ### Self tuning models
 
-# A more sophisticated way to view hyperparameter tuning (inspired by MLR) is as a model
-# *wrapper*. The wrapped model is a new model in its own right and when you fit it, it
-# tunes specified hyperparameters of the model being wrapped, before training on all
-# supplied data. Calling `predict` on the wrapped model is like calling `predict` on the
-# original model, but with the hyperparameters already optimized.
+# A more sophisticated way to view hyperparameter tuning (inspired by
+# [mlr](https://mlr.mlr-org.com)) is as a model *wrapper*. The wrapped model is a new
+# model in its own right and when you fit it, it tunes specified hyperparameters of the
+# model being wrapped, before training on all supplied data. Calling `predict` on the
+# wrapped model is like calling `predict` on the original model, but with the
+# hyperparameters already optimized.
 
 # In other words, we can think of the wrapped model as a "self-tuning" version of the
 # original.
@@ -128,7 +137,7 @@ r = range(
 import Distributions
 sampler_r = sampler(r, Distributions.Gamma)
 plt = histogram(rand(sampler_r, 10000), nbins=50)
-savefig("gamma_sampler.png")
+savefig("gamma_sampler.png");
 plt #!md
 
 # ![](gamma_sampler.png) #md
@@ -170,19 +179,17 @@ predict(tuned_mach, rows=1:3)
 rep = report(tuned_mach)
 rep.best_model
 
-# In the special case of two-parameters, you can also plot the results:
+# You can also visualize the random search:
 
 plt = plot(tuned_mach)
-savefig("tuning.png")
+savefig("tuning.png");
 plt #!md
 
 # ![](tuning.png) #md
 
-# Finally, let's compare cross-validation estimate of the performance
-# of the self-tuning model with that of the original model (an example
-# of [*nested
-# resampling*]((https://mlr.mlr-org.com/articles/tutorial/nested_resampling.html)
-# here):
+# Finally, let's compare cross-validation estimate of the performance of the self-tuning
+# model with that of the original model (an example of [*nested
+# resampling*](https://mlr.mlr-org.com/articles/tutorial/nested_resampling.html)):
 
 err = evaluate!(mach, resampling=CV(nfolds=3), measure=log_loss)
 
@@ -190,14 +197,12 @@ err = evaluate!(mach, resampling=CV(nfolds=3), measure=log_loss)
 
 tuned_err = evaluate!(tuned_mach, resampling=CV(nfolds=3), measure=log_loss)
 
-
 # ### Tutorial 4 Resources
 #
 # - From the MLJ manual:
-#    - [Learning Curves](https://alan-turing-institute.github.io/MLJ.jl/dev/learning_curves/)
-#    - [Tuning Models](https://alan-turing-institute.github.io/MLJ.jl/dev/tuning_models/)
+#    - [Learning Curves](https://juliaai.github.io/MLJ.jl/dev/learning_curves/)
+#    - [Tuning Models](https://juliaai.github.io/MLJ.jl/dev/tuning_models/)
 # - The [MLJTuning repo](https://github.com/juliaai/MLJTuning.jl#who-is-this-repo-for) - mostly for developers
-#
 # - From Data Science Tutorials:
 #     - [Tuning a model](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/model-tuning/)
 #     - [Crabs with XGBoost](https://juliaai.github.io/DataScienceTutorials.jl/end-to-end/crabs-xgb/) `Grid` tuning in stages for a tree-boosting model with many parameters

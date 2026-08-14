@@ -4,16 +4,20 @@
 # > 1. Search MLJ's database of model metadata to identify model candidates for a supervised learning task.
 # > 2. Evaluate the performance of a model on a holdout set using basic `fit!`/`predict` work-flow.
 # > 3. Inspect the outcomes of training and save these to a file.
-# > 3. Evaluate performance using other resampling strategies, such as cross-validation, in one line, using `evaluate!`
-# > 4. Plot a "learning curve", to inspect performance as a function of some model hyperparameter, such as an iteration parameter
+# > 4. Evaluate performance using other resampling strategies, such as cross-validation, in one line, using `evaluate!`
+# > 5. Plot a "learning curve", to inspect performance as a function of some model hyperparameter, such as an iteration parameter
 
-# The "Hello World!" of machine learning is to classify Fisher's famous iris data
-# set. This time, we'll grab the data from [OpenML](https://www.openml.org):
+# To run the code in this tutorial in a live Julia session, first follow the instructions
+# given [here](@ref instructions).
+
+# The "Hello World!" of machine learning is classification of iris flowers using a famous
+# [dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set) of Ronald Fisher. This
+# time, we'll grab the data from [OpenML](https://www.openml.org):
 
 using MLJ
-OpenML.describe_dataset(61)
+OpenML.describe_dataset(61);
 
-#-
+# (output suppressed here)
 
 iris = OpenML.load(61); # a column dictionary table
 
@@ -21,7 +25,7 @@ import DataFrames
 iris = DataFrames.DataFrame(iris);
 first(iris, 4)
 
-# **Main goal.** To build and evaluate models for predicting the
+# **Main goal:** To build and evaluate models for predicting the
 # `:class` variable, given the four remaining measurement variables.
 
 
@@ -46,10 +50,9 @@ scitype(y)
 # Here's one way to access the documentation (at the REPL, `?unpack`
 # also works):
 
-@doc unpack #!md
+@doc unpack
 
-# <display omitted, as not markdown renderable> #md
-
+# ---
 
 # ### On searching for a model
 
@@ -133,7 +136,7 @@ train, test = partition(1:length(y), 0.7)
 
 # Now we can `fit!`...
 
-fit!(mach, rows=train, verbosity=2)
+fit!(mach, rows=train, verbosity=2);
 
 # ... and `predict`:
 
@@ -169,7 +172,7 @@ yhat[1:3]
 # increased:
 
 model.epochs = model.epochs + 4
-fit!(mach, rows=train, verbosity=2)
+fit!(mach, rows=train, verbosity=2);
 
 # For this particular model we can also increase `:learning_rate` without triggering a
 # cold restart:
@@ -184,13 +187,13 @@ model.optimiser = Optimisers.Adam(0.01)
 
 #-
 
-fit!(mach, rows=train, verbosity=2)
+fit!(mach, rows=train, verbosity=2);
 
 # However, change any other parameter and training will restart from
 # scratch:
 
 model.lambda = 0.001
-fit!(mach, rows=train, verbosity=2)
+fit!(mach, rows=train, verbosity=2);
 
 # Iterative models that implement warm-restart for training can be controlled externally
 # (eg, using an out-of-sample stopping criterion). See
@@ -256,10 +259,8 @@ log_loss(yhat, y[test])
 misclassification_rate(mode.(yhat), y[test])
 
 # For more on metrics provided by MLJ, see the [StatisticalMeasures.jl
-# documentation](https://juliaai.github.io/StatisticalMeasures.jl/stable/). List all
-# measures like this:
-
-measures()
+# documentation](https://juliaai.github.io/StatisticalMeasures.jl/stable/). To list all
+# measures run `meausures()`.
 
 
 # ### Step 4. Evaluate the model performance
@@ -282,7 +283,7 @@ evaluate!(
     measures=[log_loss, misclassification_rate, brier_score],
 )
 
-# Or, Monte Carlo cross-validation (cross-validation repeated
+# Or, Monte Carlo cross-validation (cross-validation with repeated
 # randomized folds)
 
 e = evaluate!(
@@ -307,7 +308,7 @@ evaluate!(
 )
 
 fit!(mach, rows=train)    # re-train using all of `train` observations
-predict(mach, rows=test); # and predict missing targets
+predict(mach, rows=test) # and predict missing targets
 
 
 # ### On learning curves
@@ -318,7 +319,7 @@ predict(mach, rows=test); # and predict missing targets
 # hyperparameter). This starts by defining a one-dimensional range object for the
 # parameter (more on this when we discuss tuning in Part 4):
 
-r = range(model, :epochs, lower=1, upper=50, scale=:log10)
+r = range(model, :epochs, lower=1, upper=1000, scale=:log10)
 
 #-
 
@@ -333,7 +334,7 @@ curve = learning_curve(
 
 using Plots
 gr(size=(490,300))
-plt=plot(curve.parameter_values, curve.measurements)
+plt=plot(curve.parameter_values, curve.measurements, xscale=:log10)
 xlabel!(plt, "epochs")
 ylabel!(plt, "log loss on holdout set")
 savefig("learning_curve.png")
@@ -408,15 +409,15 @@ y, X, w = unpack(
 
 # ...attempt to guess the evaluations of the following:
 
-y
+y;
 
 #-
 
-pretty(X)
+X;
 
 #-
 
-w
+w;
 
 # #### Exercise 6 (first steps in modeling Horse Colic)
 
@@ -443,52 +444,42 @@ coerce!(
 );
 schema(horse)
 
-# (a) Suppose we want to use predict the `:outcome` variable, based on
-# the remaining variables that are `Continuous` (one-hot encoding
-# categorical variables is discussed later in Part 3) *while ignoring
-# the others*.  Extract from the `horse` data set (defined in Part 1)
-# appropriate input features `X` and target variable `y`. (Do not,
-# however, randomize the observations.)
+# (a) Suppose we want to predict the `:outcome` variable, based on the remaining variables
+# that are `Continuous` (one-hot encoding categorical variables is discussed later in Part
+# 3) *while ignoring the others*.  Extract from the `horse` data set (defined in Part 1)
+# appropriate input features `X` and target variable `y`. (Do not, however, randomize the
+# observations.)
 
-# (b) Create a 70:30 `train`/`test` split of the data and train a
-# `LogisticClassifier` model, from the `MLJLinearModels` package, on
-# the `train` rows. Use `lambda=100` and default values for the
-# other hyperparameters. (Although one would normally standardize
-# (whiten) the continuous features for this model, do not do so here.)
-# After training:
+# (b) Create a 70:30 `train`/`test` split of the data and train a `LogisticClassifier`
+# model, from the `MLJLinearModels` package, on the `train` rows. Use `lambda=100` and
+# default values for the other hyperparameters. (Although one would normally standardize
+# (whiten) the continuous features for this model, do not do so here.)  After training:
 
-# - (i) Recalling that a logistic classifier (aka logistic regressor) is
-#   a linear-based model learning a *vector* of coefficients for each
-#   feature (one coefficient for each target class), use the
-#   `fitted_params` method to find this vector of coefficients in the
-#   case of the `:pulse` feature. (You can convert a vector of pairs `v =
-#   [x1 => y1, x2 => y2, ...]` into a dictionary with `Dict(v)`.)
+# - (i) Recalling that a logistic classifier (aka logistic regressor) is a linear-based
+#   model learning a *vector* of coefficients for each feature (one coefficient for each
+#   target class), use the `fitted_params` method to find this vector of coefficients in
+#   the case of the `:pulse` feature. (You can convert a vector of pairs `v = [x1 => y1,
+#   x2 => y2, ...]` into a dictionary with `Dict(v)`.)
 
-# - (ii) Evaluate the `log_loss` performance on the `test`
-#   observations.
+# - (ii) Evaluate the `log_loss` performance on the `test` observations.
 
-# - &star;(iii) In how many `test` observations does the predicted
-#   probability of the observed class exceed 50%?
+# - (iii) In how many `test` observations does the predicted probability of the observed
+#   class exceed 50%?
 
-# - (iv) Find the `misclassification_rate` in the `test`
-#   set. (*Hint.* As this measure is deterministic, you will either
-#   need to broadcast `mode` or use `predict_mode` instead of
-#   `predict`.)
+# - (iv) Find the `misclassification_rate` in the `test` set. (*Hint.* As this measure is
+#   deterministic, you will either need to broadcast `mode` or use `predict_mode` instead
+#   of `predict`.)
 
-# (c) Instead use a `RandomForestClassifier` model from the
-#     `DecisionTree` package and:
+# (c) Instead use a `RandomForestClassifier` model from the `DecisionTree` package and:
 #
-# - (i) Generate an appropriate learning curve to convince yourself
-#   that out-of-sample estimates of the `log_loss` loss do not
-#   substantially improve for `n_trees > 50`. Use default values for
-#   all other hyperparameters, and feel free to use all available
-#   data to generate the curve.
+# - (i) Generate an appropriate learning curve to convince yourself that out-of-sample
+#   estimates of the `log_loss` loss do not substantially improve for `n_trees > 50`. Use
+#   default values for all other hyperparameters, and use all available data to generate
+#   the curve.
 
-# - (ii) Fix `n_trees=90` and use `evaluate!` to obtain a 9-fold
-#   cross-validation estimate of the `log_loss`, restricting
-#   sub-sampling to the `train` observations.
+# - (ii) Fix `n_trees=90` and use `evaluate!` to obtain a 9-fold cross-validation estimate
+#   of the `log_loss`, restricting sub-sampling to the `train` observations.
 
-# - (iii) Now use *all* available data but set
-#   `resampling=Holdout(fraction_train=0.7)` to obtain a score you can
-#   compare with the `KNNClassifier` in part (b)(iii). Which model is
-#   better?
+# - (iii) Now use *all* available data but set `resampling=Holdout(fraction_train=0.7)` to
+#   obtain a score you can compare with the `KNNClassifier` in part (b)(iii). Which model
+#   seems better?

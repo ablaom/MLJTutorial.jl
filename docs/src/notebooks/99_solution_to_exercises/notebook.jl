@@ -1,6 +1,72 @@
-# Solutions to Exercises
+# # Solutions to Exercises
 
 using MLJ, Downloads, CSV, DataFrames, Plots
+nothing #hide
+
+# #### Exercise 1 solution
+
+scitype(42)
+
+#-
+
+questions = ["who", "why", "what", "when"]
+scitype(questions)
+
+#-
+
+elscitype(questions)
+
+#-
+
+t = (3.141, 42, "how")
+scitype(t)
+
+#-
+
+A = rand(2, 3)
+
+#-
+
+scitype(A)
+
+#-
+
+elscitype(A)
+
+#-
+
+using SparseArrays
+Asparse = sparse(A)
+
+#-
+
+scitype(Asparse)
+
+#-
+
+C = coerce(A, Multiclass)
+
+#-
+
+scitype(C)
+
+#-
+
+elscitype(C)
+
+#-
+
+v = [1, 2, missing, 4]
+scitype(v)
+
+#-
+
+elscitype(v)
+
+#-
+
+scitype(v[1:2])
+
 
 # #### Exercise 2 solution
 
@@ -79,6 +145,31 @@ models(matching(X4, y4))
 y4 = coerce(y4, Continuous);
 models(matching(X4, y4))
 
+
+# #### Exercise 5 solution
+
+data = (
+    a = [1, 2, 3, 4],
+    b = rand(4),
+    c = rand(4),
+    d = coerce(["male", "female", "female", "male"], OrderedFactor),
+);
+
+using Tables
+y, X, w = unpack(
+    data,
+    ==(:a),
+    name -> elscitype(Tables.getcolumn(data, name)) == Continuous,
+)
+y
+
+#-
+
+pretty(X)
+
+#-
+
+w
 
 # #### Exercise 6 solution
 

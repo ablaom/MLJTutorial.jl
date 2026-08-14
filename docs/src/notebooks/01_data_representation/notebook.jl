@@ -5,6 +5,8 @@
 # > 2. Understand the options for representing tabular data
 # > 3. Learn how to inspect and fix the representation of data to meet MLJ requirements
 
+# To run the code in this tutorial in a live Julia session, first follow the instructions
+# given [here](@ref instructions).
 
 # ### Scientific types
 
@@ -68,6 +70,10 @@ levels(exam_mark[1:2])
 # variable, for models that require this, while a `Multiclass` variable can only be
 # one-hot encoded.
 
+# See also [Working with Categorical
+# Data](https://juliaai.github.io/MLJ.jl/stable/working_with_categorical_data/#Working-with-Categorical-Data)
+# from the MLJ manual.
+
 
 # ### Two-dimensional data
 
@@ -82,15 +88,8 @@ levels(exam_mark[1:2])
 
 column_table = (h=height, e=exam_mark, t=time)
 
-#-
-
-scitype(column_table)
-
-#-
-
-# Notice the `Table{K}` type parameter `K` encodes the scientific types of the
-# columns. (This is useful when comparing table scitypes with `<:`). To inspect the
-# individual column scitypes, we use the `schema` method instead:
+# While a table has a `scitype`, the general user will want to inspect column scitypes
+# using the `schema` method:
 
 schema(column_table)
 
@@ -114,9 +113,14 @@ df = DataFrames.DataFrame(column_table)
 
 #-
 
-schema(df) == schema(column_table)
+schema(df)
 
 #-
+
+# A schema is itself a table. If we convert it to a dataframe, we can get a nicer display
+# in some contexts (e.g., in documentation or a jupyter notebook):
+
+schema(df) |> DataFrames.DataFrame
 
 # Most MLJ models do not accept a matrix in lieu of a table, but you can
 # wrap a matrix as a table:
@@ -211,25 +215,16 @@ schema(horse)
 # ### Resources for this tutorial
 #
 # - From the MLJ manual:
-
 #   - [A preview of data type specification in
-#   MLJ](https://juliaai.github.io/MLJ.jl/dev/getting_started/#A-preview-of-data-type-specification-in-MLJ-1)
-
+#     MLJ](https://juliaai.github.io/MLJ.jl/dev/getting_started/#A-preview-of-data-type-specification-in-MLJ-1)
 #   - [Data containers and scientific
-#      types](https://juliaai.github.io/MLJ.jl/dev/getting_started/#Data-containers-and-scientific-types-1)
-
+#     types](https://juliaai.github.io/MLJ.jl/dev/getting_started/#Data-containers-and-scientific-types-1)
 #   - [Working with Categorical Data](https://juliaai.github.io/MLJ.jl/dev/working_with_categorical_data/)
-
 # - [Summary](https://juliaai.github.io/ScientificTypes.jl/dev/#Summary-of-the-default-convention) of the MLJ convention for representing scientific types
-
 # - [ScientificTypes.jl](https://juliaai.github.io/ScientificTypes.jl/dev/)
-
 # - From Data Science Tutorials:
-
 #   - [Data interpretation: Scientific Types](https://juliaai.github.io/DataScienceTutorials.jl/data/scitype/)
-
 #   - [Horse colic data](https://juliaai.github.io/DataScienceTutorials.jl/end-to-end/horse/) [UCI Horse Colic Data Set](http://archive.ics.uci.edu/ml/datasets/Horse+Colic)
-
 # - [Documentation](https://juliaai.github.io/StatisticalMeasures.jl/stable/) on
 #   performance metrics.
 
@@ -240,33 +235,33 @@ schema(horse)
 
 # Try to guess how each code snippet below will evaluate:
 
-scitype(42)
+scitype(42);
 
 #-
 
 questions = ["who", "why", "what", "when"]
-scitype(questions)
+scitype(questions);
 
 #-
 
-elscitype(questions)
+elscitype(questions);
 
 #-
 
 t = (3.141, 42, "how")
-scitype(t)
+scitype(t);
 
 #-
 
 A = rand(2, 3)
 
-# -
+#-
 
-scitype(A)
+scitype(A);
 
 #-
 
-elscitype(A)
+elscitype(A);
 
 #-
 
@@ -275,32 +270,32 @@ Asparse = sparse(A)
 
 #-
 
-scitype(Asparse)
+scitype(Asparse);
 
 #-
 
-C = coerce(A, Multiclass)
+C = coerce(A, Multiclass);
 
 #-
 
-scitype(C)
+scitype(C);
 
 #-
 
-elscitype(C)
+elscitype(C);
 
 #-
 
 v = [1, 2, missing, 4]
-scitype(v)
+scitype(v);
 
 #-
 
-elscitype(v)
+elscitype(v);
 
 #-
 
-scitype(v[1:2])
+scitype(v[1:2]);
 
 # Can you guess at the general behavior of
 # `scitype` with respect to tuples, abstract arrays and missing
@@ -314,7 +309,7 @@ scitype(v[1:2])
 # Coerce the following vector to make MLJ recognize it as a vector of
 # ordered factors (with an appropriate ordering):
 
-quality = ["good", "poor", "poor", "excellent", missing, "good", "excellent"]
+quality = ["good", "poor", "poor", "excellent", missing, "good", "excellent"];
 
 
 # #### Exercise 3 (fixing scitypes in a table)

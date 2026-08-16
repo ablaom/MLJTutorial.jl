@@ -80,7 +80,7 @@ mach2 = machine(linear, Xstand, y);
 yhat = predict(mach2, Xstand)
 
 # Now `X`, `y`, `Xstand` and `yhat` are *nodes* ("variables" or
-# "dynammic data") instead of data. All training, predicting and
+# "dynamic data") instead of data. All training, predicting and
 # transforming is now executed lazily, whenever we `fit!` one of these
 # nodes. We *call* a node to retrieve the data it represents in the
 # original manual workflow.
@@ -115,7 +115,7 @@ yhat(Xnew)
 # We start by defining a new model type for our composite. We subtype
 # `ProbabilisticNetworkComposite` because our composite is to be a probabilistic
 # predictor. If it were a deterministic predictor, we would use
-# `DeterminisiticNetworkComposite` instead. There is also a `UnsupervisedNetworkComposite`
+# `DeterministicNetworkComposite` instead. There is also a `UnsupervisedNetworkComposite`
 # for transformers.
 
 mutable struct YourPipe <: ProbabilisticNetworkComposite

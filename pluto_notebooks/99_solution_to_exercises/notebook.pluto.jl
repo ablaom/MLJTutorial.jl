@@ -55,7 +55,7 @@ font-size: 1.4rem;
 font-weight: 300;
 opacity: 1.0;
 color: #CDCDCD;
-">Tutorial - Solutions to Excercises</p>
+">Tutorial - Solutions to Exercises</p>
 <p style="text-align: left; font-size: 2.5rem;">
 Machine Learning in Julia
 </p>
@@ -104,7 +104,7 @@ md"""
 md"# Exercise 2 solution"
 
 # ╔═╡ e62654a0-cc6e-4072-8514-99938a2932db
-md"From the question statememt:"
+md"From the question statement:"
 
 # ╔═╡ 7f9003b5-95c7-418b-a0de-1721c1bc2df2
 quality0 = ["good", "poor", "poor", "excellent", missing, "good", "excellent"]

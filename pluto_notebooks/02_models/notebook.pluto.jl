@@ -150,7 +150,7 @@ schema(iris)
 md"""
 This schema fits well for our purposes, so there is nothing to fix here.
 
-*Note*: In older versions MLJ/CategoricalArrays came up at this point with the scientifc types `Union{Missing,Continuous}` and `Union{Missing,Multiclass}`.  
+*Note*: In older versions MLJ/CategoricalArrays came up at this point with the scientific types `Union{Missing,Continuous}` and `Union{Missing,Multiclass}`.  
 Therefore the following coercion was necessary:
 
 ```julia
@@ -462,7 +462,7 @@ info(model).prediction_type
 md"""
 **Important**:
 - In MLJ, a model that can predict probabilities (and not just point values) will do so by default.
-- For most probabilistic predictors, the predicted object is a `Distributions.Distribution` object (supporting the `Distributions.jl` [API](https://juliastats.org/Distributions.jl/latest/extends/#Create-a-Distribution-1)) or a `CategoricalDistributions.UnivariateFinite` object (the case here), which all support the follwing methods: `rand`,  `pdf`, `logpdf`; and, where appropriate: `mode`, `median` and `mean`.
+- For most probabilistic predictors, the predicted object is a `Distributions.Distribution` object (supporting the `Distributions.jl` [API](https://juliastats.org/Distributions.jl/latest/extends/#Create-a-Distribution-1)) or a `CategoricalDistributions.UnivariateFinite` object (the case here), which all support the following methods: `rand`,  `pdf`, `logpdf`; and, where appropriate: `mode`, `median` and `mean`.
 """
 
 # ╔═╡ 9653dbb8-a168-4a07-8dba-241d9b744683

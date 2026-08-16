@@ -7,5 +7,6 @@ extend-exclude = ["*.svg", "*.drawio", "*.html", "*.pdf", "docs/src/notebooks/**
 mape = "mape"
 yhat = "yhat"
 Jupyter = "Jupyter"
+missings = "missings"
 
 

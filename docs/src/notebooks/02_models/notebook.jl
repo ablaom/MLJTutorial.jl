@@ -260,7 +260,7 @@ misclassification_rate(mode.(yhat), y[test])
 
 # For more on metrics provided by MLJ, see the [StatisticalMeasures.jl
 # documentation](https://juliaai.github.io/StatisticalMeasures.jl/stable/). To list all
-# measures run `meausures()`.
+# measures run `measures()`.
 
 
 # ### Step 4. Evaluate the model performance

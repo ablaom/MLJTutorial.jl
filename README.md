@@ -11,7 +11,9 @@ Learning in Julia)
 Based on tutorials originally part of a 3.5 hour [online
 workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
-The tutorials are [here](https://ablaom.github.io/MLJTutorial.jl/dev/).
+
+## The tutorials are [here](https://ablaom.github.io/MLJTutorial.jl/dev/).
+
 
 ### Legacy Pluto notebooks
 
@@ -22,13 +24,15 @@ and include some outdated API, especially in Tutorial 5.
 ### For maintainers
 
 The tutorials are embedded in Documenter.jl documentation, and live at
-[/docs/src/notebooks/](/docs/src/notebooks/). A "workspace" package environment controls
-versioning, each notebook getting its own Project.toml file in the workspace tree. The
-julia version is specified in the root Project.toml. There are no committed manifests,
-only project files with [compat] lower bounds. **The ground truth for content is the julia
+[/docs/src/notebooks/](/docs/src/notebooks/). **The ground truth for content is the julia
 scripts,** which must follow the
 [Literate.jl](https://duckduckgo.com/?q=Literate.jl&t=osx&ia=web) rules for embedding the
-narrative as code comments.
+narrative as code comments. 
+
+Package management is through a workspace tree with the root Project.toml as stump. Each
+notebook getting its own Project.toml file in the workspace tree. The julia version is
+specified in the root Project.toml. There are no committed manifests, only project files
+with [compat] lower bounds.
 
 After making changes to a julia script or any Project.toml file, post a pull request and
 CI will automatically generate new markdown (using Literate.jl), inviting you to review a
@@ -41,7 +45,8 @@ In more detail, to amend a tutorial:
 2. Optionally, test markdown generation for that tutorial (see below) but do not commit any
    new markdown you generate.
 3. Post a pull request.
-4. Follow the instructions that should appear the pull request conversation, after CI concludes. 
+4. Follow the instructions that should appear in the pull request conversation, after CI
+   concludes.
 
 If you add a new tutorial, you will need to:
 

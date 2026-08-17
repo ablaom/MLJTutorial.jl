@@ -1,6 +1,6 @@
 # MLJTutorial.jl
 
-Notebooks for introducing the machine learning toolbox
+Tutorials for introducing the machine learning toolbox
 [MLJ](https://alan-turing-institute.github.io/MLJ.jl/dev/) (Machine
 Learning in Julia) 
 
@@ -11,64 +11,55 @@ Learning in Julia)
 Based on tutorials originally part of a 3.5 hour [online
 workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
+The tutorials are [here](https://ablaom.github.io/MLJTutorial.jl/dev/).
 
-#### [Options for running the tutorials](options.md)
+### Legacy Pluto notebooks
 
+Pluto notebooks, adapted from the original julia scripts by @roland-KA, are available
+[here](pluto_notebooks). These are not synchronized with the julia (and markdown) scripts
+and include some outdated API, especially in Tutorial 5.
 
-### Prerequisites
+### For maintainers
 
-- Familiarity with basic data manipulation in Julia: vectors, tuples,
-  dictionaries, arrays, generating random numbers, tabular data (e.g.,
-  DataDrames.jl) basic stats, Distributions.jl.
+The tutorials are embedded in Documenter.jl documentation, and live at
+[/docs/src/notebooks/](/docs/src/notebooks/). A "workspace" package environment controls
+versioning, each notebook getting its own Project.toml file in the workspace tree. The
+julia version is specified in the root Project.toml. There are no committed manifests,
+only project files with [compat] lower bounds. **The ground truth for content is the julia
+scripts,** which must follow the
+[Literate.jl](https://duckduckgo.com/?q=Literate.jl&t=osx&ia=web) rules for embedding the
+narrative as code comments.
 
-- Familiarity with Machine Learning fundamentals and best practice.
+After making changes to a julia script or any Project.toml file, post a pull request and
+CI will automatically generate new markdown (using Literate.jl), inviting you to review a
+new pull request committing the changes.
 
+In more detail, to amend a tutorial:
 
-### Topics covered
+1. Edit the julia script for that tutorial and check it executes using an instantiated
+   package environment based on the Project.toml in the same folder.
+2. Optionally, test markdown generation for that tutorial (see below) but do not commit any
+   new markdown you generate.
+3. Post a pull request.
+4. Follow the instructions that should appear the pull request conversation, after CI concludes. 
 
-#### Basic
+If you add a new tutorial, you will need to:
 
-- Part 1 - **Data Representation**
-
-- Part 2 - **Selecting, Training and Evaluating Models**
-
-- Part 3 - **Transformers and Pipelines**
-
-#### Advanced
-
-- Part 4 - **Tuning hyper-parameters**
-
-- Part 5 - **Advanced model composition** 
-
-The tutorials include links to external resources and exercises with
-solutions.
-
-
-### More about the tutorials 
-
-- The tutorials focus on the *machine learning* part of the data
-  science workflow, and less on exploratory data analysis and other
-  conventional "data analytics" methodology
-
-- Here "machine learning" is meant in a broad sense, and is not
-  restricted to so-called *deep learning* (neural networks)
-
-- The tutorials are crafted to rapidly familiarize the user with what
-  MLJ can do and how to do it, and are not a substitute for a course
-  on machine learning fundamentals. Examples do not necessarily
-  represent best practice or the best solution to a problem.
+- Add it to to the [workspace] in "docs/Project.toml"
+- Add an entry to the `pages` section of "docs/make.jl"
+- Add it to the table of contents at "docs/src/index.md"
 
 
-### Additional resources
+#### Testing markdown generation
 
-- [Slides](slides/slides.pdf) from workshop given at ResBaz 2021 (Auckland)
-- [HelloJulia.jl](https://github.com/ablaom/HelloJulia.jl) - Resources from an Introduction to Julia workshop 
-- [DataFrames.jl Cheatsheets](https://ahsmart.com/pub/data-wrangling-with-data-frames-jl-cheat-sheet/index.html)
-- [MLJ Cheatsheet](https://alan-turing-institute.github.io/MLJ.jl/dev/mlj_cheatsheet/)
-- [Common MLJ Workflows](https://alan-turing-institute.github.io/MLJ.jl/dev/common_mlj_workflows/)
-- [MLJ manual](https://alan-turing-institute.github.io/MLJ.jl/dev/)
-- [Data Science Tutorials in Julia](https://juliaai.github.io/DataScienceTutorials.jl/)
+To test markdown generation locally, change to the root directory of your local MLJTutorial.jl clone, and run this in julia:
 
-### Credits
+```julia
+using Pkg
+Pkg.activate("NotebookManagementToools")
+using NotebookManagementTools
+generate(joinpath("docs", "src", "notebooks", "02_models"))
+```
 
-The author and maintainer of this repository is @ablaom. Pluto notebooks have been adapted from the julia scripts by @roland-KA who is also a maintainer.
+but change "02_models" to the tutorial you are testing. Remember, you are discouraged from
+committing the generated markdown changes to your pull request.

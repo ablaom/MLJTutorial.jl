@@ -1,0 +1,8 @@
+[deps]
+Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
+NotebookManagementTools = "5f7a4451-2f7d-477b-8022-3bb7ed7b80c0"
+Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[workspace]
+projects = ["dummy_tutorials/bad_tutorial", "dummy_tutorials/good_tutorial", "dummy_tutorials/tutorial_without_script", "dummy_tutorials/tutorial_without_tests"]

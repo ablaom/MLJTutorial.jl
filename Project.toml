@@ -1,19 +1,14 @@
-name = "MLJTutorial"
-uuid = "1abb19d6-4667-4abd-b4d8-7a8f4bff7f54"
-authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
 version = "0.1.0"
+authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
+
+[workspace]
+projects = ["docs", "NotebookManagementTools"]
 
 [deps]
-IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
-Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
+MbedTLS_jll = "c8ffd9c3-330d-5841-b78e-0817d7145fa1"
+OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 
 [compat]
-IJulia = "1.23"
-Pluto = "0.17"
-julia = "1.6"
-
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Test"]
+MbedTLS_jll = "~2.28.0"
+OrderedCollections = "1"
+julia = "1.12"

@@ -1,6 +1,6 @@
 using Documenter
 
-const REPO_NAME = "MLJTutorials.jl"
+const REPO_NAME = "MLJTutorial.jl"
 const  REPO = Remotes.GitHub("ablaom", REPO_NAME)
 
 using NotebookManagementTools
@@ -25,7 +25,7 @@ makedocs(
             ),
         ],
         size_threshold = 10485760,
-        repolink = "https://github.com/ablaom/ClassImbalanceTutorials.jl",
+        repolink = "https://github.com/ablaom/MLJTutorial.jl",
     ),
     pages=[
         "Home" =>                   "index.md",

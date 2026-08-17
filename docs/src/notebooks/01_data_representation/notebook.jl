@@ -22,7 +22,7 @@
 # MLJ's convention about how different machine types will be interpreted by MLJ models:
 
 using ScientificTypes
-scitype(3.141)
+scitype(3.14)
 
 #-
 

@@ -15,12 +15,12 @@
 # time, we'll grab the data from [OpenML](https://www.openml.org):
 
 using MLJ
-OpenML.describe_dataset(61);
+## OpenML.describe_dataset(61);
 
 # (output suppressed here)
 
-iris = OpenML.load(61); # a column dictionary table
-
+## iris = OpenML.load(61); # a column dictionary table
+iris = load_iris() # needed until https://github.com/korsbo/Latexify.jl/pull/353 is resolved
 import DataFrames
 iris = DataFrames.DataFrame(iris);
 first(iris, 4)
@@ -41,7 +41,9 @@ schema(iris)
 # is needed for MLJ supervised models. We can randomize the data at
 # the same time:
 
-y, X = unpack(iris, ==(:class), rng=123);
+## y, X = unpack(iris, ==(:class), rng=123);
+y, X = unpack(iris, ==(:target), rng=123);
+
 scitype(y)
 
 # This puts the `:class` column into a vector `y`, and all remaining
@@ -224,7 +226,8 @@ info(model).prediction_type
 # So, to obtain the probability of "Iris-virginica" in the first test
 # prediction, we do
 
-pdf(yhat[1], "Iris-virginica")
+## pdf(yhat[1], "Iris-virginica")
+pdf(yhat[1], "virginica")
 
 # To get the most likely observation, we do
 
@@ -232,7 +235,8 @@ mode(yhat[1])
 
 # These can be broadcast over multiple predictions in the usual way:
 
-broadcast(pdf, yhat[1:4], "Iris-versicolor")
+## broadcast(pdf, yhat[1:4], "Iris-versicolor")
+broadcast(pdf, yhat[1:4], "versicolor")
 
 #-
 

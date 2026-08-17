@@ -29,7 +29,7 @@ Learning in Julia)
 ### Advanced
 
 - [Tutorial 4. Tuning hyperparameters](@ref)
-- [Tutorial 5. Composition](@ref)
+- [Tutorial 5. Advanced Model Composition](@ref)
 - [Solutions to Exercises](@ref)
 - [Lightning Tour of MLJ](@ref)
 

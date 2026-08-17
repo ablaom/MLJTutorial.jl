@@ -15,6 +15,7 @@ jobs:
       statuses: write
     runs-on: ubuntu-latest
     steps:
+      - uses: julia-actions/cache@v3
       - uses: actions/checkout@v7
       - uses: julia-actions/setup-julia@v3
         with:
@@ -24,7 +25,6 @@ jobs:
           julia --project=docs -e '
             using Pkg
             Pkg.develop(PackageSpec(path=joinpath(pwd(), "NotebookManagementTools")))'
-      - uses: julia-actions/cache@v3
       - uses: julia-actions/julia-docdeploy@v1
         with:
           install-package: false # because we manually installed above

@@ -73,5 +73,5 @@ additional learning resources.
 
 ---
 
-This repository is maintained with the help of [NoteBookManagementTools](@ref), an
+This repository is maintained with the help of [NotebookManagementTools](@ref), an
 experimental, unregistered package embedded in the repository.

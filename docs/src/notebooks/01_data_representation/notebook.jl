@@ -89,7 +89,7 @@ levels(exam_mark[1:2])
 column_table = (h=height, e=exam_mark, t=time)
 
 # While a table has a `scitype`, the general user will want to inspect column scitypes
-# using the `schema` method:
+# using MLJ's `schema` method:
 
 schema(column_table)
 

@@ -27,7 +27,7 @@ MLJ's convention about how different machine types will be interpreted by MLJ mo
 
 ````@julia
 using ScientificTypes
-scitype(3.141)
+scitype(3.14)
 ````
 
 ````
@@ -290,7 +290,7 @@ csv_file = Downloads.download(url)
 ````
 
 ````
-"/var/folders/4n/gvbmlhdc8xj973001s6vdyw00000gq/T/jl_gmRI1M/horse.csv"
+"/tmp/jl_9Y7XOI/horse.csv"
 ````
 
 Entering these lines of code downloads the data to a temporary file at the location
@@ -531,8 +531,8 @@ A = rand(2, 3)
 
 ````
 2×3 Matrix{Float64}:
- 0.491328  0.448287  0.203403
- 0.381288  0.810335  0.415157
+ 0.156066  0.956409  0.543647
+ 0.660134  0.892236  0.0923323
 ````
 
 ````@julia
@@ -550,8 +550,8 @@ Asparse = sparse(A)
 
 ````
 2×3 SparseArrays.SparseMatrixCSC{Float64, Int64} with 6 stored entries:
- 0.491328  0.448287  0.203403
- 0.381288  0.810335  0.415157
+ 0.156066  0.956409  0.543647
+ 0.660134  0.892236  0.0923323
 ````
 
 ````@julia

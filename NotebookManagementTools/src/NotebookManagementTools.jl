@@ -10,7 +10,7 @@ is always a julia script (with Literate.jl-compatible narrative). Furthermore, w
 with appropriate continuous integration workflows, notebooks can be generated on a
 need-to basis, to speed up document generation and the development of new tutorials.
 
-The model we have repository of this kind will be structured using Julia's "workspace"
+The kind of repository we have in mind will be structured using Julia's "workspace"
 package management structure. For a stand-alone collection of tutorials following Julia's
 workspace package pattern, this might look something like this:
 

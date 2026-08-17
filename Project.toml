@@ -10,5 +10,5 @@ OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 
 [compat]
 MbedTLS_jll = "~2.28.0"
-OrderedCollections = "1"
+OrderedCollections = "1, 2.0"
 julia = "1.12"

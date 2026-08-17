@@ -160,7 +160,7 @@ column_table = (h=height, e=exam_mark, t=time)
 ````
 
 While a table has a `scitype`, the general user will want to inspect column scitypes
-using the `schema` method:
+using MLJ's `schema` method:
 
 ````@julia
 schema(column_table)
@@ -290,7 +290,7 @@ csv_file = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_9Y7XOI/horse.csv"
+"/tmp/jl_fya9Vj/horse.csv"
 ````
 
 Entering these lines of code downloads the data to a temporary file at the location
@@ -531,8 +531,8 @@ A = rand(2, 3)
 
 ````
 2×3 Matrix{Float64}:
- 0.156066  0.956409  0.543647
- 0.660134  0.892236  0.0923323
+ 0.275669  0.983276   0.704501
+ 0.814838  0.0704022  0.619187
 ````
 
 ````@julia
@@ -550,8 +550,8 @@ Asparse = sparse(A)
 
 ````
 2×3 SparseArrays.SparseMatrixCSC{Float64, Int64} with 6 stored entries:
- 0.156066  0.956409  0.543647
- 0.660134  0.892236  0.0923323
+ 0.275669  0.983276   0.704501
+ 0.814838  0.0704022  0.619187
 ````
 
 ````@julia

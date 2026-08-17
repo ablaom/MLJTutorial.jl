@@ -6,31 +6,35 @@ EditURL = "notebook.jl"
 
 > **Goals:**
 > 1. Search MLJ's database of model metadata to identify model candidates for a supervised learning task.
-> 2. Evaluate the performance of a model on a holdout set using basic `fit!`/`predict` work-flow.
+> 2. Evaluate the performance of a model on a holdout set using basic `fit!`/`predict` workflow.
 > 3. Inspect the outcomes of training and save these to a file.
-> 3. Evaluate performance using other resampling strategies, such as cross-validation, in one line, using `evaluate!`
-> 4. Plot a "learning curve", to inspect performance as a function of some model hyperparameter, such as an iteration parameter
+> 4. Evaluate performance using other resampling strategies, such as cross-validation, in one line, using `evaluate!`
+> 5. Plot a "learning curve", to inspect performance as a function of some model hyperparameter, such as an iteration parameter
 
-The "Hello World!" of machine learning is to classify Fisher's famous iris data
-set. This time, we'll grab the data from [OpenML](https://www.openml.org):
+To run the code in this tutorial in a live Julia session, first follow the instructions
+given [here](@ref instructions).
+
+The "Hello World!" of machine learning is classification of iris flowers using a famous
+[dataset](https://en.wikipedia.org/wiki/Iris_flower_data_set) of Ronald Fisher. This
+time, we'll grab the data from [OpenML](https://www.openml.org):
 
 ````@julia
 using MLJ
-OpenML.describe_dataset(61);
+# OpenML.describe_dataset(61);
 ````
 
 (output suppressed here)
 
 ````@julia
-iris = OpenML.load(61); # a column dictionary table
-
+# iris = OpenML.load(61); # a column dictionary table
+iris = load_iris() # needed until https://github.com/korsbo/Latexify.jl/pull/353 is resolved
 import DataFrames
 iris = DataFrames.DataFrame(iris);
 first(iris, 4)
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>4×5 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sepallength</th><th style = "text-align: left;">sepalwidth</th><th style = "text-align: left;">petallength</th><th style = "text-align: left;">petalwidth</th><th style = "text-align: left;">class</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "CategoricalArrays.CategoricalValue{String, UInt32}" style = "text-align: left;">Cat…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">5.1</td><td style = "text-align: right;">3.5</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">4.9</td><td style = "text-align: right;">3.0</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">4.7</td><td style = "text-align: right;">3.2</td><td style = "text-align: right;">1.3</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: right;">4.6</td><td style = "text-align: right;">3.1</td><td style = "text-align: right;">1.5</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>4×5 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sepal_length</th><th style = "text-align: left;">sepal_width</th><th style = "text-align: left;">petal_length</th><th style = "text-align: left;">petal_width</th><th style = "text-align: left;">target</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "CategoricalArrays.CategoricalValue{String, UInt32}" style = "text-align: left;">Cat…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">5.1</td><td style = "text-align: right;">3.5</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">4.9</td><td style = "text-align: right;">3.0</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">4.7</td><td style = "text-align: right;">3.2</td><td style = "text-align: right;">1.3</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: right;">4.6</td><td style = "text-align: right;">3.1</td><td style = "text-align: right;">1.5</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr></tbody></table></div>
 ```
 
 **Main goal:** To build and evaluate models for predicting the
@@ -43,15 +47,15 @@ schema(iris)
 ````
 
 ````
-┌─────────────┬───────────────┬──────────────────────────────────┐
-│ names       │ scitypes      │ types                            │
-├─────────────┼───────────────┼──────────────────────────────────┤
-│ sepallength │ Continuous    │ Float64                          │
-│ sepalwidth  │ Continuous    │ Float64                          │
-│ petallength │ Continuous    │ Float64                          │
-│ petalwidth  │ Continuous    │ Float64                          │
-│ class       │ Multiclass{3} │ CategoricalValue{String, UInt32} │
-└─────────────┴───────────────┴──────────────────────────────────┘
+┌──────────────┬───────────────┬──────────────────────────────────┐
+│ names        │ scitypes      │ types                            │
+├──────────────┼───────────────┼──────────────────────────────────┤
+│ sepal_length │ Continuous    │ Float64                          │
+│ sepal_width  │ Continuous    │ Float64                          │
+│ petal_length │ Continuous    │ Float64                          │
+│ petal_width  │ Continuous    │ Float64                          │
+│ target       │ Multiclass{3} │ CategoricalValue{String, UInt32} │
+└──────────────┴───────────────┴──────────────────────────────────┘
 
 ````
 
@@ -64,7 +68,9 @@ is needed for MLJ supervised models. We can randomize the data at
 the same time:
 
 ````@julia
-y, X = unpack(iris, ==(:class), rng=123);
+# y, X = unpack(iris, ==(:class), rng=123);
+y, X = unpack(iris, ==(:target), rng=123);
+
 scitype(y)
 ````
 
@@ -75,56 +81,8 @@ AbstractVector{Multiclass{3}} (alias for AbstractArray{ScientificTypesBase.Multi
 This puts the `:class` column into a vector `y`, and all remaining
 columns into a table `X`.
 
-Here's one way to access the documentation (at the REPL, `?unpack`
-also works):
-
-````@julia
-@doc unpack
-````
-
-```@raw html
-<div class="markdown"><pre><code class="language-julia">unpack&#40;table, f1, f2, ... fk;
-       wrap_singles&#61;false,
-       shuffle&#61;false,
-       rng::Union&#123;AbstractRNG,Int,Nothing&#125;&#61;nothing,
-       coerce_options...&#41;</code></pre>
-<p>Horizontally split any Tables.jl compatible <code>table</code> into smaller tables or vectors by making column selections determined by the predicates <code>f1</code>, <code>f2</code>, ..., <code>fk</code>. Selection from the column names is without replacement. A <em>predicate</em> is any object <code>f</code> such that <code>f&#40;name&#41;</code> is <code>true</code> or <code>false</code> for each column <code>name::Symbol</code> of <code>table</code>.</p>
-<p>Returns a tuple of tables/vectors with length one greater than the number of supplied predicates, with the last component including all previously unselected columns.</p>
-<pre><code class="language-julia-repl">julia&gt; table &#61; DataFrame&#40;x&#61;&#91;1,2&#93;, y&#61;&#91;&#39;a&#39;, &#39;b&#39;&#93;, z&#61;&#91;10.0, 20.0&#93;, w&#61;&#91;&quot;A&quot;, &quot;B&quot;&#93;&#41;
-2×4 DataFrame
- Row │ x      y     z        w
-     │ Int64  Char  Float64  String
-─────┼──────────────────────────────
-   1 │     1  a        10.0  A
-   2 │     2  b        20.0  B
-
-julia&gt; Z, XY, W &#61; unpack&#40;table, &#61;&#61;&#40;:z&#41;, &#33;&#61;&#40;:w&#41;&#41;;
-julia&gt; Z
-2-element Vector&#123;Float64&#125;:
- 10.0
- 20.0
-
-julia&gt; XY
-2×2 DataFrame
- Row │ x      y
-     │ Int64  Char
-─────┼─────────────
-   1 │     1  a
-   2 │     2  b
-
-julia&gt; W  # the column&#40;s&#41; left over
-2-element Vector&#123;String&#125;:
- &quot;A&quot;
- &quot;B&quot;</code></pre>
-<p>Whenever a returned table contains a single column, it is converted to a vector unless <code>wrap_singles&#61;true</code>.</p>
-<p>If <code>coerce_options</code> are specified then <code>table</code> is first replaced with <code>coerce&#40;table, coerce_options&#41;</code>. See <a href="@ref"><code>ScientificTypes.coerce</code></a> for details.</p>
-<p>If <code>shuffle&#61;true</code> then the rows of <code>table</code> are first shuffled, using the global RNG, unless <code>rng</code> is specified; if <code>rng</code> is an integer, it specifies the seed of an automatically generated Mersenne twister. If <code>rng</code> is specified then <code>shuffle&#61;true</code> is implicit.</p>
-
-
-</div>
-```
-
----
+To see the documentation for this function, type `?unpack` in the Julia REPL (or use
+`@doc unpack` elsewhere).
 
 ### On searching for a model
 
@@ -630,85 +588,6 @@ NeuralNetworkClassifier(
   embedding_dims = Dict{Symbol, Real}())
 ````
 
-````@julia
-info(model)
-````
-
-````
-(name = "NeuralNetworkClassifier",
- package_name = "MLJFlux",
- is_supervised = true,
- abstract_type = MLJModelInterface.Probabilistic,
- constructor = nothing,
- deep_properties = (:optimiser, :builder),
- docstring = "```julia\nNeuralNetworkClassifier\n```\n\nA model type...",
- fit_data_scitype =
-     Tuple{Union{ScientificTypesBase.Table{<:Union{AbstractVector{<:ScientificTypesBase.Continuous}, AbstractVector{<:ScientificTypesBase.Finite}}}, AbstractMatrix{ScientificTypesBase.Continuous}}, AbstractVector{<:ScientificTypesBase.Finite}},
- human_name = "neural network classifier",
- hyperparameter_ranges = (nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing,
-                          nothing),
- hyperparameter_types =
-     ("MLJFlux.Short",
-      "typeof(NNlib.softmax)",
-      "Optimisers.Adam{Float64, Tuple{Float64, Float64}, Float64}",
-      "typeof(Flux.Losses.crossentropy)",
-      "Int64",
-      "Int64",
-      "Float64",
-      "Float64",
-      "Union{Int64, Random.AbstractRNG}",
-      "Bool",
-      "ComputationalResources.AbstractResource",
-      "Dict{Symbol, Real}"),
- hyperparameters = (:builder,
-                    :finaliser,
-                    :optimiser,
-                    :loss,
-                    :epochs,
-                    :batch_size,
-                    :lambda,
-                    :alpha,
-                    :rng,
-                    :optimiser_changes_trigger_retraining,
-                    :acceleration,
-                    :embedding_dims),
- implemented_methods = [],
- inverse_transform_scitype = ScientificTypesBase.Unknown,
- is_pure_julia = true,
- is_wrapper = false,
- iteration_parameter = :epochs,
- load_path = "MLJFlux.NeuralNetworkClassifier",
- package_license = "MIT",
- package_url = "https://github.com/alan-turing-institute/MLJFlux.jl",
- package_uuid = "094fc8d1-fd35-5302-93ea-dabda2abf845",
- predict_scitype =
-     AbstractVector{ScientificTypesBase.Density{<:ScientificTypesBase.Finite}},
- prediction_type = :probabilistic,
- reporting_operations = (),
- reports_feature_importances = false,
- supports_class_weights = false,
- supports_online = false,
- supports_training_losses = true,
- supports_weights = false,
- tags = [],
- target_in_fit = true,
- transform_scitype = ScientificTypesBase.Unknown,
- input_scitype =
-     Union{ScientificTypesBase.Table{<:Union{AbstractVector{<:ScientificTypesBase.Continuous}, AbstractVector{<:ScientificTypesBase.Finite}}}, AbstractMatrix{ScientificTypesBase.Continuous}},
- target_scitype = AbstractVector{<:ScientificTypesBase.Finite},
- output_scitype = ScientificTypesBase.Unknown)
-````
-
 In MLJ a *model* is just a struct containing hyperparameters, and that's all. A model
 does not store *learned* parameters. Models are mutable:
 
@@ -744,8 +623,8 @@ mach = machine(model, X, y)
 untrained Machine; caches model-specific representations of data
   model: NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …)
   args: 
-    1:	Source @429 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
-    2:	Source @634 ⏎ AbstractVector{ScientificTypesBase.Multiclass{3}}
+    1:	Source @650 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
+    2:	Source @879 ⏎ AbstractVector{ScientificTypesBase.Multiclass{3}}
 
 ````
 
@@ -771,18 +650,18 @@ fit!(mach, rows=train, verbosity=2);
 ````
 [ Info: Training machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
 [ Info: MLJFlux: converting input data to Float32
-[ Info: Loss is 1.143
-[ Info: Loss is 1.066
-[ Info: Loss is 1.05
-[ Info: Loss is 1.012
-[ Info: Loss is 1.02
-[ Info: Loss is 1.037
-[ Info: Loss is 0.9863
-[ Info: Loss is 0.9702
-[ Info: Loss is 0.9627
-[ Info: Loss is 0.9917
-[ Info: Loss is 0.9411
-[ Info: Loss is 0.949
+[ Info: Loss is 1.224
+[ Info: Loss is 1.171
+[ Info: Loss is 1.087
+[ Info: Loss is 1.141
+[ Info: Loss is 1.184
+[ Info: Loss is 1.08
+[ Info: Loss is 1.132
+[ Info: Loss is 1.001
+[ Info: Loss is 1.082
+[ Info: Loss is 1.103
+[ Info: Loss is 1.04
+[ Info: Loss is 1.051
 
 ````
 
@@ -795,9 +674,9 @@ yhat[1:3]
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.342, Iris-versicolor=>0.326, Iris-virginica=>0.332)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.604, Iris-versicolor=>0.217, Iris-virginica=>0.18)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.587, Iris-versicolor=>0.225, Iris-virginica=>0.188)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.365, versicolor=>0.336, virginica=>0.299)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.516, versicolor=>0.301, virginica=>0.183)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.487, versicolor=>0.306, virginica=>0.208)
 ````
 
 We'll have more to say on the form of this prediction shortly.
@@ -820,7 +699,7 @@ report(mach)
 ````
 
 ````
-(training_losses = Float32[1.1288357, 1.1425601, 1.0655024, 1.0497895, 1.011883, 1.0195154, 1.0368143, 0.986287, 0.9701824, 0.9627444, 0.99168724, 0.94110906, 0.9490261],)
+(training_losses = Float32[1.1108134, 1.2239017, 1.1714171, 1.0868121, 1.1411062, 1.1840241, 1.0804282, 1.1324829, 1.0006034, 1.0816715, 1.1034313, 1.0395544, 1.050618],)
 ````
 
 You save a machine like this:
@@ -839,9 +718,9 @@ yhat[1:3]
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.333, Iris-versicolor=>0.329, Iris-virginica=>0.337)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.595, Iris-versicolor=>0.221, Iris-virginica=>0.183)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.34, Iris-versicolor=>0.327, Iris-virginica=>0.333)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.35, versicolor=>0.332, virginica=>0.318)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.498, versicolor=>0.304, virginica=>0.198)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.368, versicolor=>0.339, virginica=>0.293)
 ````
 
 Machines remember the last set of hyperparameters used during fit,
@@ -856,10 +735,10 @@ fit!(mach, rows=train, verbosity=2);
 
 ````
 [ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
-[ Info: Loss is 0.9812
-[ Info: Loss is 0.974
-[ Info: Loss is 0.931
-[ Info: Loss is 0.9568
+[ Info: Loss is 1.079
+[ Info: Loss is 1.061
+[ Info: Loss is 1.053
+[ Info: Loss is 0.9229
 
 ````
 
@@ -890,10 +769,10 @@ fit!(mach, rows=train, verbosity=2);
 
 ````
 [ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
-[ Info: Loss is 0.8732
-[ Info: Loss is 0.9372
-[ Info: Loss is 0.885
-[ Info: Loss is 0.9271
+[ Info: Loss is 0.9575
+[ Info: Loss is 0.9934
+[ Info: Loss is 0.9791
+[ Info: Loss is 0.9231
 
 ````
 
@@ -908,26 +787,26 @@ fit!(mach, rows=train, verbosity=2);
 ````
 [ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
 [ Info: MLJFlux: converting input data to Float32
-[ Info: Loss is 1.181
-[ Info: Loss is 1.06
-[ Info: Loss is 1.042
-[ Info: Loss is 0.9951
-[ Info: Loss is 0.9879
-[ Info: Loss is 0.8658
-[ Info: Loss is 0.7765
-[ Info: Loss is 0.6654
-[ Info: Loss is 0.6879
-[ Info: Loss is 0.8079
-[ Info: Loss is 0.6575
-[ Info: Loss is 0.7111
-[ Info: Loss is 0.7004
-[ Info: Loss is 0.8001
-[ Info: Loss is 0.7394
-[ Info: Loss is 0.6407
-[ Info: Loss is 0.6097
-[ Info: Loss is 0.7553
-[ Info: Loss is 0.6733
-[ Info: Loss is 0.7881
+[ Info: Loss is 1.073
+[ Info: Loss is 0.9668
+[ Info: Loss is 0.9129
+[ Info: Loss is 0.8325
+[ Info: Loss is 0.8832
+[ Info: Loss is 0.8087
+[ Info: Loss is 0.7739
+[ Info: Loss is 0.8602
+[ Info: Loss is 0.707
+[ Info: Loss is 0.7378
+[ Info: Loss is 0.7551
+[ Info: Loss is 0.6433
+[ Info: Loss is 0.6834
+[ Info: Loss is 0.6924
+[ Info: Loss is 0.6047
+[ Info: Loss is 0.6192
+[ Info: Loss is 0.5684
+[ Info: Loss is 0.6033
+[ Info: Loss is 0.5034
+[ Info: Loss is 0.6615
 
 ````
 
@@ -946,7 +825,7 @@ yhat[1]
 ````
 
 ````
-UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0888, Iris-versicolor=>0.59, Iris-virginica=>0.321)
+UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.146, versicolor=>0.557, virginica=>0.297)
 ````
 
 What's going on here?
@@ -973,11 +852,12 @@ So, to obtain the probability of "Iris-virginica" in the first test
 prediction, we do
 
 ````@julia
-pdf(yhat[1], "Iris-virginica")
+# pdf(yhat[1], "Iris-virginica")
+pdf(yhat[1], "virginica")
 ````
 
 ````
-0.3214355f0
+0.29680207f0
 ````
 
 To get the most likely observation, we do
@@ -987,21 +867,22 @@ mode(yhat[1])
 ````
 
 ````
-CategoricalArrays.CategoricalValue{String, UInt32} "Iris-versicolor"
+CategoricalArrays.CategoricalValue{String, UInt32} "versicolor"
 ````
 
 These can be broadcast over multiple predictions in the usual way:
 
 ````@julia
-broadcast(pdf, yhat[1:4], "Iris-versicolor")
+# broadcast(pdf, yhat[1:4], "Iris-versicolor")
+broadcast(pdf, yhat[1:4], "versicolor")
 ````
 
 ````
 4-element Vector{Float32}:
- 0.5897828
- 0.0026599853
- 0.0025974344
- 0.003000382
+ 0.5573557
+ 0.005508058
+ 0.0057135588
+ 0.006359523
 ````
 
 ````@julia
@@ -1010,10 +891,10 @@ mode.(yhat[1:4])
 
 ````
 4-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
- "Iris-versicolor"
- "Iris-setosa"
- "Iris-setosa"
- "Iris-setosa"
+ "versicolor"
+ "setosa"
+ "setosa"
+ "setosa"
 ````
 
 Or, alternatively, you can use the `predict_mode` operation instead
@@ -1025,10 +906,10 @@ predict_mode(mach, X[test,:])[1:4] # or predict_mode(mach, rows=test)[1:4]
 
 ````
 4-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
- "Iris-versicolor"
- "Iris-setosa"
- "Iris-setosa"
- "Iris-setosa"
+ "versicolor"
+ "setosa"
+ "setosa"
+ "setosa"
 ````
 
 For a more conventional matrix of probabilities you can do this:
@@ -1040,13 +921,13 @@ pdf(yhat, L)[1:4, :]
 
 ````
 4×3 Matrix{Float32}:
- 0.0887817  0.589783    0.321436
- 0.99734    0.00265999  2.01647f-10
- 0.997402   0.00259743  1.95144f-10
- 0.997      0.00300038  2.57209f-10
+ 0.145842  0.557356    0.296802
+ 0.994492  0.00550806  2.47519f-7
+ 0.994286  0.00571356  2.62242f-7
+ 0.99364   0.00635952  3.05573f-7
 ````
 
-However, in a typical MLJ work-flow, this is not as useful as you might imagine. In
+However, in a typical MLJ workflow, this is not as useful as you might imagine. In
 particular, all probabilistic performance measures in MLJ expect distribution objects in
 their first slot:
 
@@ -1055,7 +936,7 @@ log_loss(yhat, y[test])
 ````
 
 ````
-0.37032954303460236
+0.3450524918546487
 ````
 
 To apply a deterministic measure, we first need to obtain point-estimates:
@@ -1069,75 +950,8 @@ misclassification_rate(mode.(yhat), y[test])
 ````
 
 For more on metrics provided by MLJ, see the [StatisticalMeasures.jl
-documentation](https://juliaai.github.io/StatisticalMeasures.jl/stable/). List all
-measures like this:
-
-````@julia
-measures()
-````
-
-````
-OrderedCollections.LittleDict{Any, Any, Vector{Any}, Vector{Any}} with 59 entries:
-  LPLoss => (aliases = ("l1", "l2", "mae", "mav", "mean_absolute_error", "mean_absolute_value"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "``L^p`` loss")
-  MultitargetLPLoss => (aliases = ("multitarget_l1", "multitarget_l2", "multitarget_mae", "multitarget_mav", "multitarget_mean_absolute_error", "multitarget_mean_absolute_value"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multitarget ``L^p`` loss")
-  LPSumLoss => (aliases = ("l1_sum", "l2_sum"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Sum(), human_name = "``L^p`` sum loss")
-  MultitargetLPSumLoss => (aliases = ("multitarget_l1_sum", "multitarget_l2_sum"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Sum(), human_name = "multitarget ``L^p`` sum loss")
-  RootMeanSquaredError => (aliases = ("rms", "rmse", "root_mean_squared_error"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "root mean squared error")
-  MultitargetRootMeanSquaredError => (aliases = ("multitarget_rms", "multitarget_rmse", "multitarget_root_mean_squared_error"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "multitarget root mean squared error")
-  RootMeanSquaredLogError => (aliases = ("rmsl", "rmsle", "root_mean_squared_log_error"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "root mean squared log error")
-  MultitargetRootMeanSquaredLogError => (aliases = ("multitarget_rmsl", "multitarget_rmsle", "multitarget_root_mean_squared_log_error"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "multitarget root mean squared log error")
-  RootMeanSquaredLogProportionalError => (aliases = ("rmslp1",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "root mean squared log proportional error")
-  MultitargetRootMeanSquaredLogProportionalError => (aliases = ("multitarget_rmslp1",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "multitarget root mean squared log proportional error")
-  RootMeanSquaredProportionalError => (aliases = ("rmsp",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "root mean squared proportional error")
-  MultitargetRootMeanSquaredProportionalError => (aliases = ("multitarget_rmsp",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = RootMean{Int64}(2), human_name = "multitarget root mean squared proportional error")
-  MeanAbsoluteProportionalError => (aliases = ("mape",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "mean absolute proportional error")
-  MultitargetMeanAbsoluteProportionalError => (aliases = ("multitarget_mape",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multitarget mean absolute proportional error")
-  LogCoshLoss => (aliases = ("log_cosh", "log_cosh_loss"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "log cosh loss")
-  MultitargetLogCoshLoss => (aliases = ("multitarget_mape",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Infinite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multitarget log cosh loss")
-  RSquared => (aliases = ("rsq", "rsquared"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "R² coefficient")
-  WillmottD => (aliases = ("willmott_d",), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Infinite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "Willmott index of agreement (d)")
-  ConfusionMatrix => (aliases = ("confmat", "confusion_matrix"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Unoriented(), external_aggregation_mode = Sum(), human_name = "confusion matrix")
-  MisclassificationRate => (aliases = ("misclassification_rate", "mcr"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "misclassification rate")
-  MultitargetMisclassificationRate => (aliases = ("multitarget_misclassification_rate", "multitarget_mcr"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Finite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multitarget misclassification rate")
-  Accuracy => (aliases = ("accuracy",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "accuracy")
-  MultitargetAccuracy => (aliases = ("multitarget_accuracy",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Point(), observation_scitype = AbstractArray{<:Union{Missing, Finite}}, can_consume_tables = true, supports_weights = true, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "multitarget accuracy")
-  BalancedAccuracy => (aliases = ("balanced_accuracy", "bacc", "bac", "probability_of_correct_classification"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "balanced accuracy")
-  Kappa => (aliases = ("kappa",), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "Cohen's κ")
-  MatthewsCorrelation => (aliases = ("matthews_correlation", "mcc"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "Matthew's correlation")
-  FScore => (aliases = ("f1score",), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "``F_β`` score")
-  TruePositive => (aliases = ("true_positive", "truepositive"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Sum(), human_name = "true positive count")
-  TrueNegative => (aliases = ("true_negative", "truenegative"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Sum(), human_name = "true negative count")
-  FalsePositive => (aliases = ("false_positive", "falsepositive"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Sum(), human_name = "false positive count")
-  FalseNegative => (aliases = ("false_negative", "falsenegative"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Sum(), human_name = "false negative count")
-  TruePositiveRate => (aliases = ("true_positive_rate", "truepositive_rate", "tpr", "sensitivity", "recall", "hit_rate"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "true positive rate")
-  TrueNegativeRate => (aliases = ("true_negative_rate", "truenegative_rate", "tnr", "specificity", "selectivity"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "true negative rate")
-  FalsePositiveRate => (aliases = ("false_positive_rate", "falsepositive_rate", "fpr", "fallout"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "false positive rate")
-  FalseNegativeRate => (aliases = ("false_negative_rate", "falsenegative_rate", "fnr", "miss_rate"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "false negative rate")
-  FalseDiscoveryRate => (aliases = ("false_discovery_rate", "falsediscovery_rate", "fdr"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "false discovery rate")
-  PositivePredictiveValue => (aliases = ("positive_predictive_value", "ppv", "positivepredictive_value", "precision"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "positive predictive value")
-  NegativePredictiveValue => (aliases = ("negative_predictive_value", "negativepredictive_value", "npv"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, OrderedFactor{2}}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "negative predictive value")
-  MulticlassTruePositive => (aliases = ("multiclass_true_positive", "multiclass_truepositive"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Sum(), human_name = "multi-class true positive count")
-  MulticlassTrueNegative => (aliases = ("multiclass_true_negative", "multiclass_truenegative"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Sum(), human_name = "multi-class true negative count")
-  MulticlassFalsePositive => (aliases = ("multiclass_false_positive", "multiclass_falsepositive"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Sum(), human_name = "multi-class false positive count")
-  MulticlassFalseNegative => (aliases = ("multiclass_false_negative", "multiclass_falsenegative"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Loss(), external_aggregation_mode = Sum(), human_name = "multi-class false negative count")
-  MulticlassTruePositiveRate => (aliases = ("multiclass_true_positive_rate", "multiclass_truepositive_rate", "multiclass_tpr", "multiclass_sensitivity", "multiclass_recall", "multiclass_hit_rate"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "multi-class true positive rate")
-  MulticlassTrueNegativeRate => (aliases = ("multiclass_true_negative_rate", "multiclass_truenegative_rate", "multiclass_tnr", "multiclass_specificity", "multiclass_selectivity"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "multi-class true negative rate")
-  MulticlassFalsePositiveRate => (aliases = ("multiclass_false_positive_rate", "multiclass_falsepositive_rate", "multiclass_fpr", "multiclass_fallout"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multi-class false positive rate")
-  MulticlassFalseNegativeRate => (aliases = ("multiclass_false_negative_rate", "multiclass_falsenegative_rate", "multiclass_fnr", "multiclass_miss_rate"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multi-class false negative rate")
-  MulticlassFalseDiscoveryRate => (aliases = ("multiclass_false_discovery_rate", "multiclass_falsediscovery_rate", "multiclass_fdr"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "multi-class false discovery rate")
-  MulticlassPositivePredictiveValue => (aliases = ("multiclass_positive_predictive_value", "multiclass_ppv", "multiclass_positivepredictive_value", "multiclass_precision"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "multi-class positive predictive value")
-  MulticlassNegativePredictiveValue => (aliases = ("multiclass_negative_predictive_value", "multiclass_negativepredictive_value", "multiclass_npv"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "multi-class negative predictive value")
-  MulticlassFScore => (aliases = ("macro_f1score", "micro_f1score", "multiclass_f1score"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Point(), observation_scitype = Union{Missing, Finite}, can_consume_tables = false, supports_weights = false, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "multi-class ``F_β`` score")
-  AveragePrecision => (aliases = ("average_precision",), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Distribution(), observation_scitype = OrderedFactor{2}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "average precision")
-  AreaUnderCurve => (aliases = ("auc", "area_under_curve"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Distribution(), observation_scitype = Binary, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "area under the receiver operator characteritic")
-  PrecisionAtFixedRecall => (aliases = ("precision_at_fixed_recall",), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Distribution(), observation_scitype = OrderedFactor{2}, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "precision at fixed recall")
-  LogScore => (aliases = ("log_score",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Distribution(), observation_scitype = Union{Missing, Infinite, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "log score")
-  LogLoss => (aliases = ("log_loss", "cross_entropy"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Distribution(), observation_scitype = Union{Missing, Infinite, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "log loss")
-  BrierScore => (aliases = ("brier_score", "quadratic_score"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Distribution(), observation_scitype = Union{Missing, Infinite, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "brier score")
-  BrierLoss => (aliases = ("brier_loss", "cross_entropy", "quadratic_loss"), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Distribution(), observation_scitype = Union{Missing, Infinite, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Loss(), external_aggregation_mode = Mean(), human_name = "brier loss")
-  SphericalScore => (aliases = ("spherical_score",), consumes_multiple_observations = true, can_report_unaggregated = true, kind_of_proxy = Distribution(), observation_scitype = Union{Missing, Infinite, Finite}, can_consume_tables = false, supports_weights = true, supports_class_weights = true, orientation = Score(), external_aggregation_mode = Mean(), human_name = "spherical score")
-  ContinuousBoyceIndex => (aliases = ("continuous_boyce_index", "cbi"), consumes_multiple_observations = true, can_report_unaggregated = false, kind_of_proxy = Distribution(), observation_scitype = Binary, can_consume_tables = false, supports_weights = false, supports_class_weights = false, orientation = Score(), external_aggregation_mode = Mean(), human_name = "continuous Boyce index")
-````
+documentation](https://juliaai.github.io/StatisticalMeasures.jl/stable/). To list all
+measures run `measures()`.
 
 ### Step 4. Evaluate the model performance
 
@@ -1159,15 +973,15 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-252
+Tag: NeuralNetworkClassifier-803
 Extract:
 ┌─────────────────────────┬──────────────┬─────────────┐
 │ measure                 │ operation    │ measurement │
 ├─────────────────────────┼──────────────┼─────────────┤
-│ LogLoss(                │ predict      │ 0.37        │
+│ LogLoss(                │ predict      │ 0.345       │
 │   tol = 2.22045e-16)    │              │             │
 │ MisclassificationRate() │ predict_mode │ 0.0444      │
-│ BrierScore()            │ predict      │ -0.202      │
+│ BrierScore()            │ predict      │ -0.184      │
 └─────────────────────────┴──────────────┴─────────────┘
 
 ````
@@ -1188,22 +1002,22 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-304
+Tag: NeuralNetworkClassifier-943
 Extract:
 ┌───┬─────────────────────────┬──────────────┬─────────────┐
 │   │ measure                 │ operation    │ measurement │
 ├───┼─────────────────────────┼──────────────┼─────────────┤
-│ A │ LogLoss(                │ predict      │ 0.287       │
+│ A │ LogLoss(                │ predict      │ 0.289       │
 │   │   tol = 2.22045e-16)    │              │             │
-│ B │ MisclassificationRate() │ predict_mode │ 0.0333      │
-│ C │ BrierScore()            │ predict      │ -0.148      │
+│ B │ MisclassificationRate() │ predict_mode │ 0.04        │
+│ C │ BrierScore()            │ predict      │ -0.154      │
 └───┴─────────────────────────┴──────────────┴─────────────┘
 ┌───┬─────────────────────────────────────────────────────────┬─────────┐
 │   │ per_fold                                                │ 1.96*SE │
 ├───┼─────────────────────────────────────────────────────────┼─────────┤
-│ A │ [0.267, 0.251, 0.258, 0.271, 0.287, 0.391]              │ 0.0457  │
-│ B │ [0.04, 0.04, 0.0, 0.04, 0.04, 0.04]                     │ 0.0143  │
-│ C │ Float32[-0.139, -0.129, -0.128, -0.128, -0.149, -0.212] │ 0.0287  │
+│ A │ [0.296, 0.265, 0.267, 0.307, 0.284, 0.312]              │ 0.0173  │
+│ B │ [0.04, 0.08, 0.0, 0.04, 0.04, 0.04]                     │ 0.0222  │
+│ C │ Float32[-0.158, -0.146, -0.135, -0.173, -0.149, -0.165] │ 0.012   │
 └───┴─────────────────────────────────────────────────────────┴─────────┘
 
 ````
@@ -1226,22 +1040,22 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-123
+Tag: NeuralNetworkClassifier-933
 Extract:
 ┌───┬─────────────────────────┬──────────────┬─────────────┐
 │   │ measure                 │ operation    │ measurement │
 ├───┼─────────────────────────┼──────────────┼─────────────┤
-│ A │ LogLoss(                │ predict      │ 0.309       │
+│ A │ LogLoss(                │ predict      │ 0.312       │
 │   │   tol = 2.22045e-16)    │              │             │
-│ B │ MisclassificationRate() │ predict_mode │ 0.0356      │
-│ C │ BrierScore()            │ predict      │ -0.163      │
+│ B │ MisclassificationRate() │ predict_mode │ 0.0444      │
+│ C │ BrierScore()            │ predict      │ -0.164      │
 └───┴─────────────────────────┴──────────────┴─────────────┘
 ┌───┬───────────────────────────────────────────────────────────────────────────
 │   │ per_fold                                                                 ⋯
 ├───┼───────────────────────────────────────────────────────────────────────────
-│ A │ [0.299, 0.417, 0.238, 0.538, 0.272, 0.197, 0.308, 0.289, 0.254, 0.327, 0 ⋯
-│ B │ [0.0, 0.04, 0.04, 0.0, 0.08, 0.04, 0.04, 0.04, 0.0, 0.0, 0.08, 0.08, 0.0 ⋯
-│ C │ Float32[-0.159, -0.219, -0.116, -0.315, -0.147, -0.0995, -0.17, -0.156,  ⋯
+│ A │ [0.337, 0.327, 0.291, 0.318, 0.354, 0.216, 0.185, 0.378, 0.284, 0.36, 0. ⋯
+│ B │ [0.0, 0.0, 0.04, 0.0, 0.08, 0.0, 0.04, 0.12, 0.0, 0.04, 0.12, 0.08, 0.04 ⋯
+│ C │ Float32[-0.186, -0.182, -0.135, -0.154, -0.208, -0.108, -0.0885, -0.229, ⋯
 └───┴───────────────────────────────────────────────────────────────────────────
                                                                2 columns omitted
 
@@ -1250,7 +1064,7 @@ Extract:
 We finally note that you can restrict the rows of observations from
 which train and test folds are drawn, by specifying `rows=...`. For
 example, imagining the last 30% of target observations are `missing`
-you might have a work-flow like this:
+you might have a workflow like this:
 
 ````@julia
 train, test = partition(eachindex(y), 0.7)
@@ -1268,51 +1082,51 @@ predict(mach, rows=test) # and predict missing targets
 
 ````
 45-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.142, Iris-versicolor=>0.578, Iris-virginica=>0.279)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.991, Iris-versicolor=>0.00853, Iris-virginica=>3.85e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.991, Iris-versicolor=>0.00888, Iris-virginica=>4.12e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.99, Iris-versicolor=>0.00993, Iris-virginica=>4.85e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.16, Iris-versicolor=>0.575, Iris-virginica=>0.264)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00253, Iris-versicolor=>0.259, Iris-virginica=>0.738)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.992, Iris-versicolor=>0.00774, Iris-virginica=>3.35e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.992, Iris-versicolor=>0.00843, Iris-virginica=>3.79e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0316, Iris-versicolor=>0.459, Iris-virginica=>0.509)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.199, Iris-versicolor=>0.619, Iris-virginica=>0.182)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000766, Iris-versicolor=>0.189, Iris-virginica=>0.811)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00272, Iris-versicolor=>0.265, Iris-virginica=>0.733)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00105, Iris-versicolor=>0.205, Iris-virginica=>0.794)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0916, Iris-versicolor=>0.535, Iris-virginica=>0.373)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.991, Iris-versicolor=>0.00895, Iris-virginica=>4.13e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.222, Iris-versicolor=>0.631, Iris-virginica=>0.147)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00187, Iris-versicolor=>0.238, Iris-virginica=>0.76)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00228, Iris-versicolor=>0.25, Iris-virginica=>0.747)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0192, Iris-versicolor=>0.412, Iris-virginica=>0.569)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.138, Iris-versicolor=>0.571, Iris-virginica=>0.291)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.272, Iris-versicolor=>0.623, Iris-virginica=>0.105)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.113, Iris-versicolor=>0.57, Iris-virginica=>0.316)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.154, Iris-versicolor=>0.604, Iris-virginica=>0.242)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00146, Iris-versicolor=>0.223, Iris-virginica=>0.775)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.988, Iris-versicolor=>0.0117, Iris-virginica=>6.07e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00105, Iris-versicolor=>0.205, Iris-virginica=>0.794)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.169, Iris-versicolor=>0.593, Iris-virginica=>0.238)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0209, Iris-versicolor=>0.415, Iris-virginica=>0.564)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00406, Iris-versicolor=>0.29, Iris-virginica=>0.706)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.003, Iris-versicolor=>0.269, Iris-virginica=>0.728)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.099, Iris-versicolor=>0.566, Iris-virginica=>0.335)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.988, Iris-versicolor=>0.0116, Iris-virginica=>6.08e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.114, Iris-versicolor=>0.58, Iris-virginica=>0.306)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.152, Iris-versicolor=>0.593, Iris-virginica=>0.255)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00145, Iris-versicolor=>0.224, Iris-virginica=>0.775)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0211, Iris-versicolor=>0.422, Iris-virginica=>0.557)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00235, Iris-versicolor=>0.253, Iris-virginica=>0.745)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.219, Iris-versicolor=>0.625, Iris-virginica=>0.156)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.991, Iris-versicolor=>0.00918, Iris-virginica=>4.32e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.991, Iris-versicolor=>0.00922, Iris-virginica=>4.35e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00303, Iris-versicolor=>0.27, Iris-virginica=>0.727)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.989, Iris-versicolor=>0.0111, Iris-virginica=>5.56e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0154, Iris-versicolor=>0.395, Iris-virginica=>0.59)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.162, Iris-versicolor=>0.586, Iris-virginica=>0.253)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0146, Iris-versicolor=>0.39, Iris-virginica=>0.596)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.252, versicolor=>0.476, virginica=>0.272)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.977, versicolor=>0.0204, virginica=>0.00301)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.977, versicolor=>0.0198, virginica=>0.0029)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.975, versicolor=>0.0213, virginica=>0.0032)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.274, versicolor=>0.468, virginica=>0.258)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00471, versicolor=>0.314, virginica=>0.681)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.981, versicolor=>0.0164, virginica=>0.00226)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.979, versicolor=>0.0187, virginica=>0.00269)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0491, versicolor=>0.465, virginica=>0.485)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.276, versicolor=>0.466, virginica=>0.258)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00211, versicolor=>0.266, virginica=>0.732)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00591, versicolor=>0.329, virginica=>0.665)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00233, versicolor=>0.272, virginica=>0.726)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.177, versicolor=>0.495, virginica=>0.328)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.977, versicolor=>0.0202, virginica=>0.00298)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.287, versicolor=>0.461, virginica=>0.252)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00361, versicolor=>0.298, virginica=>0.699)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0065, versicolor=>0.335, virginica=>0.658)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0343, versicolor=>0.444, virginica=>0.521)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.24, versicolor=>0.479, virginica=>0.28)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.321, versicolor=>0.446, virginica=>0.232)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.199, versicolor=>0.491, virginica=>0.31)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.24, versicolor=>0.479, virginica=>0.28)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00377, versicolor=>0.301, virginica=>0.696)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.962, versicolor=>0.0328, virginica=>0.00564)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00286, versicolor=>0.284, virginica=>0.713)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.274, versicolor=>0.467, virginica=>0.258)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0389, versicolor=>0.452, virginica=>0.509)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00826, versicolor=>0.351, virginica=>0.641)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00643, versicolor=>0.334, virginica=>0.659)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.179, versicolor=>0.494, virginica=>0.326)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.968, versicolor=>0.0275, virginica=>0.00445)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.193, versicolor=>0.492, virginica=>0.315)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.247, versicolor=>0.477, virginica=>0.276)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00376, versicolor=>0.301, virginica=>0.696)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0328, versicolor=>0.442, virginica=>0.526)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00641, versicolor=>0.334, virginica=>0.659)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.281, versicolor=>0.464, virginica=>0.255)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.975, versicolor=>0.0217, virginica=>0.00327)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.976, versicolor=>0.0209, virginica=>0.00311)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00547, versicolor=>0.324, virginica=>0.671)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.969, versicolor=>0.0266, virginica=>0.00427)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0347, versicolor=>0.445, virginica=>0.52)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.268, versicolor=>0.47, virginica=>0.262)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0386, versicolor=>0.452, virginica=>0.51)
 ````
 
 ### On learning curves
@@ -1321,7 +1135,7 @@ Since our model is an iterative one, we might want to inspect the out-of-sample
 performance as a function of the iteration parameter. For this we can use the
 `learning_curve` function (which, incidentally can be applied to any model
 hyperparameter). This starts by defining a one-dimensional range object for the
-parameter (more on this when we discuss tuning in Part 4):
+parameter (more on this when we discuss tuning in Tutorial 4):
 
 ````@julia
 r = range(model, :epochs, lower=1, upper=1000, scale=:log10)
@@ -1341,7 +1155,7 @@ curve = learning_curve(
 ````
 
 ````
-(parameter_name = "epochs", parameter_scale = :log10, parameter_values = [1, 2, 3, 4, 5, 7, 9, 11, 14, 17, 22, 28, 36, 45, 57, 73, 92, 117, 149, 189, 240, 304, 386, 489, 621, 788, 1000], measurements = [1.1018252828129487, 1.033152048093469, 0.9863576423897263, 0.9391617902015723, 0.8750421994591743, 0.7851653124864693, 0.7328263008371334, 0.702214489753954, 0.6780729031117568, 0.6487431500447599, 0.64571045377685, 0.6204905084235258, 0.5818433695914454, 0.56333147640524, 0.42256384342255554, 0.4018988792429016, 0.3187217465543096, 0.30359883054933823, 0.312081853864572, 0.31428629354201426, 0.28165515325725804, 0.30369578120986407, 0.2929974052548339, 0.3067284457890579, 0.2938824409580112, 0.29301857202072, 0.2844845796823058])
+(parameter_name = "epochs", parameter_scale = :log10, parameter_values = [1, 2, 3, 4, 5, 7, 9, 11, 14, 17, 22, 28, 36, 45, 57, 73, 92, 117, 149, 189, 240, 304, 386, 489, 621, 788, 1000], measurements = [0.9868631607591435, 0.9177373579274353, 0.7928130612629691, 0.7571137752713681, 0.6851313147101327, 0.6156774219929569, 0.581239506206346, 0.534846995511736, 0.5002254761427426, 0.48638265866988506, 0.4400383152078051, 0.42036333526391684, 0.3737500578649974, 0.3355361839785058, 0.3105294743807959, 0.3331241936577385, 0.25588813384002324, 0.23053561187495986, 0.2361587544861429, 0.2752916485072084, 0.2358462016375349, 0.23330843436159235, 0.22328935581618545, 0.2384161728086053, 0.21372094325026206, 0.2669165770979309, 0.24147887997776202])
 ````
 
 ````@julia
@@ -1354,7 +1168,7 @@ savefig("learning_curve.png")
 ````
 
 ````
-"/Users/anthony/GoogleDrive/Julia/MLJ/MLJTutorial/docs/src/notebooks/02_models/learning_curve.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/02_models/learning_curve.png"
 ````
 
 ![](learning_curve.png)
@@ -1404,16 +1218,16 @@ y4 = [n_devices(row.salary) for row in eachrow(X4)]
 
 ````
 10-element Vector{Int64}:
+ 5
+ 2
  3
+ 5
+ 5
  1
- 0
  4
- 0
- 3
- 3
+ 8
  2
- 1
- 2
+ 4
 ````
 
 (b) What models can be applied if you coerce the salary to a
@@ -1439,10 +1253,10 @@ pretty(data)
 │ Int64 │ Float64    │ Float64    │ CategoricalValue{String, UInt32} │
 │ Count │ Continuous │ Continuous │ OrderedFactor{2}                 │
 ├───────┼────────────┼────────────┼──────────────────────────────────┤
-│ 1     │ 0.92579    │ 0.247422   │ male                             │
-│ 2     │ 0.459766   │ 0.791015   │ female                           │
-│ 3     │ 0.875865   │ 0.133436   │ female                           │
-│ 4     │ 0.593311   │ 0.931308   │ male                             │
+│ 1     │ 0.699924   │ 0.534555   │ male                             │
+│ 2     │ 0.814431   │ 0.532784   │ female                           │
+│ 3     │ 0.48782    │ 0.759467   │ female                           │
+│ 4     │ 0.407518   │ 0.108316   │ male                             │
 └───────┴────────────┴────────────┴──────────────────────────────────┘
 
 ````
@@ -1464,21 +1278,7 @@ y;
 ````
 
 ````@julia
-pretty(X);
-````
-
-````
-┌────────────┬────────────┐
-│ b          │ c          │
-│ Float64    │ Float64    │
-│ Continuous │ Continuous │
-├────────────┼────────────┤
-│ 0.92579    │ 0.247422   │
-│ 0.459766   │ 0.791015   │
-│ 0.875865   │ 0.133436   │
-│ 0.593311   │ 0.931308   │
-└────────────┴────────────┘
-
+X;
 ````
 
 ````@julia
@@ -1537,10 +1337,10 @@ schema(horse)
 ````
 
 (a) Suppose we want to predict the `:outcome` variable, based on the remaining variables
-that are `Continuous` (one-hot encoding categorical variables is discussed later in Part
-3) *while ignoring the others*.  Extract from the `horse` data set (defined in Part 1)
-appropriate input features `X` and target variable `y`. (Do not, however, randomize the
-observations.)
+that are `Continuous` (one-hot encoding categorical variables is discussed later in
+Tutorial 3) *while ignoring the others*.  Extract from the `horse` data set (defined in
+Tutorial 1) appropriate input features `X` and target variable `y`. (Do not, however,
+randomize the observations.)
 
 (b) Create a 70:30 `train`/`test` split of the data and train a `LogisticClassifier`
 model, from the `MLJLinearModels` package, on the `train` rows. Use `lambda=100` and

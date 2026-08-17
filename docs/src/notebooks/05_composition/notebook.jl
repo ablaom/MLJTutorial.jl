@@ -33,14 +33,14 @@
 
 # ### Building a pipeline using the generic composition syntax
 
-# To warm up, we'll do the equivalent of
-
 using MLJ
+MLJ.color_off() #hide
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
+
+# To warm up, we'll build a learning network to replace this basic pipeline model:
+
 pipe = Standardizer |> LogisticClassifier(lambda=0.001)
 nothing #hide
-
-# by building and exporting a learning network.
 
 # Here's some dummy data we'll be using to test our learning network:
 
@@ -48,7 +48,7 @@ X, y = make_blobs(5, 3)
 pretty(X)
 
 # **Step 0** - Proceed as if you were combining the models "by hand", using all the data
-# available for training, transforming and prediction:
+# available for training, transforation and prediction:
 
 standardizer = Standardizer();
 linear = LogisticClassifier(lambda=0.001);
@@ -138,7 +138,7 @@ yhat = predict(mach2, Xstand)
 your_pipe = YourPipe(standardizer, linear)
 fit!(yhat, composite=your_pipe);
 
-# In this case `:standardizer` is being substituted by `standardizer` and :classifier by
+# In this case `:standardizer` is being substituted by `standardizer` and `:classifier` by
 # `linear` in training.
 
 # The final step is to wrap our learning network code in a method called `prefit`

@@ -85,9 +85,10 @@ jobs:
 
             **Instructions**
 
-            **If given the option to execute CI, do so. Otherwise, close and immediately
-            re-open this pull request** to regenerate documentation.  If successful, merge
-            this pull request to trigger deployment of the new docs to gh-pages.
+            **Accept the invitation to run pending workflows.** If none are apparent, then
+            close and immediately re-open this pull request. This will commit the new
+            markdown and regenerate documentation.  If successful, merge this pull request
+            to trigger deployment of the new docs to gh-pages.
 
             You can check repository "Actions" to check when deployment is complete.
             You should see: ✅ **pages build and deployment**

@@ -2,7 +2,7 @@
 
 # > **Goals:**
 # > 1. Search MLJ's database of model metadata to identify model candidates for a supervised learning task.
-# > 2. Evaluate the performance of a model on a holdout set using basic `fit!`/`predict` work-flow.
+# > 2. Evaluate the performance of a model on a holdout set using basic `fit!`/`predict` workflow.
 # > 3. Inspect the outcomes of training and save these to a file.
 # > 4. Evaluate performance using other resampling strategies, such as cross-validation, in one line, using `evaluate!`
 # > 5. Plot a "learning curve", to inspect performance as a function of some model hyperparameter, such as an iteration parameter
@@ -49,12 +49,8 @@ scitype(y)
 # This puts the `:class` column into a vector `y`, and all remaining
 # columns into a table `X`.
 
-# Here's one way to access the documentation (at the REPL, `?unpack`
-# also works):
-
-@doc unpack
-
-# ---
+# To see the documentation for this function, type `?unpack` in the Julia REPL (or use
+# `@doc unpack` elsewhere).
 
 # ### On searching for a model
 
@@ -106,10 +102,6 @@ NeuralNetworkClassifier = @load NeuralNetworkClassifier pkg=MLJFlux
 # hyperparameters:
 
 model = NeuralNetworkClassifier()
-
-#-
-
-info(model)
 
 # In MLJ a *model* is just a struct containing hyperparameters, and that's all. A model
 # does not store *learned* parameters. Models are mutable:
@@ -252,7 +244,7 @@ predict_mode(mach, X[test,:])[1:4] # or predict_mode(mach, rows=test)[1:4]
 L = levels(y)
 pdf(yhat, L)[1:4, :]
 
-# However, in a typical MLJ work-flow, this is not as useful as you might imagine. In
+# However, in a typical MLJ workflow, this is not as useful as you might imagine. In
 # particular, all probabilistic performance measures in MLJ expect distribution objects in
 # their first slot:
 
@@ -300,7 +292,7 @@ e = evaluate!(
 # We finally note that you can restrict the rows of observations from
 # which train and test folds are drawn, by specifying `rows=...`. For
 # example, imagining the last 30% of target observations are `missing`
-# you might have a work-flow like this:
+# you might have a workflow like this:
 
 train, test = partition(eachindex(y), 0.7)
 mach = machine(model, X, y)
@@ -321,7 +313,7 @@ predict(mach, rows=test) # and predict missing targets
 # performance as a function of the iteration parameter. For this we can use the
 # `learning_curve` function (which, incidentally can be applied to any model
 # hyperparameter). This starts by defining a one-dimensional range object for the
-# parameter (more on this when we discuss tuning in Part 4):
+# parameter (more on this when we discuss tuning in Tutorial 4):
 
 r = range(model, :epochs, lower=1, upper=1000, scale=:log10)
 
@@ -449,10 +441,10 @@ coerce!(
 schema(horse)
 
 # (a) Suppose we want to predict the `:outcome` variable, based on the remaining variables
-# that are `Continuous` (one-hot encoding categorical variables is discussed later in Part
-# 3) *while ignoring the others*.  Extract from the `horse` data set (defined in Part 1)
-# appropriate input features `X` and target variable `y`. (Do not, however, randomize the
-# observations.)
+# that are `Continuous` (one-hot encoding categorical variables is discussed later in
+# Tutorial 3) *while ignoring the others*.  Extract from the `horse` data set (defined in
+# Tutorial 1) appropriate input features `X` and target variable `y`. (Do not, however,
+# randomize the observations.)
 
 # (b) Create a 70:30 `train`/`test` split of the data and train a `LogisticClassifier`
 # model, from the `MLJLinearModels` package, on the `train` rows. Use `lambda=100` and

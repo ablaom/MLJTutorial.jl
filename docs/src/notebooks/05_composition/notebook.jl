@@ -48,7 +48,7 @@ X, y = make_blobs(5, 3)
 pretty(X)
 
 # **Step 0** - Proceed as if you were combining the models "by hand", using all the data
-# available for training, transforation and prediction:
+# available for training, transformation and prediction:
 
 standardizer = Standardizer();
 linear = LogisticClassifier(lambda=0.001);

@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>5. Composition · MLJTutorial.jl</title><meta name="title" content="5. Composition · MLJTutorial.jl"/><meta property="og:title" content="5. Composition · MLJTutorial.jl"/><meta property="twitter:title" content="5. Composition · MLJTutorial.jl"/><meta name="description" content="Documentation for MLJTutorial.jl."/><meta property="og:description" content="Documentation for MLJTutorial.jl."/><meta property="twitter:description" content="Documentation for MLJTutorial.jl."/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.svg" alt="MLJTutorial.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">MLJTutorial.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><a class="tocitem" href="../../01_data_representation/notebook/">1. Data Representation</a></li><li><a class="tocitem" href="../../02_models/notebook/">2. Models</a></li><li><a class="tocitem" href="../../03_pipelines/notebook/">3. Pipelines</a></li><li><a class="tocitem" href="../../04_tuning/notebook/">4. Tuning</a></li><li class="is-active"><a class="tocitem" href>5. Composition</a></li><li><a class="tocitem" href="../../99_solution_to_exercises/notebook/">Solutions to Exercises</a></li><li><a class="tocitem" href="../../lightning_tour/notebook/">Lightning Tour</a></li><li><a class="tocitem" href="../../../notebook_management_tools/">NotebookManagementTools.jl</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>5. Composition</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>5. Composition</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/ablaom/MLJTutorial.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/ablaom/MLJTutorial.jl/blob/dev/docs/src/notebooks/05_composition/notebook.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Tutorial-5.-Advanced-Model-Composition"><a class="docs-heading-anchor" href="#Tutorial-5.-Advanced-Model-Composition">Tutorial 5. Advanced Model Composition</a><a id="Tutorial-5.-Advanced-Model-Composition-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial-5.-Advanced-Model-Composition" title="Permalink"></a></h1><div class="admonition is-warning" id="Warning-712df3831942f1ec"><header class="admonition-header">Warning<a class="admonition-anchor" href="#Warning-712df3831942f1ec" title="Permalink"></a></header><div class="admonition-body"><p>This is an advanced MLJ feature. For extensive documentation and further examples, see <a href="https://juliaai.github.io/MLJ.jl/dev/learning_networks/">the manual</a>.</p></div></div><blockquote><p><strong>Goals:</strong></p><ol><li>Learn how to build a prototypes of a composite model, called <em>learning networks</em></li><li>Learn how to &quot;export&quot; a learning network as a new stand-alone model type</li></ol></blockquote><p>Pipelines are great for composing models in an unbranching sequence. Another built-in type of model composition is a model <em>stack</em>; see <a href="https://juliaai.github.io/MLJ.jl/dev/model_stacking/#Model-Stacking">here</a> for details. For other more complicated model compositions you&#39;ll want to use MLJ&#39;s generic model composition syntax.</p><p>There are two main steps:</p><ul><li><p><strong>Prototype</strong> the composite model by building a <em>learning network</em>, which can be tested on some (dummy) data as you build it.</p></li><li><p><strong>Export</strong> the learning network as a new stand-alone model type.</p></li></ul><p>Like pipeline models, instances of the exported model type behave like any other model (and are not bound to any data, until you wrap them in a machine).</p><h3 id="Building-a-pipeline-using-the-generic-composition-syntax"><a class="docs-heading-anchor" href="#Building-a-pipeline-using-the-generic-composition-syntax">Building a pipeline using the generic composition syntax</a><a id="Building-a-pipeline-using-the-generic-composition-syntax-1"></a><a class="docs-heading-anchor-permalink" href="#Building-a-pipeline-using-the-generic-composition-syntax" title="Permalink"></a></h3><p>To warm up, we&#39;ll do the equivalent of</p><pre><code class="language- hljs">using MLJ
-LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
-pipe = Standardizer |&gt; LogisticClassifier(lambda=0.001)
-nothing # hide</code></pre><pre><code class="nohighlight hljs">[ Info: For silent loading, specify `verbosity=0`. 
-import MLJLinearModels ✔
-</code></pre><p>by building and exporting a learning network.</p><p>Here&#39;s some dummy data we&#39;ll be using to test our learning network:</p><pre><code class="language- hljs">X, y = make_blobs(5, 3)
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>5. Composition · MLJTutorial.jl</title><meta name="title" content="5. Composition · MLJTutorial.jl"/><meta property="og:title" content="5. Composition · MLJTutorial.jl"/><meta property="twitter:title" content="5. Composition · MLJTutorial.jl"/><meta name="description" content="Documentation for MLJTutorial.jl."/><meta property="og:description" content="Documentation for MLJTutorial.jl."/><meta property="twitter:description" content="Documentation for MLJTutorial.jl."/><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.svg" alt="MLJTutorial.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">MLJTutorial.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><a class="tocitem" href="../../01_data_representation/notebook/">1. Data Representation</a></li><li><a class="tocitem" href="../../02_models/notebook/">2. Models</a></li><li><a class="tocitem" href="../../03_pipelines/notebook/">3. Pipelines</a></li><li><a class="tocitem" href="../../04_tuning/notebook/">4. Tuning</a></li><li class="is-active"><a class="tocitem" href>5. Composition</a></li><li><a class="tocitem" href="../../99_solution_to_exercises/notebook/">Solutions to Exercises</a></li><li><a class="tocitem" href="../../lightning_tour/notebook/">Lightning Tour</a></li><li><a class="tocitem" href="../../../notebook_management_tools/">NotebookManagementTools.jl</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>5. Composition</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>5. Composition</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/ablaom/MLJTutorial.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/ablaom/MLJTutorial.jl/blob/dev/docs/src/notebooks/05_composition/notebook.jl" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Tutorial-5.-Advanced-Model-Composition"><a class="docs-heading-anchor" href="#Tutorial-5.-Advanced-Model-Composition">Tutorial 5. Advanced Model Composition</a><a id="Tutorial-5.-Advanced-Model-Composition-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial-5.-Advanced-Model-Composition" title="Permalink"></a></h1><div class="admonition is-warning" id="Warning-712df3831942f1ec"><header class="admonition-header">Warning<a class="admonition-anchor" href="#Warning-712df3831942f1ec" title="Permalink"></a></header><div class="admonition-body"><p>This is an advanced MLJ feature. For extensive documentation and further examples, see <a href="https://juliaai.github.io/MLJ.jl/dev/learning_networks/">the manual</a>.</p></div></div><blockquote><p><strong>Goals:</strong></p><ol><li>Learn how to build a prototypes of a composite model, called <em>learning networks</em></li><li>Learn how to &quot;export&quot; a learning network as a new stand-alone model type</li></ol></blockquote><p>To run the code in this tutorial in a live Julia session, first follow the instructions given <a href="../../../#instructions">here</a>.</p><p>Pipelines are great for composing models in an unbranching sequence. Another built-in type of model composition is a model <em>stack</em>; see <a href="https://juliaai.github.io/MLJ.jl/dev/model_stacking/#Model-Stacking">here</a> for details. For other more complicated model compositions you&#39;ll want to use MLJ&#39;s generic model composition syntax.</p><p>There are two main steps:</p><ul><li><p><strong>Prototype</strong> the composite model by building a <em>learning network</em>, which can be tested on some (dummy) data as you build it.</p></li><li><p><strong>Export</strong> the learning network as a new stand-alone model type.</p></li></ul><p>Like pipeline models, instances of the exported model type behave like any other model (and are not bound to any data, until you wrap them in a machine).</p><h3 id="Building-a-pipeline-using-the-generic-composition-syntax"><a class="docs-heading-anchor" href="#Building-a-pipeline-using-the-generic-composition-syntax">Building a pipeline using the generic composition syntax</a><a id="Building-a-pipeline-using-the-generic-composition-syntax-1"></a><a class="docs-heading-anchor-permalink" href="#Building-a-pipeline-using-the-generic-composition-syntax" title="Permalink"></a></h3><pre><code class="language- hljs">using MLJ
+LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels</code></pre><pre><code class="nohighlight hljs">MLJLinearModels.LogisticClassifier</code></pre><p>To warm up, we&#39;ll build a learning network to replace this basic pipeline model:</p><pre><code class="language- hljs">pipe = Standardizer |&gt; LogisticClassifier(lambda=0.001)</code></pre><p>Here&#39;s some dummy data we&#39;ll be using to test our learning network:</p><pre><code class="language- hljs">X, y = make_blobs(5, 3)
 pretty(X)</code></pre><pre><code class="nohighlight hljs">┌────────────┬────────────┬────────────┐
 │ x1         │ x2         │ x3         │
 │ Float64    │ Float64    │ Float64    │
 │ Continuous │ Continuous │ Continuous │
 ├────────────┼────────────┼────────────┤
-│ -14.621    │ -4.57562   │ -11.2012   │
-│ -6.91997   │ -9.11864   │ -8.70932   │
-│ -3.01901   │ -4.75326   │ -13.9312   │
-│ -7.10836   │ -7.86801   │ -8.2769    │
-│ -6.8677    │ -7.5697    │ -7.06492   │
+│ -5.74465   │ 2.46153    │ -2.99641   │
+│ -5.84665   │ 2.092      │ -0.271891  │
+│ -13.83     │ 0.276595   │ 4.05293    │
+│ -12.237    │ 9.43369    │ 5.14761    │
+│ -7.77455   │ 0.941789   │ -0.369465  │
 └────────────┴────────────┴────────────┘
-</code></pre><p><strong>Step 0</strong> - Proceed as if you were combining the models &quot;by hand&quot;, using all the data available for training, transforming and prediction:</p><pre><code class="language- hljs">standardizer = Standardizer();
+</code></pre><p><strong>Step 0</strong> - Proceed as if you were combining the models &quot;by hand&quot;, using all the data available for training, transformation and prediction:</p><pre><code class="language- hljs">standardizer = Standardizer();
 linear = LogisticClassifier(lambda=0.001);
 
 mach1 = machine(standardizer, X);
@@ -26,11 +22,11 @@ Xstand = transform(mach1, X);
 mach2 = machine(linear, Xstand, y);
 fit!(mach2);
 yhat = predict(mach2, Xstand)</code></pre><pre><code class="nohighlight hljs">5-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00182, 2=&gt;0.996, 3=&gt;0.00177)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000315, 2=&gt;0.000208, 3=&gt;0.999)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.995, 2=&gt;0.00316, 3=&gt;0.00148)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00111, 2=&gt;0.00128, 3=&gt;0.998)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000369, 2=&gt;0.000616, 3=&gt;0.999)</code></pre><p><strong>Step 1</strong> - Edit your code as follows:</p><ul><li><p>wrap the data in <code>Source</code> nodes</p></li><li><p>delete the <code>fit!</code> calls</p></li></ul><pre><code class="language- hljs">X = source(X)  # or X = source() if not testing
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;2.75e-5, 2=&gt;0.000152, 3=&gt;1.0)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000372, 2=&gt;0.00087, 3=&gt;0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.993, 2=&gt;0.00215, 3=&gt;0.00446)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00352, 2=&gt;0.995, 3=&gt;0.00124)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00453, 2=&gt;0.000961, 3=&gt;0.995)</code></pre><p><strong>Step 1</strong> - Edit your code as follows:</p><ul><li><p>wrap the data in <code>Source</code> nodes</p></li><li><p>delete the <code>fit!</code> calls</p></li></ul><pre><code class="language- hljs">X = source(X)  # or X = source() if not testing
 y = source(y)  # or y = source()
 
 standardizer = Standardizer();
@@ -40,28 +36,28 @@ mach1 = machine(standardizer, X);
 Xstand = transform(mach1, X);
 
 mach2 = machine(linear, Xstand, y);
-yhat = predict(mach2, Xstand)</code></pre><pre><code class="nohighlight hljs">Node @897 → LogisticClassifier(…)
+yhat = predict(mach2, Xstand)</code></pre><pre><code class="nohighlight hljs">Node @121 → LogisticClassifier(…)
   args:
-    1:	Node @721 → Standardizer(…)
+    1:	Node @394 → Standardizer(…)
   formula:
     predict(
-      [0m[1mmachine(LogisticClassifier(lambda = 0.001, …), …)[22m, 
+      machine(LogisticClassifier(lambda = 0.001, …), …), 
       transform(
-        [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-        Source @559,
+        machine(Standardizer(features = Symbol[], …), …), 
+        Source @574,
       ),
-    )</code></pre><p>Now <code>X</code>, <code>y</code>, <code>Xstand</code> and <code>yhat</code> are <em>nodes</em> (&quot;variables&quot; or &quot;dynammic data&quot;) instead of data. All training, predicting and transforming is now executed lazily, whenever we <code>fit!</code> one of these nodes. We <em>call</em> a node to retrieve the data it represents in the original manual workflow.</p><pre><code class="language- hljs">fit!(Xstand)
+    )</code></pre><p>Now <code>X</code>, <code>y</code>, <code>Xstand</code> and <code>yhat</code> are <em>nodes</em> (&quot;variables&quot; or &quot;dynamic data&quot;) instead of data. All training, predicting and transforming is now executed lazily, whenever we <code>fit!</code> one of these nodes. We <em>call</em> a node to retrieve the data it represents in the original manual workflow.</p><pre><code class="language- hljs">fit!(Xstand)
 Xstand() |&gt; pretty</code></pre><pre><code class="nohighlight hljs">[ Info: Training machine(Standardizer(features = Symbol[], …), …).
 ┌────────────┬────────────┬────────────┐
 │ x1         │ x2         │ x3         │
 │ Float64    │ Float64    │ Float64    │
 │ Continuous │ Continuous │ Continuous │
 ├────────────┼────────────┼────────────┤
-│ -1.63571   │ 1.09243    │ -0.498136  │
-│ 0.186249   │ -1.16199   │ 0.411573   │
-│ 1.10917    │ 1.00428    │ -1.49476   │
-│ 0.141678   │ -0.541377  │ 0.569435   │
-│ 0.198616   │ -0.393345  │ 1.01189    │
+│ 0.894666   │ -0.157523  │ -1.21267   │
+│ 0.867361   │ -0.257956  │ -0.408588  │
+│ -1.26987   │ -0.751356  │ 0.867785   │
+│ -0.8434    │ 1.7374     │ 1.19086    │
+│ 0.351241   │ -0.570566  │ -0.437385  │
 └────────────┴────────────┴────────────┘
 </code></pre><pre><code class="language- hljs">fit!(yhat); # training is smart and so `Standardizer` is not retrained</code></pre><pre><code class="nohighlight hljs">[ Info: Not retraining machine(Standardizer(features = Symbol[], …), …). Use `force=true` to force.
 [ Info: Training machine(LogisticClassifier(lambda = 0.001, …), …).
@@ -69,30 +65,30 @@ Xstand() |&gt; pretty</code></pre><pre><code class="nohighlight hljs">[ Info: Tr
 │   optim_options: Optim.Options{Float64, Nothing}
 └   lbfgs_options: @NamedTuple{} NamedTuple()
 </code></pre><pre><code class="language- hljs">yhat()</code></pre><pre><code class="nohighlight hljs">5-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00182, 2=&gt;0.996, 3=&gt;0.00177)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000315, 2=&gt;0.000208, 3=&gt;0.999)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.995, 2=&gt;0.00316, 3=&gt;0.00148)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00111, 2=&gt;0.00128, 3=&gt;0.998)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000369, 2=&gt;0.000616, 3=&gt;0.999)</code></pre><p>The node <code>yhat</code> is the &quot;descendant&quot; (in an associated DAG we have defined) of a unique source node:</p><pre><code class="language- hljs">origins(yhat)</code></pre><pre><code class="nohighlight hljs">1-element Vector{MLJBase.Source}:
- Source @559 ⏎ `ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}`</code></pre><p>The data at the source node is replaced by <code>Xnew</code> to obtain a new prediction when we call <code>yhat</code> like this:</p><pre><code class="language- hljs">Xnew, _ = make_blobs(2, 3);
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;2.75e-5, 2=&gt;0.000152, 3=&gt;1.0)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000372, 2=&gt;0.00087, 3=&gt;0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.993, 2=&gt;0.00215, 3=&gt;0.00446)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00352, 2=&gt;0.995, 3=&gt;0.00124)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.00453, 2=&gt;0.000961, 3=&gt;0.995)</code></pre><p>The node <code>yhat</code> is the &quot;descendant&quot; (in an associated DAG we have defined) of a unique source node:</p><pre><code class="language- hljs">origins(yhat)</code></pre><pre><code class="nohighlight hljs">1-element Vector{MLJBase.Source}:
+ Source @574 ⏎ `ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}`</code></pre><p>The data at the source node is replaced by <code>Xnew</code> to obtain a new prediction when we call <code>yhat</code> like this:</p><pre><code class="language- hljs">Xnew, _ = make_blobs(2, 3);
 yhat(Xnew)</code></pre><pre><code class="nohighlight hljs">2-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.98, 2=&gt;0.0198, 3=&gt;7.56e-5)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.442, 2=&gt;0.553, 3=&gt;0.00488)</code></pre><p><strong>Step 2</strong> - Export the learning network as a new stand-alone model type</p><p>We start by defining a new model type for our composite. We subtype <code>ProbabilisticNetworkComposite</code> because our composite is to be a probabilistic predictor. If it were a deterministic predictor, we would use <code>DeterminisiticNetworkComposite</code> instead. There is also a <code>UnsupervisedNetworkComposite</code> for transformers.</p><pre><code class="language- hljs">mutable struct YourPipe &lt;: ProbabilisticNetworkComposite
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;0.000861, 2=&gt;2.17e-12, 3=&gt;0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=&gt;1.11e-5, 2=&gt;2.65e-9, 3=&gt;1.0)</code></pre><p><strong>Step 2</strong> - Export the learning network as a new stand-alone model type</p><p>We start by defining a new model type for our composite. We subtype <code>ProbabilisticNetworkComposite</code> because our composite is to be a probabilistic predictor. If it were a deterministic predictor, we would use <code>DeterministicNetworkComposite</code> instead. There is also a <code>UnsupervisedNetworkComposite</code> for transformers.</p><pre><code class="language- hljs">mutable struct YourPipe &lt;: ProbabilisticNetworkComposite
     standardizer
     classifier
 end</code></pre><p>Next, we make our learning network above generic by substituting each model instance with the corresponding symbol representing a property (field) of the new model struct:</p><pre><code class="language- hljs">mach1 = machine(:standardizer, X);
 Xstand = transform(mach1, X);
 
 mach2 = machine(:classifier, Xstand, y);
-yhat = predict(mach2, Xstand)</code></pre><pre><code class="nohighlight hljs">Node @226 → :classifier
+yhat = predict(mach2, Xstand)</code></pre><pre><code class="nohighlight hljs">Node @768 → :classifier
   args:
-    1:	Node @119 → :standardizer
+    1:	Node @820 → :standardizer
   formula:
     predict(
-      [0m[1mmachine(:classifier, …)[22m, 
+      machine(:classifier, …), 
       transform(
-        [0m[1mmachine(:standardizer, …)[22m, 
-        Source @559,
+        machine(:standardizer, …), 
+        Source @574,
       ),
     )</code></pre><p>Incidentally, this network can be used as before except we must provide an instance of <code>YourPipe</code> in our <code>fit!</code> calls, to indicate which models replace the symbols:</p><pre><code class="language- hljs">your_pipe = YourPipe(standardizer, linear)
 fit!(yhat, composite=your_pipe);</code></pre><pre><code class="nohighlight hljs">[ Info: Training machine(:standardizer, …).
@@ -100,7 +96,7 @@ fit!(yhat, composite=your_pipe);</code></pre><pre><code class="nohighlight hljs"
 ┌ Info: Solver: MLJLinearModels.LBFGS{Optim.Options{Float64, Nothing}, @NamedTuple{}}
 │   optim_options: Optim.Options{Float64, Nothing}
 └   lbfgs_options: @NamedTuple{} NamedTuple()
-</code></pre><p>In this case <code>:standardizer</code> is being substituted by <code>standardizer</code> and :classifier by <code>linear</code> in training.</p><p>The final step is to wrap our learning network code in a method called <code>prefit</code> dispatched on <code>YourPipe</code>. This method returns a &quot;learning network interface&quot; which is a named tuple telling the method which node of the network returns predictions for the composite model.</p><pre><code class="language- hljs">import MLJ.MLJBase
+</code></pre><p>In this case <code>:standardizer</code> is being substituted by <code>standardizer</code> and <code>:classifier</code> by <code>linear</code> in training.</p><p>The final step is to wrap our learning network code in a method called <code>prefit</code> dispatched on <code>YourPipe</code>. This method returns a &quot;learning network interface&quot; which is a named tuple telling the method which node of the network returns predictions for the composite model.</p><pre><code class="language- hljs">import MLJ.MLJBase
 function MLJBase.prefit(composite::YourPipe, verbosity, X, y)
     # the learning network from above:
     X = source(X)
@@ -125,89 +121,89 @@ fit!(mach);</code></pre><pre><code class="nohighlight hljs">[ Info: Training mac
 │   optim_options: Optim.Options{Float64, Nothing}
 └   lbfgs_options: @NamedTuple{} NamedTuple()
 </code></pre><p>The learned parameters and report (where non-empty) for each component model are accessible:</p><pre><code class="language- hljs">fitted_params(mach).classifier.coefs</code></pre><pre><code class="nohighlight hljs">4-element Vector{Pair{Symbol, SubArray{Float64, 1, Matrix{Float64}, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true}}}:
- :sepal_length =&gt; [-2.2990571932367896, 1.6019159485796188, 0.6971412446571812]
-  :sepal_width =&gt; [2.366480261051423, -0.5248221807347037, -1.841658080316722]
- :petal_length =&gt; [-3.5224079961962618, -1.3877639901870444, 4.9101719863832995]
-  :petal_width =&gt; [-3.4242893613574115, -1.7409889397944158, 5.165278301151831]</code></pre><pre><code class="language- hljs">report(mach).standardizer</code></pre><pre><code class="nohighlight hljs">(features_fit = [:sepal_length, :sepal_width, :petal_length, :petal_width],)</code></pre><p>Component models can be swapped out for new ones:</p><pre><code class="language- hljs">pipe.classifier = ConstantClassifier()
+ :sepal_length =&gt; [-2.2884323728871254, 1.4607388496829115, 0.8276935232042247]
+  :sepal_width =&gt; [2.5849165395349716, -0.6646830918858928, -1.9202334476490799]
+ :petal_length =&gt; [-3.5313085896004583, -1.406180852406463, 4.937489442006912]
+  :petal_width =&gt; [-3.4480076498857017, -1.6977190775004856, 5.145726727386192]</code></pre><pre><code class="language- hljs">report(mach).standardizer</code></pre><pre><code class="nohighlight hljs">(features_fit = [:sepal_length, :sepal_width, :petal_length, :petal_width],)</code></pre><p>Component models can be swapped out for new ones:</p><pre><code class="language- hljs">pipe.classifier = ConstantClassifier()
 fit!(mach)
 fitted_params(mach).classifier.target_distribution</code></pre><pre><code class="nohighlight hljs">(CategoricalArrays.CategoricalValue{String, UInt32}[CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;]), 1), CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;]), 2), CategoricalValue(CategoricalArrays.CategoricalPool{String, UInt32}([&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;]), 3)], [0.3333333333333333 0.3333333333333333 0.3333333333333333])</code></pre><h3 id="A-composite-model-to-average-two-regressor-predictors"><a class="docs-heading-anchor" href="#A-composite-model-to-average-two-regressor-predictors">A composite model to average two regressor predictors</a><a id="A-composite-model-to-average-two-regressor-predictors-1"></a><a class="docs-heading-anchor-permalink" href="#A-composite-model-to-average-two-regressor-predictors" title="Permalink"></a></h3><p>Next, we define a composite model that:</p><ul><li>standardizes the input data</li><li>learns and applies a Box-Cox transformation to the target variable</li><li>averages the predictions of two supervised learning models - a ridge regressor and a random forest regressor - using a simple average</li><li>applies the <em>inverse</em> Box-Cox transformation to this blended prediction</li></ul><p>We&#39;ll start with a learning network, with source nodes bound to some dummy test data:</p><pre><code class="language- hljs">RandomForestRegressor = @load RandomForestRegressor pkg=DecisionTree
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels</code></pre><pre><code class="nohighlight hljs">MLJLinearModels.RidgeRegressor</code></pre><p><strong>Input layer with dummy data:</strong></p><pre><code class="language- hljs">X, y = make_regression()
 y = abs.(y)
 X = source(X)
-y = source(y)</code></pre><pre><code class="nohighlight hljs">Source @977 ⏎ `AbstractVector{ScientificTypesBase.Continuous}`</code></pre><p><strong>First layer and target transformation:</strong></p><pre><code class="language- hljs">standardizer = Standardizer()
+y = source(y)</code></pre><pre><code class="nohighlight hljs">Source @332 ⏎ `AbstractVector{ScientificTypesBase.Continuous}`</code></pre><p><strong>First layer and target transformation:</strong></p><pre><code class="language- hljs">standardizer = Standardizer()
 mach1 = machine(standardizer, X)
 W = MLJ.transform(mach1, X)
 
 box_model = UnivariateBoxCoxTransformer()
 mach2 = machine(box_model, y)
-z = MLJ.transform(mach2, y)</code></pre><pre><code class="nohighlight hljs">Node @900 → UnivariateBoxCoxTransformer(…)
+z = MLJ.transform(mach2, y)</code></pre><pre><code class="nohighlight hljs">Node @907 → UnivariateBoxCoxTransformer(…)
   args:
-    1:	Source @977
+    1:	Source @332
   formula:
     transform(
-      [0m[1mmachine(UnivariateBoxCoxTransformer(n = 171, …), …)[22m, 
-      Source @977,
+      machine(UnivariateBoxCoxTransformer(n = 171, …), …), 
+      Source @332,
     )</code></pre><p><strong>Second layer:</strong></p><pre><code class="language- hljs">regressor1 = RidgeRegressor(lambda=0.1)
 mach3 = machine(regressor1, W, z)
 
 regressor2 = RandomForestRegressor(n_trees=50)
 mach4 = machine(regressor2, W, z)
 
-zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)</code></pre><pre><code class="nohighlight hljs">Node @950
+zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)</code></pre><pre><code class="nohighlight hljs">Node @983
   args:
-    1:	Node @350
-    2:	Node @026
+    1:	Node @241
+    2:	Node @953
   formula:
     +(
      var&quot;#*##0#*##1&quot;(
        predict(
-         [0m[1mmachine(RidgeRegressor(lambda = 0.1, …), …)[22m, 
+         machine(RidgeRegressor(lambda = 0.1, …), …), 
          transform(
-           [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-           Source @879,
+           machine(Standardizer(features = Symbol[], …), …), 
+           Source @902,
          ),
        ),
      ),
      var&quot;#*##0#*##1&quot;(
        predict(
-         [0m[1mmachine(RandomForestRegressor(max_depth = -1, …), …)[22m, 
+         machine(RandomForestRegressor(max_depth = -1, …), …), 
          transform(
-           [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-           Source @879,
+           machine(Standardizer(features = Symbol[], …), …), 
+           Source @902,
          ),
        ),
      ),
-    )</code></pre><p><strong>Output:</strong></p><pre><code class="language- hljs">yhat = inverse_transform(mach2, zhat)</code></pre><pre><code class="nohighlight hljs">Node @862 → UnivariateBoxCoxTransformer(…)
+    )</code></pre><p><strong>Output:</strong></p><pre><code class="language- hljs">yhat = inverse_transform(mach2, zhat)</code></pre><pre><code class="nohighlight hljs">Node @508 → UnivariateBoxCoxTransformer(…)
   args:
-    1:	Node @950
+    1:	Node @983
   formula:
     inverse_transform(
-      [0m[1mmachine(UnivariateBoxCoxTransformer(n = 171, …), …)[22m, 
+      machine(UnivariateBoxCoxTransformer(n = 171, …), …), 
       +(
        var&quot;#*##0#*##1&quot;(
          predict(
-           [0m[1mmachine(RidgeRegressor(lambda = 0.1, …), …)[22m, 
+           machine(RidgeRegressor(lambda = 0.1, …), …), 
            transform(
-             [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-             Source @879,
+             machine(Standardizer(features = Symbol[], …), …), 
+             Source @902,
            ),
          ),
        ),
        var&quot;#*##0#*##1&quot;(
          predict(
-           [0m[1mmachine(RandomForestRegressor(max_depth = -1, …), …)[22m, 
+           machine(RandomForestRegressor(max_depth = -1, …), …), 
            transform(
-             [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-             Source @879,
+             machine(Standardizer(features = Symbol[], …), …), 
+             Source @902,
            ),
          ),
        ),
       ),
     )</code></pre><p>Let&#39;s test this learning network (always a good idea!):</p><pre><code class="language- hljs">fit!(yhat)
 yhat(rows=1:3)</code></pre><pre><code class="nohighlight hljs">3-element Vector{Float64}:
- 0.23931364749775372
- 0.19041325184703914
- 0.20933730090193173</code></pre><p>Now for the new model type:</p><pre><code class="language- hljs">mutable struct CompositeModel &lt;: DeterministicNetworkComposite
+ 0.41876708160520987
+ 0.8130133557286682
+ 1.7366068735520672</code></pre><p>Now for the new model type:</p><pre><code class="language- hljs">mutable struct CompositeModel &lt;: DeterministicNetworkComposite
     standardizer
     box_cox
     regressor1
@@ -238,19 +234,19 @@ evaluate(composite, X, y; resampling=CV(nfolds=6, shuffle=true), measures=[rms, 
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: CompositeModel-928
+Tag: CompositeModel-892
 Extract:
 ┌───┬────────────────────────┬───────────┬─────────────┐
 │   │ measure                │ operation │ measurement │
 ├───┼────────────────────────┼───────────┼─────────────┤
-│ A │ RootMeanSquaredError() │ predict   │ 4.05        │
+│ A │ RootMeanSquaredError() │ predict   │ 3.96        │
 │ B │ LPLoss(                │ predict   │ 2.54        │
 │   │   p = 1)               │           │             │
 └───┴────────────────────────┴───────────┴─────────────┘
 ┌───┬──────────────────────────────────────┬─────────┐
 │   │ per_fold                             │ 1.96*SE │
 ├───┼──────────────────────────────────────┼─────────┤
-│ A │ [4.68, 3.12, 3.59, 4.72, 4.84, 2.84] │ 0.781   │
-│ B │ [2.48, 2.24, 2.4, 2.82, 3.21, 2.12]  │ 0.354   │
+│ A │ [4.85, 4.11, 3.08, 4.19, 3.77, 3.48] │ 0.539   │
+│ B │ [2.73, 2.49, 2.33, 2.82, 2.37, 2.49] │ 0.171   │
 └───┴──────────────────────────────────────┴─────────┘
-</code></pre><h3 id="Tutorial-5-Resources"><a class="docs-heading-anchor" href="#Tutorial-5-Resources">Tutorial 5 Resources</a><a id="Tutorial-5-Resources-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial-5-Resources" title="Permalink"></a></h3><ul><li>From the MLJ manual:<ul><li><a href="https://juliaai.github.io/MLJ.jl/stable/composing_models/#Learning-Networks-1">Learning Networks</a></li></ul></li><li>From Data Science Tutorials:<ul><li><a href="https://juliaai.github.io/DataScienceTutorials.jl/advanced/ensembles-3/">Model ensembles via learning networks</a></li><li><a href="https://juliaai.github.io/DataScienceTutorials.jl/advanced/stacking/">Model stacking via learning networks</a></li></ul></li></ul><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../04_tuning/notebook/">« 4. Tuning</a><a class="docs-footer-nextpage" href="../../99_solution_to_exercises/notebook/">Solutions to Exercises »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Tuesday 18 August 2026 00:24">Tuesday 18 August 2026</span>. Using Julia version 1.12.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><h3 id="Tutorial-5-Resources"><a class="docs-heading-anchor" href="#Tutorial-5-Resources">Tutorial 5 Resources</a><a id="Tutorial-5-Resources-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial-5-Resources" title="Permalink"></a></h3><ul><li>From the MLJ manual:<ul><li><a href="https://juliaai.github.io/MLJ.jl/stable/composing_models/#Learning-Networks-1">Learning Networks</a></li></ul></li><li>From Data Science Tutorials:<ul><li><a href="https://juliaai.github.io/DataScienceTutorials.jl/advanced/ensembles-3/">Model ensembles via learning networks</a></li><li><a href="https://juliaai.github.io/DataScienceTutorials.jl/advanced/stacking/">Model stacking via learning networks</a></li></ul></li></ul><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../04_tuning/notebook/">« 4. Tuning</a><a class="docs-footer-nextpage" href="../../99_solution_to_exercises/notebook/">Solutions to Exercises »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Tuesday 18 August 2026 00:35">Tuesday 18 August 2026</span>. Using Julia version 1.12.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -5,7 +5,7 @@ EditURL = "notebook.jl"
 # Solutions to Exercises
 
 ````@julia
-using MLJ, Downloads, CSV, DataFrames, Plots;
+using MLJ, Downloads, CSV, DataFrames, Plots
 ````
 
 #### Exercise 1 solution
@@ -50,11 +50,9 @@ A = rand(2, 3)
 
 ````
 2×3 Matrix{Float64}:
- 0.246146  0.712929  0.391357
- 0.175065  0.154123  0.752446
+ 0.426011  0.161761  0.375289
+ 0.762629  0.073642  0.419511
 ````
-
--
 
 ````@julia
 scitype(A)
@@ -79,8 +77,8 @@ Asparse = sparse(A)
 
 ````
 2×3 SparseArrays.SparseMatrixCSC{Float64, Int64} with 6 stored entries:
- 0.246146  0.712929  0.391357
- 0.175065  0.154123  0.752446
+ 0.426011  0.161761  0.375289
+ 0.762629  0.073642  0.419511
 ````
 
 ````@julia
@@ -97,8 +95,8 @@ C = coerce(A, Multiclass)
 
 ````
 2×3 CategoricalArrays.CategoricalArray{Float64,2,UInt32}:
- 0.246146  0.712929  0.391357
- 0.175065  0.154123  0.752446
+ 0.426011  0.161761  0.375289
+ 0.762629  0.073642  0.419511
 ````
 
 ````@julia
@@ -144,7 +142,7 @@ AbstractVector{Union{Missing, Count}} (alias for AbstractArray{Union{Missing, Sc
 
 #### Exercise 2 solution
 
-From the question statememt:
+From the question statement:
 
 ````@julia
 quality = ["good", "poor", "poor", "excellent", missing, "good", "excellent"]
@@ -328,16 +326,16 @@ y4 = [n_devices(row.salary) for row in eachrow(X4)]
 
 ````
 10-element Vector{Int64}:
- 5
- 3
  1
  0
- 4
  2
- 4
  3
- 0
+ 1
+ 1
  3
+ 3
+ 1
+ 5
 ````
 
 4(a)
@@ -413,10 +411,10 @@ pretty(X)
 │ Float64    │ Float64    │
 │ Continuous │ Continuous │
 ├────────────┼────────────┤
-│ 0.790857   │ 0.934434   │
-│ 0.24473    │ 0.319965   │
-│ 0.635737   │ 0.00459207 │
-│ 0.664213   │ 0.941094   │
+│ 0.526857   │ 0.563734   │
+│ 0.254198   │ 0.833533   │
+│ 0.21846    │ 0.997917   │
+│ 0.426727   │ 0.62664    │
 └────────────┴────────────┘
 
 ````
@@ -520,7 +518,7 @@ fitted_params(mach)
 ````
 
 ````
-(classes = CategoricalArrays.CategoricalValue{Int64, UInt32}[CategoricalValue(CategoricalArrays.CategoricalPool{Int64, UInt32}([1, 2, 3]), 1), CategoricalValue(CategoricalArrays.CategoricalPool{Int64, UInt32}([1, 2, 3]), 2), CategoricalValue(CategoricalArrays.CategoricalPool{Int64, UInt32}([1, 2, 3]), 3)], coefs = Pair{Symbol, SubArray{Float64, 1, Matrix{Float64}, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true}}[:rectal_temperature => [0.01686295393627511, -0.006507080203387595, -0.010355873732887514], :pulse => [-0.0021197133048865397, 0.0024446887372460836, -0.00032497543235954023], :respiratory_rate => [-0.0021197133048865397, 0.0024446887372460836, -0.00032497543235954023], :packed_cell_volume => [0.0026803807218916285, 0.0027691110428390664, -0.005449491764730691], :total_protein => [0.009140635517388739, -0.016781603334516174, 0.007640967817127435]], intercept = [0.00043735073119034447, -0.0001664939906402961, -0.0005429003586992254])
+(classes = CategoricalArrays.CategoricalValue{Int64, UInt32}[CategoricalValue(CategoricalArrays.CategoricalPool{Int64, UInt32}([1, 2, 3]), 1), CategoricalValue(CategoricalArrays.CategoricalPool{Int64, UInt32}([1, 2, 3]), 2), CategoricalValue(CategoricalArrays.CategoricalPool{Int64, UInt32}([1, 2, 3]), 3)], coefs = Pair{Symbol, SubArray{Float64, 1, Matrix{Float64}, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true}}[:rectal_temperature => [0.01679940181352405, -0.006529534963799633, -0.010269866849724429], :pulse => [-0.002078922183617693, 0.00248508277505068, -0.00040616059143293954], :respiratory_rate => [-0.002078922183617693, 0.00248508277505068, -0.00040616059143293954], :packed_cell_volume => [0.0026345470622363147, 0.002707772252298626, -0.005342319314534946], :total_protein => [0.009110258500266177, -0.01679787903626504, 0.0076876205359988755]], intercept = [0.00043563961897106053, -0.00016706727792654562, -0.0005913867104289383])
 ````
 
 ````@julia
@@ -534,7 +532,7 @@ err = log_loss(yhat, y[test])
 ````
 
 ````
-0.8336332010527131
+0.8334775485441969
 ````
 
 6(b)(iii)
@@ -591,19 +589,19 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestClassifier-606
+Tag: RandomForestClassifier-373
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 1.27        │
+│ LogLoss(             │ predict   │ 1.17        │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
-┌──────────────────────────────────────┬─────────┐
-│ per_fold                             │ 1.96*SE │
-├──────────────────────────────────────┼─────────┤
-│ [0.766, 1.39, 2.31, 1.32, 1.2, 0.63] │ 0.522   │
-└──────────────────────────────────────┴─────────┘
+┌────────────────────────────────────────┬─────────┐
+│ per_fold                               │ 1.96*SE │
+├────────────────────────────────────────┼─────────┤
+│ [0.747, 1.37, 2.32, 0.773, 1.2, 0.598] │ 0.557   │
+└────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -635,7 +633,7 @@ savefig("exercise_6ci.png")
 ````
 
 ````
-"/Users/anthony/GoogleDrive/Julia/MLJ/MLJTutorial/docs/src/notebooks/99_solution_to_exercises/exercise_6ci.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/99_solution_to_exercises/exercise_6ci.png"
 ````
 
 ![](exercise_6ci.png)
@@ -662,7 +660,7 @@ err_forest =
 ````
 
 ````
-1.2682195011109016
+0.9859147358185245
 ````
 
 #### Exercise 7
@@ -726,19 +724,19 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-720
+Tag: ProbabilisticPipeline-811
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 0.83        │
+│ LogLoss(             │ predict   │ 0.829       │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
-┌──────────────────────────────────────────┬─────────┐
-│ per_fold                                 │ 1.96*SE │
-├──────────────────────────────────────────┼─────────┤
-│ [0.891, 1.01, 0.76, 0.844, 0.822, 0.648] │ 0.108   │
-└──────────────────────────────────────────┴─────────┘
+┌───────────────────────────────────────────┬─────────┐
+│ per_fold                                  │ 1.96*SE │
+├───────────────────────────────────────────┼─────────┤
+│ [0.916, 0.95, 0.876, 0.787, 0.775, 0.669] │ 0.0917  │
+└───────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -759,7 +757,7 @@ savefig("exercise_7c.png")
 ````
 
 ````
-"/Users/anthony/GoogleDrive/Julia/MLJ/MLJTutorial/docs/src/notebooks/99_solution_to_exercises/exercise_7c.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/99_solution_to_exercises/exercise_7c.png"
 ````
 
 ![](exercise_7c.png)
@@ -810,7 +808,7 @@ savefig("exercise_8c.png")
 ````
 
 ````
-"/Users/anthony/GoogleDrive/Julia/MLJ/MLJTutorial/docs/src/notebooks/99_solution_to_exercises/exercise_8c.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/99_solution_to_exercises/exercise_8c.png"
 ````
 
 ![](exercise_8c.png)
@@ -829,7 +827,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-609
+Tag: DeterministicPipeline-153
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -855,7 +853,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicTunedModel-254
+Tag: DeterministicTunedModel-941
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

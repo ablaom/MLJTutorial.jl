@@ -4,6 +4,13 @@ EditURL = "notebook.jl"
 
 # Tutorial 4. Tuning hyperparameters
 
+> **Goals:** Learn how to:
+> 1. Tune (optimize) a single model hyperparameter visually, by plotting learning curves
+> 2. Implement the optimization of one or more hyperparameters by wrapping a model in a tuning strategy
+
+To run the code in this tutorial in a live Julia session, first follow the instructions
+given [here](@ref instructions).
+
 ### Naive tuning of a single parameter
 
 The most naive way to tune a single hyperparameter is to use
@@ -137,7 +144,7 @@ savefig("learning_curve2.png")
 ````
 
 ````
-"/Users/anthony/GoogleDrive/Julia/MLJ/MLJTutorial/docs/src/notebooks/04_tuning/learning_curve2.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/04_tuning/learning_curve2.png"
 ````
 
 ![](learning_curve2.png)
@@ -147,7 +154,7 @@ best_lambda = lambdas[argmin(losses)]
 ````
 
 ````
-0.01487352107293511
+0.0117210229753348
 ````
 
 ### Self tuning models
@@ -249,7 +256,7 @@ Now for the wrapper, which is an instance of `TunedModel`:
 
 ````@julia
 tuned_model = TunedModel(
-    model=model,
+    model,
     ranges=[r, s],
     resampling=CV(nfolds=6),
     measures=log_loss,
@@ -302,9 +309,9 @@ predict(tuned_mach, rows=1:3)
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.653, 2=>0.242, 3=>0.105)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.662, 2=>0.0931, 3=>0.245)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.888, 2=>0.0714, 3=>0.041)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.643, 2=>0.244, 3=>0.114)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.658, 2=>0.0938, 3=>0.248)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.884, 2=>0.0727, 3=>0.043)
 ````
 
 The outcomes of the tuning can be inspected from a detailed
@@ -359,19 +366,19 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-635
+Tag: ProbabilisticPipeline-127
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 0.797       │
+│ LogLoss(             │ predict   │ 0.782       │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
-┌───────────────────────┬─────────┐
-│ per_fold              │ 1.96*SE │
-├───────────────────────┼─────────┤
-│ [0.833, 0.723, 0.836] │ 0.0895  │
-└───────────────────────┴─────────┘
+┌──────────────────────┬─────────┐
+│ per_fold             │ 1.96*SE │
+├──────────────────────┼─────────┤
+│ [0.83, 0.721, 0.794] │ 0.0773  │
+└──────────────────────┴─────────┘
 
 ````
 
@@ -385,18 +392,18 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticTunedModel-492
+Tag: ProbabilisticTunedModel-318
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 0.782       │
+│ LogLoss(             │ predict   │ 0.779       │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
 ┌───────────────────────┬─────────┐
 │ per_fold              │ 1.96*SE │
 ├───────────────────────┼─────────┤
-│ [0.801, 0.801, 0.744] │ 0.0456  │
+│ [0.798, 0.802, 0.738] │ 0.0496  │
 └───────────────────────┴─────────┘
 
 ````
@@ -406,7 +413,6 @@ Extract:
 - From the MLJ manual:
    - [Learning Curves](https://juliaai.github.io/MLJ.jl/dev/learning_curves/)
    - [Tuning Models](https://juliaai.github.io/MLJ.jl/dev/tuning_models/)
-- The [MLJTuning repo](https://github.com/juliaai/MLJTuning.jl#who-is-this-repo-for) - mostly for developers
 - From Data Science Tutorials:
     - [Tuning a model](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/model-tuning/)
     - [Crabs with XGBoost](https://juliaai.github.io/DataScienceTutorials.jl/end-to-end/crabs-xgb/) `Grid` tuning in stages for a tree-boosting model with many parameters

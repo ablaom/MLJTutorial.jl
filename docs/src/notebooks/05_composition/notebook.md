@@ -13,6 +13,9 @@ EditURL = "notebook.jl"
 > 1. Learn how to build a prototypes of a composite model, called *learning networks*
 > 2. Learn how to "export" a learning network as a new stand-alone model type
 
+To run the code in this tutorial in a live Julia session, first follow the instructions
+given [here](@ref instructions).
+
 Pipelines are great for composing models in an unbranching sequence. Another built-in
 type of model composition is a model *stack*; see
 [here](https://juliaai.github.io/MLJ.jl/dev/model_stacking/#Model-Stacking) for
@@ -33,22 +36,20 @@ them in a machine).
 
 ### Building a pipeline using the generic composition syntax
 
-To warm up, we'll do the equivalent of
-
 ````@julia
 using MLJ
 LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
+````
+
+````
+MLJLinearModels.LogisticClassifier
+````
+
+To warm up, we'll build a learning network to replace this basic pipeline model:
+
+````@julia
 pipe = Standardizer |> LogisticClassifier(lambda=0.001)
-nothing # hide
 ````
-
-````
-[ Info: For silent loading, specify `verbosity=0`. 
-import MLJLinearModels ✔
-
-````
-
-by building and exporting a learning network.
 
 Here's some dummy data we'll be using to test our learning network:
 
@@ -63,17 +64,17 @@ pretty(X)
 │ Float64    │ Float64    │ Float64    │
 │ Continuous │ Continuous │ Continuous │
 ├────────────┼────────────┼────────────┤
-│ -14.621    │ -4.57562   │ -11.2012   │
-│ -6.91997   │ -9.11864   │ -8.70932   │
-│ -3.01901   │ -4.75326   │ -13.9312   │
-│ -7.10836   │ -7.86801   │ -8.2769    │
-│ -6.8677    │ -7.5697    │ -7.06492   │
+│ -5.74465   │ 2.46153    │ -2.99641   │
+│ -5.84665   │ 2.092      │ -0.271891  │
+│ -13.83     │ 0.276595   │ 4.05293    │
+│ -12.237    │ 9.43369    │ 5.14761    │
+│ -7.77455   │ 0.941789   │ -0.369465  │
 └────────────┴────────────┴────────────┘
 
 ````
 
 **Step 0** - Proceed as if you were combining the models "by hand", using all the data
-available for training, transforming and prediction:
+available for training, transformation and prediction:
 
 ````@julia
 standardizer = Standardizer();
@@ -90,11 +91,11 @@ yhat = predict(mach2, Xstand)
 
 ````
 5-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00182, 2=>0.996, 3=>0.00177)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000315, 2=>0.000208, 3=>0.999)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.995, 2=>0.00316, 3=>0.00148)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00111, 2=>0.00128, 3=>0.998)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000369, 2=>0.000616, 3=>0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>2.75e-5, 2=>0.000152, 3=>1.0)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000372, 2=>0.00087, 3=>0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.993, 2=>0.00215, 3=>0.00446)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00352, 2=>0.995, 3=>0.00124)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00453, 2=>0.000961, 3=>0.995)
 ````
 
 **Step 1** - Edit your code as follows:
@@ -118,21 +119,21 @@ yhat = predict(mach2, Xstand)
 ````
 
 ````
-Node @897 → LogisticClassifier(…)
+Node @121 → LogisticClassifier(…)
   args:
-    1:	Node @721 → Standardizer(…)
+    1:	Node @394 → Standardizer(…)
   formula:
     predict(
-      [0m[1mmachine(LogisticClassifier(lambda = 0.001, …), …)[22m, 
+      machine(LogisticClassifier(lambda = 0.001, …), …), 
       transform(
-        [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-        Source @559,
+        machine(Standardizer(features = Symbol[], …), …), 
+        Source @574,
       ),
     )
 ````
 
 Now `X`, `y`, `Xstand` and `yhat` are *nodes* ("variables" or
-"dynammic data") instead of data. All training, predicting and
+"dynamic data") instead of data. All training, predicting and
 transforming is now executed lazily, whenever we `fit!` one of these
 nodes. We *call* a node to retrieve the data it represents in the
 original manual workflow.
@@ -149,11 +150,11 @@ Xstand() |> pretty
 │ Float64    │ Float64    │ Float64    │
 │ Continuous │ Continuous │ Continuous │
 ├────────────┼────────────┼────────────┤
-│ -1.63571   │ 1.09243    │ -0.498136  │
-│ 0.186249   │ -1.16199   │ 0.411573   │
-│ 1.10917    │ 1.00428    │ -1.49476   │
-│ 0.141678   │ -0.541377  │ 0.569435   │
-│ 0.198616   │ -0.393345  │ 1.01189    │
+│ 0.894666   │ -0.157523  │ -1.21267   │
+│ 0.867361   │ -0.257956  │ -0.408588  │
+│ -1.26987   │ -0.751356  │ 0.867785   │
+│ -0.8434    │ 1.7374     │ 1.19086    │
+│ 0.351241   │ -0.570566  │ -0.437385  │
 └────────────┴────────────┴────────────┘
 
 ````
@@ -177,11 +178,11 @@ yhat()
 
 ````
 5-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00182, 2=>0.996, 3=>0.00177)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000315, 2=>0.000208, 3=>0.999)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.995, 2=>0.00316, 3=>0.00148)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00111, 2=>0.00128, 3=>0.998)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000369, 2=>0.000616, 3=>0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>2.75e-5, 2=>0.000152, 3=>1.0)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000372, 2=>0.00087, 3=>0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.993, 2=>0.00215, 3=>0.00446)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00352, 2=>0.995, 3=>0.00124)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.00453, 2=>0.000961, 3=>0.995)
 ````
 
 The node `yhat` is the "descendant" (in an associated DAG we have
@@ -193,7 +194,7 @@ origins(yhat)
 
 ````
 1-element Vector{MLJBase.Source}:
- Source @559 ⏎ `ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}`
+ Source @574 ⏎ `ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}`
 ````
 
 The data at the source node is replaced by `Xnew` to obtain a
@@ -206,8 +207,8 @@ yhat(Xnew)
 
 ````
 2-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, Int64, UInt32, Float64}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.98, 2=>0.0198, 3=>7.56e-5)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.442, 2=>0.553, 3=>0.00488)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>0.000861, 2=>2.17e-12, 3=>0.999)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(1=>1.11e-5, 2=>2.65e-9, 3=>1.0)
 ````
 
 **Step 2** - Export the learning network as a new stand-alone model type
@@ -215,7 +216,7 @@ yhat(Xnew)
 We start by defining a new model type for our composite. We subtype
 `ProbabilisticNetworkComposite` because our composite is to be a probabilistic
 predictor. If it were a deterministic predictor, we would use
-`DeterminisiticNetworkComposite` instead. There is also a `UnsupervisedNetworkComposite`
+`DeterministicNetworkComposite` instead. There is also a `UnsupervisedNetworkComposite`
 for transformers.
 
 ````@julia
@@ -237,15 +238,15 @@ yhat = predict(mach2, Xstand)
 ````
 
 ````
-Node @226 → :classifier
+Node @768 → :classifier
   args:
-    1:	Node @119 → :standardizer
+    1:	Node @820 → :standardizer
   formula:
     predict(
-      [0m[1mmachine(:classifier, …)[22m, 
+      machine(:classifier, …), 
       transform(
-        [0m[1mmachine(:standardizer, …)[22m, 
-        Source @559,
+        machine(:standardizer, …), 
+        Source @574,
       ),
     )
 ````
@@ -267,7 +268,7 @@ fit!(yhat, composite=your_pipe);
 
 ````
 
-In this case `:standardizer` is being substituted by `standardizer` and :classifier by
+In this case `:standardizer` is being substituted by `standardizer` and `:classifier` by
 `linear` in training.
 
 The final step is to wrap our learning network code in a method called `prefit`
@@ -322,10 +323,10 @@ fitted_params(mach).classifier.coefs
 
 ````
 4-element Vector{Pair{Symbol, SubArray{Float64, 1, Matrix{Float64}, Tuple{Int64, Base.Slice{Base.OneTo{Int64}}}, true}}}:
- :sepal_length => [-2.2990571932367896, 1.6019159485796188, 0.6971412446571812]
-  :sepal_width => [2.366480261051423, -0.5248221807347037, -1.841658080316722]
- :petal_length => [-3.5224079961962618, -1.3877639901870444, 4.9101719863832995]
-  :petal_width => [-3.4242893613574115, -1.7409889397944158, 5.165278301151831]
+ :sepal_length => [-2.2884323728871254, 1.4607388496829115, 0.8276935232042247]
+  :sepal_width => [2.5849165395349716, -0.6646830918858928, -1.9202334476490799]
+ :petal_length => [-3.5313085896004583, -1.406180852406463, 4.937489442006912]
+  :petal_width => [-3.4480076498857017, -1.6977190775004856, 5.145726727386192]
 ````
 
 ````@julia
@@ -379,7 +380,7 @@ y = source(y)
 ````
 
 ````
-Source @977 ⏎ `AbstractVector{ScientificTypesBase.Continuous}`
+Source @332 ⏎ `AbstractVector{ScientificTypesBase.Continuous}`
 ````
 
 **First layer and target transformation:**
@@ -395,13 +396,13 @@ z = MLJ.transform(mach2, y)
 ````
 
 ````
-Node @900 → UnivariateBoxCoxTransformer(…)
+Node @907 → UnivariateBoxCoxTransformer(…)
   args:
-    1:	Source @977
+    1:	Source @332
   formula:
     transform(
-      [0m[1mmachine(UnivariateBoxCoxTransformer(n = 171, …), …)[22m, 
-      Source @977,
+      machine(UnivariateBoxCoxTransformer(n = 171, …), …), 
+      Source @332,
     )
 ````
 
@@ -418,27 +419,27 @@ zhat = 0.5*predict(mach3, W) + 0.5*predict(mach4, W)
 ````
 
 ````
-Node @950
+Node @983
   args:
-    1:	Node @350
-    2:	Node @026
+    1:	Node @241
+    2:	Node @953
   formula:
     +(
      var"#*##0#*##1"(
        predict(
-         [0m[1mmachine(RidgeRegressor(lambda = 0.1, …), …)[22m, 
+         machine(RidgeRegressor(lambda = 0.1, …), …), 
          transform(
-           [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-           Source @879,
+           machine(Standardizer(features = Symbol[], …), …), 
+           Source @902,
          ),
        ),
      ),
      var"#*##0#*##1"(
        predict(
-         [0m[1mmachine(RandomForestRegressor(max_depth = -1, …), …)[22m, 
+         machine(RandomForestRegressor(max_depth = -1, …), …), 
          transform(
-           [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-           Source @879,
+           machine(Standardizer(features = Symbol[], …), …), 
+           Source @902,
          ),
        ),
      ),
@@ -452,28 +453,28 @@ yhat = inverse_transform(mach2, zhat)
 ````
 
 ````
-Node @862 → UnivariateBoxCoxTransformer(…)
+Node @508 → UnivariateBoxCoxTransformer(…)
   args:
-    1:	Node @950
+    1:	Node @983
   formula:
     inverse_transform(
-      [0m[1mmachine(UnivariateBoxCoxTransformer(n = 171, …), …)[22m, 
+      machine(UnivariateBoxCoxTransformer(n = 171, …), …), 
       +(
        var"#*##0#*##1"(
          predict(
-           [0m[1mmachine(RidgeRegressor(lambda = 0.1, …), …)[22m, 
+           machine(RidgeRegressor(lambda = 0.1, …), …), 
            transform(
-             [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-             Source @879,
+             machine(Standardizer(features = Symbol[], …), …), 
+             Source @902,
            ),
          ),
        ),
        var"#*##0#*##1"(
          predict(
-           [0m[1mmachine(RandomForestRegressor(max_depth = -1, …), …)[22m, 
+           machine(RandomForestRegressor(max_depth = -1, …), …), 
            transform(
-             [0m[1mmachine(Standardizer(features = Symbol[], …), …)[22m, 
-             Source @879,
+             machine(Standardizer(features = Symbol[], …), …), 
+             Source @902,
            ),
          ),
        ),
@@ -490,9 +491,9 @@ yhat(rows=1:3)
 
 ````
 3-element Vector{Float64}:
- 0.23931364749775372
- 0.19041325184703914
- 0.20933730090193173
+ 0.41876708160520987
+ 0.8130133557286682
+ 1.7366068735520672
 ````
 
 Now for the new model type:
@@ -545,20 +546,20 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: CompositeModel-928
+Tag: CompositeModel-892
 Extract:
 ┌───┬────────────────────────┬───────────┬─────────────┐
 │   │ measure                │ operation │ measurement │
 ├───┼────────────────────────┼───────────┼─────────────┤
-│ A │ RootMeanSquaredError() │ predict   │ 4.05        │
+│ A │ RootMeanSquaredError() │ predict   │ 3.96        │
 │ B │ LPLoss(                │ predict   │ 2.54        │
 │   │   p = 1)               │           │             │
 └───┴────────────────────────┴───────────┴─────────────┘
 ┌───┬──────────────────────────────────────┬─────────┐
 │   │ per_fold                             │ 1.96*SE │
 ├───┼──────────────────────────────────────┼─────────┤
-│ A │ [4.68, 3.12, 3.59, 4.72, 4.84, 2.84] │ 0.781   │
-│ B │ [2.48, 2.24, 2.4, 2.82, 3.21, 2.12]  │ 0.354   │
+│ A │ [4.85, 4.11, 3.08, 4.19, 3.77, 3.48] │ 0.539   │
+│ B │ [2.73, 2.49, 2.33, 2.82, 2.37, 2.49] │ 0.171   │
 └───┴──────────────────────────────────────┴─────────┘
 
 ````

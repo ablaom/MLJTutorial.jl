@@ -199,15 +199,11 @@ report(mach).pca
 # use the log-price (a common practice in dealing with house price data). However, suppose
 # that we still want to report final *predictions* on the original linear scale (and use
 # these for evaluation purposes). Then we wrap our supervised model using
-# `TransformedTargetModel`, which has to key-word arguments `target` and `inverse`.
+# `TransformedTargetModel`, which has two keyword arguments `transformer` and `inverse`.
 
-# First we'll overload `log` and `exp` for broadcasting:
-Base.log(v::AbstractArray) = log.(v)
-Base.exp(v::AbstractArray) = exp.(v)
+rgs_log = TransformedTargetModel(rgs, transformer=y->log.(y), inverse=z->exp.(z))
 
-# Now for the new pipeline:
-
-rgs_log = TransformedTargetModel(rgs, transformer=log, inverse=exp)
+# And here is a revised pipeline model:
 
 pipe3 = pipe |> rgs_log
 mach = machine(pipe3, X, y)

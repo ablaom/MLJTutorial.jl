@@ -158,7 +158,7 @@ s  = range(
 # Now for the wrapper, which is an instance of `TunedModel`:
 
 tuned_model = TunedModel(
-    model=model,
+    model,
     ranges=[r, s],
     resampling=CV(nfolds=6),
     measures=log_loss,
@@ -202,7 +202,6 @@ tuned_err = evaluate!(tuned_mach, resampling=CV(nfolds=3), measure=log_loss)
 # - From the MLJ manual:
 #    - [Learning Curves](https://juliaai.github.io/MLJ.jl/dev/learning_curves/)
 #    - [Tuning Models](https://juliaai.github.io/MLJ.jl/dev/tuning_models/)
-# - The [MLJTuning repo](https://github.com/juliaai/MLJTuning.jl#who-is-this-repo-for) - mostly for developers
 # - From Data Science Tutorials:
 #     - [Tuning a model](https://juliaai.github.io/DataScienceTutorials.jl/getting-started/model-tuning/)
 #     - [Crabs with XGBoost](https://juliaai.github.io/DataScienceTutorials.jl/end-to-end/crabs-xgb/) `Grid` tuning in stages for a tree-boosting model with many parameters

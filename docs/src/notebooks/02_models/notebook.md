@@ -20,21 +20,25 @@ time, we'll grab the data from [OpenML](https://www.openml.org):
 
 ````@julia
 using MLJ
-# OpenML.describe_dataset(61);
+iris = OpenML.load(61); # a column dictionary table
 ````
 
-(output suppressed here)
+````
+[ Info: Downloading dataset 61.
+
+````
+
+To describe the dataset, with no need to load it first, run
+`OpenML.describe_dataset(61)`.
 
 ````@julia
-# iris = OpenML.load(61); # a column dictionary table
-iris = load_iris() # needed until https://github.com/korsbo/Latexify.jl/pull/353 is resolved
 import DataFrames
 iris = DataFrames.DataFrame(iris);
 first(iris, 4)
 ````
 
 ```@raw html
-<div><div style = "float: left;"><span>4×5 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sepal_length</th><th style = "text-align: left;">sepal_width</th><th style = "text-align: left;">petal_length</th><th style = "text-align: left;">petal_width</th><th style = "text-align: left;">target</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "CategoricalArrays.CategoricalValue{String, UInt32}" style = "text-align: left;">Cat…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">5.1</td><td style = "text-align: right;">3.5</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">4.9</td><td style = "text-align: right;">3.0</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">4.7</td><td style = "text-align: right;">3.2</td><td style = "text-align: right;">1.3</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: right;">4.6</td><td style = "text-align: right;">3.1</td><td style = "text-align: right;">1.5</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">setosa</td></tr></tbody></table></div>
+<div><div style = "float: left;"><span>4×5 DataFrame</span></div><div style = "clear: both;"></div></div><div class = "data-frame" style = "overflow-x: scroll;"><table class = "data-frame" style = "margin-bottom: 6px;"><thead><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;">Row</th><th style = "text-align: left;">sepallength</th><th style = "text-align: left;">sepalwidth</th><th style = "text-align: left;">petallength</th><th style = "text-align: left;">petalwidth</th><th style = "text-align: left;">class</th></tr><tr class = "columnLabelRow"><th class = "stubheadLabel" style = "font-weight: bold; text-align: right;"></th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "Float64" style = "text-align: left;">Float64</th><th title = "CategoricalArrays.CategoricalValue{String, UInt32}" style = "text-align: left;">Cat…</th></tr></thead><tbody><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">1</td><td style = "text-align: right;">5.1</td><td style = "text-align: right;">3.5</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">2</td><td style = "text-align: right;">4.9</td><td style = "text-align: right;">3.0</td><td style = "text-align: right;">1.4</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">3</td><td style = "text-align: right;">4.7</td><td style = "text-align: right;">3.2</td><td style = "text-align: right;">1.3</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr><tr class = "dataRow"><td class = "rowLabel" style = "font-weight: bold; text-align: right;">4</td><td style = "text-align: right;">4.6</td><td style = "text-align: right;">3.1</td><td style = "text-align: right;">1.5</td><td style = "text-align: right;">0.2</td><td style = "text-align: left;">Iris-setosa</td></tr></tbody></table></div>
 ```
 
 **Main goal:** To build and evaluate models for predicting the
@@ -47,15 +51,15 @@ schema(iris)
 ````
 
 ````
-┌──────────────┬───────────────┬──────────────────────────────────┐
-│ names        │ scitypes      │ types                            │
-├──────────────┼───────────────┼──────────────────────────────────┤
-│ sepal_length │ Continuous    │ Float64                          │
-│ sepal_width  │ Continuous    │ Float64                          │
-│ petal_length │ Continuous    │ Float64                          │
-│ petal_width  │ Continuous    │ Float64                          │
-│ target       │ Multiclass{3} │ CategoricalValue{String, UInt32} │
-└──────────────┴───────────────┴──────────────────────────────────┘
+┌─────────────┬───────────────┬──────────────────────────────────┐
+│ names       │ scitypes      │ types                            │
+├─────────────┼───────────────┼──────────────────────────────────┤
+│ sepallength │ Continuous    │ Float64                          │
+│ sepalwidth  │ Continuous    │ Float64                          │
+│ petallength │ Continuous    │ Float64                          │
+│ petalwidth  │ Continuous    │ Float64                          │
+│ class       │ Multiclass{3} │ CategoricalValue{String, UInt32} │
+└─────────────┴───────────────┴──────────────────────────────────┘
 
 ````
 
@@ -68,9 +72,7 @@ is needed for MLJ supervised models. We can randomize the data at
 the same time:
 
 ````@julia
-# y, X = unpack(iris, ==(:class), rng=123);
-y, X = unpack(iris, ==(:target), rng=123);
-
+y, X = unpack(iris, ==(:class), rng=123);
 scitype(y)
 ````
 
@@ -623,8 +625,8 @@ mach = machine(model, X, y)
 untrained Machine; caches model-specific representations of data
   model: NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …)
   args: 
-    1:	Source @650 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
-    2:	Source @879 ⏎ AbstractVector{ScientificTypesBase.Multiclass{3}}
+    1:	Source @505 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
+    2:	Source @059 ⏎ AbstractVector{ScientificTypesBase.Multiclass{3}}
 
 ````
 
@@ -650,18 +652,18 @@ fit!(mach, rows=train, verbosity=2);
 ````
 [ Info: Training machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
 [ Info: MLJFlux: converting input data to Float32
-[ Info: Loss is 1.224
-[ Info: Loss is 1.171
-[ Info: Loss is 1.087
-[ Info: Loss is 1.141
-[ Info: Loss is 1.184
+[ Info: Loss is 1.106
+[ Info: Loss is 1.096
+[ Info: Loss is 1.09
 [ Info: Loss is 1.08
-[ Info: Loss is 1.132
-[ Info: Loss is 1.001
-[ Info: Loss is 1.082
-[ Info: Loss is 1.103
-[ Info: Loss is 1.04
-[ Info: Loss is 1.051
+[ Info: Loss is 1.073
+[ Info: Loss is 1.054
+[ Info: Loss is 1.061
+[ Info: Loss is 1.036
+[ Info: Loss is 1.026
+[ Info: Loss is 1.003
+[ Info: Loss is 0.9871
+[ Info: Loss is 0.9638
 
 ````
 
@@ -674,9 +676,9 @@ yhat[1:3]
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.365, versicolor=>0.336, virginica=>0.299)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.516, versicolor=>0.301, virginica=>0.183)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.487, versicolor=>0.306, virginica=>0.208)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.376, Iris-versicolor=>0.322, Iris-virginica=>0.302)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.518, Iris-versicolor=>0.315, Iris-virginica=>0.167)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.512, Iris-versicolor=>0.317, Iris-virginica=>0.171)
 ````
 
 We'll have more to say on the form of this prediction shortly.
@@ -699,7 +701,7 @@ report(mach)
 ````
 
 ````
-(training_losses = Float32[1.1108134, 1.2239017, 1.1714171, 1.0868121, 1.1411062, 1.1840241, 1.0804282, 1.1324829, 1.0006034, 1.0816715, 1.1034313, 1.0395544, 1.050618],)
+(training_losses = Float32[1.105516, 1.1064824, 1.0963646, 1.0899975, 1.0800945, 1.0732424, 1.054435, 1.0611892, 1.0356965, 1.0255092, 1.0031275, 0.9870628, 0.96378404],)
 ````
 
 You save a machine like this:
@@ -718,9 +720,9 @@ yhat[1:3]
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.35, versicolor=>0.332, virginica=>0.318)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.498, versicolor=>0.304, virginica=>0.198)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.368, versicolor=>0.339, virginica=>0.293)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.366, Iris-versicolor=>0.322, Iris-virginica=>0.312)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.515, Iris-versicolor=>0.316, Iris-virginica=>0.168)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.374, Iris-versicolor=>0.322, Iris-virginica=>0.305)
 ````
 
 Machines remember the last set of hyperparameters used during fit,
@@ -735,10 +737,10 @@ fit!(mach, rows=train, verbosity=2);
 
 ````
 [ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
-[ Info: Loss is 1.079
-[ Info: Loss is 1.061
-[ Info: Loss is 1.053
-[ Info: Loss is 0.9229
+[ Info: Loss is 0.9864
+[ Info: Loss is 0.9672
+[ Info: Loss is 0.9449
+[ Info: Loss is 0.9555
 
 ````
 
@@ -769,10 +771,10 @@ fit!(mach, rows=train, verbosity=2);
 
 ````
 [ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
-[ Info: Loss is 0.9575
-[ Info: Loss is 0.9934
-[ Info: Loss is 0.9791
-[ Info: Loss is 0.9231
+[ Info: Loss is 0.9086
+[ Info: Loss is 0.9264
+[ Info: Loss is 0.9286
+[ Info: Loss is 0.8889
 
 ````
 
@@ -787,26 +789,26 @@ fit!(mach, rows=train, verbosity=2);
 ````
 [ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
 [ Info: MLJFlux: converting input data to Float32
-[ Info: Loss is 1.073
-[ Info: Loss is 0.9668
-[ Info: Loss is 0.9129
-[ Info: Loss is 0.8325
-[ Info: Loss is 0.8832
-[ Info: Loss is 0.8087
-[ Info: Loss is 0.7739
-[ Info: Loss is 0.8602
-[ Info: Loss is 0.707
-[ Info: Loss is 0.7378
-[ Info: Loss is 0.7551
-[ Info: Loss is 0.6433
-[ Info: Loss is 0.6834
-[ Info: Loss is 0.6924
-[ Info: Loss is 0.6047
-[ Info: Loss is 0.6192
-[ Info: Loss is 0.5684
-[ Info: Loss is 0.6033
-[ Info: Loss is 0.5034
-[ Info: Loss is 0.6615
+[ Info: Loss is 1.205
+[ Info: Loss is 1.002
+[ Info: Loss is 0.8946
+[ Info: Loss is 0.8962
+[ Info: Loss is 0.8291
+[ Info: Loss is 0.7841
+[ Info: Loss is 0.7918
+[ Info: Loss is 0.7609
+[ Info: Loss is 0.7345
+[ Info: Loss is 0.6576
+[ Info: Loss is 0.8205
+[ Info: Loss is 0.6344
+[ Info: Loss is 0.5965
+[ Info: Loss is 0.6961
+[ Info: Loss is 0.6019
+[ Info: Loss is 0.6176
+[ Info: Loss is 0.6944
+[ Info: Loss is 0.6157
+[ Info: Loss is 0.5218
+[ Info: Loss is 0.5873
 
 ````
 
@@ -825,7 +827,7 @@ yhat[1]
 ````
 
 ````
-UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.146, versicolor=>0.557, virginica=>0.297)
+UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.106, Iris-versicolor=>0.607, Iris-virginica=>0.287)
 ````
 
 What's going on here?
@@ -852,12 +854,11 @@ So, to obtain the probability of "Iris-virginica" in the first test
 prediction, we do
 
 ````@julia
-# pdf(yhat[1], "Iris-virginica")
-pdf(yhat[1], "virginica")
+pdf(yhat[1], "Iris-virginica")
 ````
 
 ````
-0.29680207f0
+0.2869514f0
 ````
 
 To get the most likely observation, we do
@@ -867,22 +868,21 @@ mode(yhat[1])
 ````
 
 ````
-CategoricalArrays.CategoricalValue{String, UInt32} "versicolor"
+CategoricalArrays.CategoricalValue{String, UInt32} "Iris-versicolor"
 ````
 
 These can be broadcast over multiple predictions in the usual way:
 
 ````@julia
-# broadcast(pdf, yhat[1:4], "Iris-versicolor")
-broadcast(pdf, yhat[1:4], "versicolor")
+broadcast(pdf, yhat[1:4], "Iris-versicolor")
 ````
 
 ````
 4-element Vector{Float32}:
- 0.5573557
- 0.005508058
- 0.0057135588
- 0.006359523
+ 0.60706484
+ 0.0019000835
+ 0.0019024607
+ 0.0021122482
 ````
 
 ````@julia
@@ -891,10 +891,10 @@ mode.(yhat[1:4])
 
 ````
 4-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
- "versicolor"
- "setosa"
- "setosa"
- "setosa"
+ "Iris-versicolor"
+ "Iris-setosa"
+ "Iris-setosa"
+ "Iris-setosa"
 ````
 
 Or, alternatively, you can use the `predict_mode` operation instead
@@ -906,10 +906,10 @@ predict_mode(mach, X[test,:])[1:4] # or predict_mode(mach, rows=test)[1:4]
 
 ````
 4-element CategoricalArrays.CategoricalArray{String,1,UInt32}:
- "versicolor"
- "setosa"
- "setosa"
- "setosa"
+ "Iris-versicolor"
+ "Iris-setosa"
+ "Iris-setosa"
+ "Iris-setosa"
 ````
 
 For a more conventional matrix of probabilities you can do this:
@@ -921,10 +921,10 @@ pdf(yhat, L)[1:4, :]
 
 ````
 4×3 Matrix{Float32}:
- 0.145842  0.557356    0.296802
- 0.994492  0.00550806  2.47519f-7
- 0.994286  0.00571356  2.62242f-7
- 0.99364   0.00635952  3.05573f-7
+ 0.105984  0.607065    0.286951
+ 0.9981    0.00190008  7.28908f-11
+ 0.998098  0.00190246  7.42093f-11
+ 0.997888  0.00211225  8.8793f-11
 ````
 
 However, in a typical MLJ workflow, this is not as useful as you might imagine. In
@@ -936,7 +936,7 @@ log_loss(yhat, y[test])
 ````
 
 ````
-0.3450524918546487
+0.37777010080199586
 ````
 
 To apply a deterministic measure, we first need to obtain point-estimates:
@@ -973,15 +973,15 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-803
+Tag: NeuralNetworkClassifier-642
 Extract:
 ┌─────────────────────────┬──────────────┬─────────────┐
 │ measure                 │ operation    │ measurement │
 ├─────────────────────────┼──────────────┼─────────────┤
-│ LogLoss(                │ predict      │ 0.345       │
+│ LogLoss(                │ predict      │ 0.378       │
 │   tol = 2.22045e-16)    │              │             │
 │ MisclassificationRate() │ predict_mode │ 0.0444      │
-│ BrierScore()            │ predict      │ -0.184      │
+│ BrierScore()            │ predict      │ -0.206      │
 └─────────────────────────┴──────────────┴─────────────┘
 
 ````
@@ -1002,23 +1002,23 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-943
+Tag: NeuralNetworkClassifier-150
 Extract:
 ┌───┬─────────────────────────┬──────────────┬─────────────┐
 │   │ measure                 │ operation    │ measurement │
 ├───┼─────────────────────────┼──────────────┼─────────────┤
-│ A │ LogLoss(                │ predict      │ 0.289       │
+│ A │ LogLoss(                │ predict      │ 0.314       │
 │   │   tol = 2.22045e-16)    │              │             │
-│ B │ MisclassificationRate() │ predict_mode │ 0.04        │
-│ C │ BrierScore()            │ predict      │ -0.154      │
+│ B │ MisclassificationRate() │ predict_mode │ 0.0333      │
+│ C │ BrierScore()            │ predict      │ -0.162      │
 └───┴─────────────────────────┴──────────────┴─────────────┘
-┌───┬─────────────────────────────────────────────────────────┬─────────┐
-│   │ per_fold                                                │ 1.96*SE │
-├───┼─────────────────────────────────────────────────────────┼─────────┤
-│ A │ [0.296, 0.265, 0.267, 0.307, 0.284, 0.312]              │ 0.0173  │
-│ B │ [0.04, 0.08, 0.0, 0.04, 0.04, 0.04]                     │ 0.0222  │
-│ C │ Float32[-0.158, -0.146, -0.135, -0.173, -0.149, -0.165] │ 0.012   │
-└───┴─────────────────────────────────────────────────────────┴─────────┘
+┌───┬────────────────────────────────────────────────────────┬─────────┐
+│   │ per_fold                                               │ 1.96*SE │
+├───┼────────────────────────────────────────────────────────┼─────────┤
+│ A │ [0.323, 0.326, 0.249, 0.316, 0.298, 0.369]             │ 0.0347  │
+│ B │ [0.04, 0.04, 0.0, 0.04, 0.04, 0.04]                    │ 0.0143  │
+│ C │ Float32[-0.188, -0.156, -0.11, -0.168, -0.147, -0.202] │ 0.0285  │
+└───┴────────────────────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -1040,22 +1040,22 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-933
+Tag: NeuralNetworkClassifier-961
 Extract:
 ┌───┬─────────────────────────┬──────────────┬─────────────┐
 │   │ measure                 │ operation    │ measurement │
 ├───┼─────────────────────────┼──────────────┼─────────────┤
-│ A │ LogLoss(                │ predict      │ 0.312       │
+│ A │ LogLoss(                │ predict      │ 0.317       │
 │   │   tol = 2.22045e-16)    │              │             │
-│ B │ MisclassificationRate() │ predict_mode │ 0.0444      │
-│ C │ BrierScore()            │ predict      │ -0.164      │
+│ B │ MisclassificationRate() │ predict_mode │ 0.0489      │
+│ C │ BrierScore()            │ predict      │ -0.172      │
 └───┴─────────────────────────┴──────────────┴─────────────┘
 ┌───┬───────────────────────────────────────────────────────────────────────────
 │   │ per_fold                                                                 ⋯
 ├───┼───────────────────────────────────────────────────────────────────────────
-│ A │ [0.337, 0.327, 0.291, 0.318, 0.354, 0.216, 0.185, 0.378, 0.284, 0.36, 0. ⋯
-│ B │ [0.0, 0.0, 0.04, 0.0, 0.08, 0.0, 0.04, 0.12, 0.0, 0.04, 0.12, 0.08, 0.04 ⋯
-│ C │ Float32[-0.186, -0.182, -0.135, -0.154, -0.208, -0.108, -0.0885, -0.229, ⋯
+│ A │ [0.311, 0.328, 0.325, 0.343, 0.353, 0.195, 0.315, 0.402, 0.235, 0.347, 0 ⋯
+│ B │ [0.0, 0.04, 0.04, 0.04, 0.08, 0.04, 0.12, 0.08, 0.0, 0.04, 0.16, 0.08, 0 ⋯
+│ C │ Float32[-0.164, -0.183, -0.172, -0.182, -0.184, -0.0885, -0.181, -0.252, ⋯
 └───┴───────────────────────────────────────────────────────────────────────────
                                                                2 columns omitted
 
@@ -1082,51 +1082,51 @@ predict(mach, rows=test) # and predict missing targets
 
 ````
 45-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.252, versicolor=>0.476, virginica=>0.272)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.977, versicolor=>0.0204, virginica=>0.00301)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.977, versicolor=>0.0198, virginica=>0.0029)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.975, versicolor=>0.0213, virginica=>0.0032)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.274, versicolor=>0.468, virginica=>0.258)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00471, versicolor=>0.314, virginica=>0.681)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.981, versicolor=>0.0164, virginica=>0.00226)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.979, versicolor=>0.0187, virginica=>0.00269)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0491, versicolor=>0.465, virginica=>0.485)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.276, versicolor=>0.466, virginica=>0.258)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00211, versicolor=>0.266, virginica=>0.732)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00591, versicolor=>0.329, virginica=>0.665)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00233, versicolor=>0.272, virginica=>0.726)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.177, versicolor=>0.495, virginica=>0.328)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.977, versicolor=>0.0202, virginica=>0.00298)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.287, versicolor=>0.461, virginica=>0.252)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00361, versicolor=>0.298, virginica=>0.699)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0065, versicolor=>0.335, virginica=>0.658)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0343, versicolor=>0.444, virginica=>0.521)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.24, versicolor=>0.479, virginica=>0.28)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.321, versicolor=>0.446, virginica=>0.232)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.199, versicolor=>0.491, virginica=>0.31)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.24, versicolor=>0.479, virginica=>0.28)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00377, versicolor=>0.301, virginica=>0.696)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.962, versicolor=>0.0328, virginica=>0.00564)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00286, versicolor=>0.284, virginica=>0.713)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.274, versicolor=>0.467, virginica=>0.258)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0389, versicolor=>0.452, virginica=>0.509)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00826, versicolor=>0.351, virginica=>0.641)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00643, versicolor=>0.334, virginica=>0.659)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.179, versicolor=>0.494, virginica=>0.326)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.968, versicolor=>0.0275, virginica=>0.00445)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.193, versicolor=>0.492, virginica=>0.315)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.247, versicolor=>0.477, virginica=>0.276)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00376, versicolor=>0.301, virginica=>0.696)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0328, versicolor=>0.442, virginica=>0.526)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00641, versicolor=>0.334, virginica=>0.659)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.281, versicolor=>0.464, virginica=>0.255)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.975, versicolor=>0.0217, virginica=>0.00327)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.976, versicolor=>0.0209, virginica=>0.00311)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.00547, versicolor=>0.324, virginica=>0.671)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.969, versicolor=>0.0266, virginica=>0.00427)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0347, versicolor=>0.445, virginica=>0.52)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.268, versicolor=>0.47, virginica=>0.262)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(setosa=>0.0386, versicolor=>0.452, virginica=>0.51)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.159, Iris-versicolor=>0.569, Iris-virginica=>0.273)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00299, Iris-virginica=>1.26e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.0031, Iris-virginica=>1.31e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00345, Iris-virginica=>1.53e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.187, Iris-versicolor=>0.583, Iris-virginica=>0.23)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00342, Iris-versicolor=>0.201, Iris-virginica=>0.795)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00271, Iris-virginica=>1.09e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00294, Iris-virginica=>1.22e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0345, Iris-versicolor=>0.408, Iris-virginica=>0.558)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.225, Iris-versicolor=>0.615, Iris-virginica=>0.16)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00141, Iris-versicolor=>0.148, Iris-virginica=>0.85)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00378, Iris-versicolor=>0.208, Iris-virginica=>0.788)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00167, Iris-versicolor=>0.157, Iris-virginica=>0.842)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.111, Iris-versicolor=>0.532, Iris-virginica=>0.356)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00312, Iris-virginica=>1.33e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.248, Iris-versicolor=>0.622, Iris-virginica=>0.13)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00268, Iris-versicolor=>0.185, Iris-virginica=>0.813)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00373, Iris-versicolor=>0.207, Iris-virginica=>0.789)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0279, Iris-versicolor=>0.39, Iris-virginica=>0.582)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.159, Iris-versicolor=>0.57, Iris-virginica=>0.272)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.32, Iris-versicolor=>0.612, Iris-virginica=>0.0684)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.121, Iris-versicolor=>0.542, Iris-virginica=>0.338)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.158, Iris-versicolor=>0.575, Iris-virginica=>0.267)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00221, Iris-versicolor=>0.173, Iris-virginica=>0.825)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.996, Iris-versicolor=>0.00421, Iris-virginica=>1.98e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00177, Iris-versicolor=>0.16, Iris-virginica=>0.838)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.203, Iris-versicolor=>0.601, Iris-virginica=>0.195)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0213, Iris-versicolor=>0.352, Iris-virginica=>0.627)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00501, Iris-versicolor=>0.227, Iris-virginica=>0.768)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00425, Iris-versicolor=>0.216, Iris-virginica=>0.78)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.117, Iris-versicolor=>0.551, Iris-virginica=>0.332)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.996, Iris-versicolor=>0.00408, Iris-virginica=>1.98e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.124, Iris-versicolor=>0.552, Iris-virginica=>0.325)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.176, Iris-versicolor=>0.59, Iris-virginica=>0.234)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00218, Iris-versicolor=>0.172, Iris-virginica=>0.826)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.026, Iris-versicolor=>0.38, Iris-virginica=>0.594)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00351, Iris-versicolor=>0.202, Iris-virginica=>0.794)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.221, Iris-versicolor=>0.608, Iris-virginica=>0.171)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00321, Iris-virginica=>1.42e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00322, Iris-virginica=>1.39e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00416, Iris-versicolor=>0.215, Iris-virginica=>0.781)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.996, Iris-versicolor=>0.00389, Iris-virginica=>1.82e-6)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0206, Iris-versicolor=>0.355, Iris-virginica=>0.624)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.19, Iris-versicolor=>0.591, Iris-virginica=>0.219)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.019, Iris-versicolor=>0.345, Iris-virginica=>0.636)
 ````
 
 ### On learning curves
@@ -1155,7 +1155,7 @@ curve = learning_curve(
 ````
 
 ````
-(parameter_name = "epochs", parameter_scale = :log10, parameter_values = [1, 2, 3, 4, 5, 7, 9, 11, 14, 17, 22, 28, 36, 45, 57, 73, 92, 117, 149, 189, 240, 304, 386, 489, 621, 788, 1000], measurements = [0.9868631607591435, 0.9177373579274353, 0.7928130612629691, 0.7571137752713681, 0.6851313147101327, 0.6156774219929569, 0.581239506206346, 0.534846995511736, 0.5002254761427426, 0.48638265866988506, 0.4400383152078051, 0.42036333526391684, 0.3737500578649974, 0.3355361839785058, 0.3105294743807959, 0.3331241936577385, 0.25588813384002324, 0.23053561187495986, 0.2361587544861429, 0.2752916485072084, 0.2358462016375349, 0.23330843436159235, 0.22328935581618545, 0.2384161728086053, 0.21372094325026206, 0.2669165770979309, 0.24147887997776202])
+(parameter_name = "epochs", parameter_scale = :log10, parameter_values = [1, 2, 3, 4, 5, 7, 9, 11, 14, 17, 22, 28, 36, 45, 57, 73, 92, 117, 149, 189, 240, 304, 386, 489, 621, 788, 1000], measurements = [1.0688572877232012, 0.9775668502403386, 0.8957729763444537, 0.8502722820013228, 0.7900654567779567, 0.7161783875903127, 0.6783388511485662, 0.6626694886542754, 0.6302097642164451, 0.6216974806422221, 0.5637847854496398, 0.4898889856077138, 0.42644719180744134, 0.3904612622351922, 0.3374627553349284, 0.31244659954260495, 0.2809301635554485, 0.32667948553139114, 0.23659671315739095, 0.261564989893, 0.28363801902151037, 0.2689894678615147, 0.2256241953963682, 0.2701070883877704, 0.2769876324354052, 0.2150057484379753, 0.2835758104810806])
 ````
 
 ````@julia
@@ -1218,16 +1218,16 @@ y4 = [n_devices(row.salary) for row in eachrow(X4)]
 
 ````
 10-element Vector{Int64}:
+ 1
+ 1
  5
+ 6
  2
  3
- 5
+ 1
+ 2
  5
  1
- 4
- 8
- 2
- 4
 ````
 
 (b) What models can be applied if you coerce the salary to a
@@ -1253,10 +1253,10 @@ pretty(data)
 │ Int64 │ Float64    │ Float64    │ CategoricalValue{String, UInt32} │
 │ Count │ Continuous │ Continuous │ OrderedFactor{2}                 │
 ├───────┼────────────┼────────────┼──────────────────────────────────┤
-│ 1     │ 0.699924   │ 0.534555   │ male                             │
-│ 2     │ 0.814431   │ 0.532784   │ female                           │
-│ 3     │ 0.48782    │ 0.759467   │ female                           │
-│ 4     │ 0.407518   │ 0.108316   │ male                             │
+│ 1     │ 0.259146   │ 0.0350593  │ male                             │
+│ 2     │ 0.509949   │ 0.0537315  │ female                           │
+│ 3     │ 0.922383   │ 0.801738   │ female                           │
+│ 4     │ 0.828869   │ 0.777606   │ male                             │
 └───────┴────────────┴────────────┴──────────────────────────────────┘
 
 ````

@@ -31,8 +31,8 @@ x = rand(100);
 ````
 
 ````
-mean(x) = 0.49308016844176983
-std(x) = 0.2752393968165335
+mean(x) = 0.5049271509171457
+std(x) = 0.2930352399455027
 
 ````
 
@@ -46,7 +46,7 @@ xhat = transform(mach, x);
 
 ````
 [ Info: Training machine(Standardizer(features = Symbol[], …), …).
-mean(xhat) = 9.103828801926283e-17
+mean(xhat) = -1.9095836023552692e-16
 std(xhat) = 1.0
 
 ````
@@ -500,7 +500,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-446
+Tag: DeterministicPipeline-586
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -629,7 +629,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-478
+Tag: DeterministicPipeline-488
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -669,7 +669,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-977
+Tag: DeterministicPipeline-307
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -696,7 +696,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-343
+Tag: DeterministicPipeline-882
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

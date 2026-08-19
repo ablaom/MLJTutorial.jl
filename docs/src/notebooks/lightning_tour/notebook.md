@@ -4,6 +4,9 @@ EditURL = "notebook.jl"
 
 # Lightning Tour of MLJ
 
+To run the code in this tutorial in a live Julia session, first follow the instructions
+given [here](@ref instructions).
+
 In MLJ a *model* is just a container for hyper-parameters, and that's all. Here we will
 apply several kinds of model composition before binding the resulting "meta-model" to
 data in a *machine* for evaluation, using cross-validation.
@@ -213,7 +216,7 @@ DeterministicTunedModel(
   train_best = true, 
   repeats = 1, 
   n = 50, 
-  acceleration = ComputationalResources.CPUThreads{Int64}(12), 
+  acceleration = ComputationalResources.CPUThreads{Int64}(1), 
   acceleration_resampling = ComputationalResources.CPU1{Nothing}(nothing), 
   check_measure = true, 
   cache = true, 
@@ -240,8 +243,8 @@ mach = machine(self_tuning_pipe, X, y)
 untrained Machine; does not cache data
   model: DeterministicTunedModel(model = DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …)
   args: 
-    1:	Source @794 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
-    2:	Source @994 ⏎ AbstractVector{ScientificTypesBase.Continuous}
+    1:	Source @691 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
+    2:	Source @950 ⏎ AbstractVector{ScientificTypesBase.Continuous}
 
 ````
 
@@ -255,9 +258,9 @@ first(yhat, 3)
 
 ````
 3-element Vector{Float32}:
- 1.9124728
- 2.146141
- 1.308753
+ -0.75853795
+ -0.5854095
+ -0.99169284
 ````
 
 Evaluating the "self-tuning" pipeline model's performance using all data and 5-fold
@@ -278,21 +281,21 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicTunedModel-826
+Tag: DeterministicTunedModel-103
 Extract:
 ┌───┬────────────┬───────────┬─────────────┐
 │   │ measure    │ operation │ measurement │
 ├───┼────────────┼───────────┼─────────────┤
-│ A │ LPLoss(    │ predict   │ 0.227       │
+│ A │ LPLoss(    │ predict   │ 0.187       │
 │   │   p = 1)   │           │             │
-│ B │ RSquared() │ predict   │ 0.912       │
+│ B │ RSquared() │ predict   │ 0.939       │
 └───┴────────────┴───────────┴─────────────┘
-┌───┬────────────────────────────────────┬─────────┐
-│   │ per_fold                           │ 1.96*SE │
-├───┼────────────────────────────────────┼─────────┤
-│ A │ [0.248, 0.192, 0.251, 0.254, 0.19] │ 0.032   │
-│ B │ [0.876, 0.911, 0.908, 0.927, 0.94] │ 0.024   │
-└───┴────────────────────────────────────┴─────────┘
+┌───┬─────────────────────────────────────┬─────────┐
+│   │ per_fold                            │ 1.96*SE │
+├───┼─────────────────────────────────────┼─────────┤
+│ A │ [0.182, 0.244, 0.111, 0.212, 0.187] │ 0.0481  │
+│ B │ [0.925, 0.899, 0.974, 0.943, 0.953] │ 0.0278  │
+└───┴─────────────────────────────────────┴─────────┘
 
 ````
 
@@ -312,17 +315,17 @@ describe.(evaluations) |> pretty
 ````
 
 ````
-[ Info: Performing evaluations using 12 threads.
-Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:26[KEvaluating over 5 folds:  60%[===============>         ]  ETA: 0:00:12[KEvaluating over 5 folds:  80%[====================>    ]  ETA: 0:00:05[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:20[K
-[ Info: Performing evaluations using 12 threads.
+[ Info: Performing evaluations using 1 thread.
+Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:28[KEvaluating over 5 folds:  60%[===============>         ]  ETA: 0:00:17[KEvaluating over 5 folds:  80%[====================>    ]  ETA: 0:00:07[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:35[K
+[ Info: Performing evaluations using 1 thread.
 Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:01[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:00[K
 ┌─────────┬──────────────────────┬──────────────────────┐
 │ tag     │ LPLoss               │ RSquared             │
 │ String  │ Measurement{Float64} │ Measurement{Float64} │
 │ Textual │ Continuous           │ Continuous           │
 ├─────────┼──────────────────────┼──────────────────────┤
-│ booster │ 0.227±0.032          │ 0.912±0.024          │
-│ dummy   │ 0.88±0.13            │ -0.092±0.1           │
+│ booster │ 0.187±0.048          │ 0.939±0.028          │
+│ dummy   │ 0.88±0.11            │ -0.11±0.11           │
 └─────────┴──────────────────────┴──────────────────────┘
 
 ````

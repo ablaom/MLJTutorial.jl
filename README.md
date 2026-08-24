@@ -29,10 +29,14 @@ scripts,** which must follow the
 [Literate.jl](https://duckduckgo.com/?q=Literate.jl&t=osx&ia=web) rules for embedding the
 narrative as code comments. 
 
-Package management is through a workspace tree with the root Project.toml as stump. Each
-notebook getting its own Project.toml file in the workspace tree. The julia version is
-specified in the root Project.toml. There are no committed manifests, only project files
-with [compat] lower bounds.
+Package management is through a workspace tree with /Project.toml as the root
+project. Each notebook gets its own Project.toml file in the workspace tree. The julia
+version is specified in the root Project.toml. There are no committed manifests, only
+project files with [compat] lower bounds.
+
+An optional runtest.jl file can be added to any tutorial folder for CI testing of
+consistency of the tutorial with the narrative. This should begin with the line
+`include("tutorial.jl")` and end with `true`.
 
 After making changes to a julia script or any Project.toml file, post a pull request and
 CI will automatically generate new markdown (using Literate.jl), inviting you to review a

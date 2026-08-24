@@ -32,7 +32,7 @@ makedocs(
         "Using MLJ (Video tutorials)" => [
             "1\\. Basics"  => "notebooks/11_basics/notebook.md",
             "2\\. Model Composition" => "notebooks/12_model_composition/notebook.md",
-            "3\\. Tuning Models" => "notebooks/13_model_tuning/notebook.md",
+            "3\\. ModelTuning" => "notebooks/13_model_tuning/notebook.md",
         ],
         "MLJTutorial (original series)" => [
             "1\\. Data Representation" => "notebooks/01_data_representation/notebook.md",

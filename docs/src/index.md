@@ -22,14 +22,14 @@ Two collections of tutorials are hosted here:
 
 ## The tutorials
 
-### Using MLJ (video series)
+### *Using MLJ* (video series)
 
 - [Lesson 1. Basics](@ref)
 - [Lesson 2. Model Composition](@ref)
 - [Lesson 3. Model Tuning](@ref)
 
 
-### MLJTutorial (original series)
+### *MLJTutorial* (original series)
 
 #### Basic
 

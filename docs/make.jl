@@ -30,10 +30,10 @@ makedocs(
     pages=[
         "Home" =>                   "index.md",
         "Using MLJ (Video tutorials)" => [
-            "Lesson 1\\. Basics"  => "notebooks/11_basics/notebook.md",
-            "Lesson 2\\. Model Composition" => "notebooks/12_model_composition/notebook.md",
-            "Lesson 3\\. Tuning Models" => "notebooks/13_tuning_models/notebook.md",
-        ]
+            "1\\. Basics"  => "notebooks/11_basics/notebook.md",
+            "2\\. Model Composition" => "notebooks/12_model_composition/notebook.md",
+            "3\\. Tuning Models" => "notebooks/13_model_tuning/notebook.md",
+        ],
         "MLJTutorial (original series)" => [
             "1\\. Data Representation" => "notebooks/01_data_representation/notebook.md",
             "2\\. Models" =>              "notebooks/02_models/notebook.md",
@@ -41,7 +41,7 @@ makedocs(
             "4\\. Tuning" =>              "notebooks/04_tuning/notebook.md",
             "5\\. Composition" =>         "notebooks/05_composition/notebook.md",
             "Solutions to Exercises" => "notebooks/99_solution_to_exercises/notebook.md",
-        ]
+        ],
         "Lightning Tour" => "notebooks/lightning_tour/notebook.md",
     ],
     sitename=REPO_NAME,

@@ -1,5 +1,5 @@
 [workspace]
-projects = ["src/notebooks/01_data_representation", "src/notebooks/02_models", "src/notebooks/03_pipelines", "src/notebooks/04_tuning", "src/notebooks/05_composition", "src/notebooks/99_solution_to_exercises", "src/notebooks/lightning_tour", "src/notebooks/11_basics", "src/notebooks/12_model_composition", "src/notebooks/13_tuning_models"]
+projects = ["src/notebooks/01_data_representation", "src/notebooks/02_models", "src/notebooks/03_pipelines", "src/notebooks/04_tuning", "src/notebooks/05_composition", "src/notebooks/99_solution_to_exercises", "src/notebooks/lightning_tour", "src/notebooks/11_basics", "src/notebooks/12_model_composition", "src/notebooks/13_model_tuning"]
 
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"

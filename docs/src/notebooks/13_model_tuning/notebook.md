@@ -2,7 +2,7 @@
 EditURL = "notebook.jl"
 ```
 
-# Lesson 3: Model Tuning
+# Lesson 3. Model Tuning
 
 Notebook supporting the video series "Using MLJ".
 
@@ -65,7 +65,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-762
+Tag: ProbabilisticPipeline-103
 Extract:
 ┌──────────┬──────────────┬─────────────┐
 │ measure  │ operation    │ measurement │
@@ -182,10 +182,10 @@ e1 = evaluate(tuned_pipe, X, y; options...)
 
 ````
 [ Info: Performing evaluations using 12 threads.
-Evaluating over 3 folds:  67%[================>        ]  ETA: 0:00:14[KEvaluating over 3 folds: 100%[=========================] Time: 0:00:27[K
-ebase = PerformanceEvaluation("ProbabilisticPipeline-762", 0.568 ± 0.0332)
-e0 = PerformanceEvaluation("DeterministicPipeline-860", 0.184 ± 0.0281)
-e1 = PerformanceEvaluation("DeterministicTunedModel-352", 0.176 ± 0.0204)
+Evaluating over 3 folds:  67%[================>        ]  ETA: 0:00:14[KEvaluating over 3 folds: 100%[=========================] Time: 0:00:28[K
+ebase = PerformanceEvaluation("ProbabilisticPipeline-103", 0.568 ± 0.0332)
+e0 = PerformanceEvaluation("DeterministicPipeline-378", 0.184 ± 0.0281)
+e1 = PerformanceEvaluation("DeterministicTunedModel-685", 0.176 ± 0.0218)
 
 ````
 

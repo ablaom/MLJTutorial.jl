@@ -1,4 +1,4 @@
-# # Lesson 2: Model Composition
+# # Lesson 2. Model Composition
 
 # Notebook supporting the video series "Using MLJ".
 

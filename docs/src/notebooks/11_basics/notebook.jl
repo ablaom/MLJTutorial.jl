@@ -1,4 +1,4 @@
-# # Lesson 1: Basics
+# # Lesson 1. Basics
 
 # Notebook supporting the video series "Using MLJ".
 

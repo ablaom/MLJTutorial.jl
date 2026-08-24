@@ -26,7 +26,7 @@ Two collections of tutorials are hosted here:
 
 - [Lesson 1. Basics](@ref)
 - [Lesson 2. Model Composition](@ref)
-- [Lesson 1. Tuning Models](@ref)
+- [Lesson 3. Model Tuning](@ref)
 
 
 ### MLJTutorial (original series)

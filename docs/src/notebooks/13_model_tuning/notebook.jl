@@ -1,4 +1,4 @@
-# # Lesson 3: Model Tuning
+# # Lesson 3. Model Tuning
 
 # Notebook supporting the video series "Using MLJ".
 

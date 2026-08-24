@@ -2,7 +2,7 @@
 EditURL = "notebook.jl"
 ```
 
-# Lesson 2: Model Composition
+# Lesson 2. Model Composition
 
 Notebook supporting the video series "Using MLJ".
 
@@ -135,7 +135,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-555
+Tag: DeterministicPipeline-245
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -196,7 +196,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: TransformedTargetModelDeterministic-116
+Tag: TransformedTargetModelDeterministic-843
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

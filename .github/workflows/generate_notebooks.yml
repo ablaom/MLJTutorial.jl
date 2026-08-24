@@ -56,8 +56,11 @@ jobs:
 
           # Construct a list of dirs for notebooks needing regeneration
           notebook_dirs = workspace_changed ? 
-              NotebookManagementTools.dirs(root=notebook_root) :
-              NotebookManagementTools.dirs_containing(changed_notebook_files; root=notebook_root)
+              NotebookManagementTools.notebook_dirs(root=notebook_root) :
+              NotebookManagementTools.notebook_dirs_containing(
+                  changed_notebook_files;
+                  root=notebook_root,
+              )
 
           # Test and generate the notebooks:
           markdown_files = NotebookManagementTools.generate(notebook_dirs; tests=true)

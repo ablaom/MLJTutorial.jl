@@ -65,6 +65,7 @@ include("path_to_literate.jl")
 include("generate.jl")
 include("init.jl")
 
-export generate, dirs_containing, dirs, set_path_to_literate, path_to_literate
+export generate, notebook_dirs_containing, notebook_dirs,
+    set_path_to_literate, path_to_literate
 
 end # module

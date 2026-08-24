@@ -1,43 +1,45 @@
 """
-    dirs_containing([paths]; root=pwd())
+    notebook_dirs_containing([paths]; root=pwd())
 
-Return, as full paths, a list of those top-level subdirectores of `root` that contain one
-or more of the full paths specified by `paths`.
+Return, as full paths, a list of all subdirectores of `root` that contain a file called
+"notebook.jl" and one or more of the files with full paths specified by `paths`.
 
 ```julia-repl
 shell> pwd
-/Users/anthony/GoogleDrive/Julia/MLJ/StatisticalMeasures
+/MLJTutorial/NotebookManagementTools/test/dummy_tutorials
 
-shell> tree -L 2
+shell> tree
 .
-├── docs
-│   ├── build
-│   ├── make.jl
+├── bad_tutorial
+│   ├── notebook.jl
 │   ├── Project.toml
-│   └── src
-├── LICENSE
-├── Project.toml
-├── README.md
-├── src
-│   ├── confusion_matrices.jl
-│   ├── continuous.jl
-    ├── tools.jl
-│   ├── docstrings.jl
-│   └── unfussy.jl
-└── test
-    ├── confusion_matrices.jl
-    ├── continuous.jl
-    └── tools.jl
+│   └── runtests.jl
+├── good_tutorial
+│   ├── notebook.jl
+│   ├── Project.toml
+│   └── runtests.jl
+├── nested
+│   └── good_tutorial
+│       ├── notebook.jl
+│       ├── Project.toml
+│       └── runtests.jl
+├── tutorial_without_script
+│   ├── Project.toml
+│   └── runtests.jl
+└── tutorial_without_tests
+    ├── notebook.jl
+    └── Project.toml
 
-julia> paths = [joinpath(pwd(), "src", "confusion_matrices.jl"),];
-julia> dirs_containing(paths)
+julia> path1 = joinpath(pwd(), "nested", "good_tutorial", "Project.toml")
+julia> path2 = joinpath(pwd(), "tutorial_without_scripts", "Project.toml")
+julia> notebook_dirs_containing([path1, path2])
 1-element Vector{String}:
- "/Users/anthony/GoogleDrive/Julia/MLJ/StatisticalMeasures/src"
+ "MLJTutorial/NotebookManagementTools/test/dummy)tutorials/nested/good_tutorial"
 ```
 
 """
-function dirs_containing(paths=nothing; root=pwd())
-    all_tutorial_dirs = filter(isdir, readdir(root, join=true))
+function notebook_dirs_containing(paths=nothing; root=pwd())
+    all_tutorial_dirs = notebook_dirs(; root)
     isnothing(paths) && return all_tutorial_dirs
     filter(all_tutorial_dirs) do dir
         any(path -> startswith(path, dir), paths)
@@ -45,9 +47,17 @@ function dirs_containing(paths=nothing; root=pwd())
 end
 
 """
-    dirs(; root=pwd())
+    notebook_dirs(root=pwd())
 
-Return *all* top-level subdirectories of `root` as full paths.
+Return all subdirectories of `root` (possibly nested) that contain a file called
+"notebook.jl". Directores are returned as full paths.
 
 """
-dirs(; kwargs...) = dirs_containing(; kwargs...)
+function notebook_dirs(; root=pwd())
+    tree = walkdir(root)
+    dirs = String[]
+    for (dir, _, contents) in tree
+        "notebook.jl" in contents && push!(dirs, dir)
+    end
+    return dirs
+end

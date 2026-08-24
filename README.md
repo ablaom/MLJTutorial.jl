@@ -57,14 +57,16 @@ If you add a new tutorial, you will need to:
 
 #### Testing markdown generation
 
-To test markdown generation locally, change to the root directory of your local MLJTutorial.jl clone, and run this in julia:
+To test markdown generation locally, change to the root directory of your local
+MLJTutorial.jl clone, check the root Project.toml is properly resolved, and run this in
+julia:
 
 ```julia
 using Pkg
-Pkg.activate("NotebookManagementToools")
+Pkg.activate("NotebookManagementTools")
 using NotebookManagementTools
 generate(joinpath("docs", "src", "notebooks", "02_models"))
 ```
 
-but change "02_models" to the tutorial you are testing. Remember, you are discouraged from
-committing the generated markdown changes to your pull request.
+but change "02_models" to the tutorial you are testing. If you are adding a brand new
+tutorial, *do commit* the generated markdown, but for updates this is discouraged.

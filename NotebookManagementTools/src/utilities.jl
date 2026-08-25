@@ -50,7 +50,7 @@ end
     notebook_dirs(root=pwd())
 
 Return all subdirectories of `root` (possibly nested) that contain a file called
-"notebook.jl". Directores are returned as full paths.
+"notebook.jl". Directories are returned as full paths.
 
 """
 function notebook_dirs(; root=pwd())

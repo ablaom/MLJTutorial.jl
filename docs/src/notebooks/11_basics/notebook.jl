@@ -69,7 +69,7 @@ mae(ypred, y[test])
 
 mae
 
-# List other pertitent metrics:
+# List other pertinent metrics:
 
 measures(ypred, y)
 

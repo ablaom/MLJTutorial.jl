@@ -236,7 +236,7 @@ LPLoss(
   p = 1)
 ````
 
-List other pertitent metrics:
+List other pertinent metrics:
 
 ````@julia
 measures(ypred, y)

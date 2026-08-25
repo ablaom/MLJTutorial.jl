@@ -81,3 +81,8 @@ use with Julia 1.12 or later:
 
 Visit the [MLJ Learn page](https://juliaai.github.io/MLJ.jl/dev/learning_mlj/) for
 additional learning resources.
+
+--
+
+This site makes use of an experimental, unregistered package
+[NotebookManagementTools.jl](@ref).

@@ -42,10 +42,10 @@ workspace package pattern, this might look something like this:
 
 - [`generate`](@ref): The main tool, used to generate markdown from annotated julia script.
 
-- [`dirs`](@ref): Used in continuous integration to list tutorial directories.
+- [`notebook_dirs`](@ref): Used in continuous integration to list notebook directories.
 
-- [`dirs_containing`](@ref): Used in continuous integration to find tutorial directories
-  containing files known to have changed in a pull-request.
+- [`notebook_dirs_containing`](@ref): Used in continuous integration to find tutorial
+  directories containing files known to have changed in a pull-request.
 
 # Advanced Tools
 

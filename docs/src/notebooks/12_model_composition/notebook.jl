@@ -7,38 +7,63 @@
 
 using MLJ
 
-# load some model code:
+# Load some model code:
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 
-# load some data and inspect schema:
+# Load some data and inspect schema:
 data = load_reduced_ames();
 schema(data)
 
-# horizontally split with observation shuffling:
+# Horizontally split with observation shuffling:
 y, X = unpack(data, ==(:target); rng=123);
 schema(X)
 
-# defined a pipeline model:
+#-
+
+first(y, 4)
+
+# Define a pipeline model:
 pipe = ContinuousEncoder() |> Standardizer() |> RidgeRegressor()
 
-# accessing a nested hyperparameter:
+# Access a nested hyperparameter:
 pipe.ridge_regressor.fit_intercept
 
-# changing it:
-pipe.ridge_regressor.fit_intercept = false
+# Change it's value:
+pipe.ridge_regressor.fit_intercept = false;
 
-# evaluate the pipeline:
-evaluate(pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
+# Evaluate the pipeline:
+e1 = evaluate(pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
 
-# look at the target:
-@show mean(y) std(y)
+# Notice the target very large on the current scale:
+@show mean(y) std(y);
 
-# wrap in target normalization:
+# So we wrap the pipeline in target normalization:
 norm_pipe = TransformedTargetModel(pipe, transformer=Standardizer())
 
-# evaluate performance:
-evaluate(norm_pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
+# Note that target predictions will remain on the original scale. However, as
+# internally we are using a normalized target, we get different performance:
+e2 = evaluate(norm_pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
 
-# horizontally split with observation shuffling:
-y, X = unpack(data, ==(:target); rng=123)
-schema(X)
+# Changing the regularization parameter `lambda` of ridge regressor, we can arrange that
+# the target transformation gives better performance:
+
+pipe_original = deepcopy(pipe)
+pipe.ridge_regressor.lambda = 0.45
+
+evaluations = evaluate(
+    [
+        "default lambda" => pipe_original,
+        "new lambda" => pipe,
+        "new lambda & normalized target" => norm_pipe],
+    X,
+    y;
+    resampling=CV(nfolds=4, rng=123),
+    repeats=2,
+    measure=mav,
+)
+
+# Here's a pretty view of these results:
+
+describe.(evaluations) |> pretty
+
+# Finding optimal hyper-parameter values is the subject of the next lesson.

@@ -13,7 +13,7 @@ given [here](@ref instructions).
 using MLJ
 ````
 
-load some model code:
+Load some model code:
 
 ````@julia
 RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
@@ -23,7 +23,7 @@ RidgeRegressor = @load RidgeRegressor pkg=MLJLinearModels
 MLJLinearModels.RidgeRegressor
 ````
 
-load some data and inspect schema:
+Load some data and inspect schema:
 
 ````@julia
 data = load_reduced_ames();
@@ -51,7 +51,7 @@ schema(data)
 
 ````
 
-horizontally split with observation shuffling:
+Horizontally split with observation shuffling:
 
 ````@julia
 y, X = unpack(data, ==(:target); rng=123);
@@ -78,7 +78,19 @@ schema(X)
 
 ````
 
-defined a pipeline model:
+````@julia
+first(y, 4)
+````
+
+````
+4-element Vector{Float64}:
+ 145000.0
+ 239799.0
+ 268000.0
+ 226000.0
+````
+
+Define a pipeline model:
 
 ````@julia
 pipe = ContinuousEncoder() |> Standardizer() |> RidgeRegressor()
@@ -103,7 +115,7 @@ DeterministicPipeline(
   cache = true)
 ````
 
-accessing a nested hyperparameter:
+Access a nested hyperparameter:
 
 ````@julia
 pipe.ridge_regressor.fit_intercept
@@ -113,20 +125,16 @@ pipe.ridge_regressor.fit_intercept
 true
 ````
 
-changing it:
+Change it's value:
 
 ````@julia
-pipe.ridge_regressor.fit_intercept = false
+pipe.ridge_regressor.fit_intercept = false;
 ````
 
-````
-false
-````
-
-evaluate the pipeline:
+Evaluate the pipeline:
 
 ````@julia
-evaluate(pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
+e1 = evaluate(pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
 ````
 
 ````
@@ -135,7 +143,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-245
+Tag: DeterministicPipeline-669
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -152,17 +160,19 @@ Extract:
 
 ````
 
-look at the target:
+Notice the target very large on the current scale:
 
 ````@julia
-@show mean(y) std(y)
+@show mean(y) std(y);
 ````
 
 ````
-76696.59253004662
+mean(y) = 180151.2335164835
+std(y) = 76696.59253004662
+
 ````
 
-wrap in target normalization:
+So we wrap the pipeline in target normalization:
 
 ````@julia
 norm_pipe = TransformedTargetModel(pipe, transformer=Standardizer())
@@ -184,10 +194,11 @@ TransformedTargetModelDeterministic(
   cache = true)
 ````
 
-evaluate performance:
+Note that target predictions will remain on the original scale. However, as
+internally we are using a normalized target, we get different performance:
 
 ````@julia
-evaluate(norm_pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
+e2 = evaluate(norm_pipe, X, y; resampling=CV(nfolds=4, rng=123), repeats=2, measure=mav)
 ````
 
 ````
@@ -196,7 +207,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: TransformedTargetModelDeterministic-843
+Tag: TransformedTargetModelDeterministic-132
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -213,32 +224,53 @@ Extract:
 
 ````
 
-horizontally split with observation shuffling:
+Changing the regularization parameter `lambda` of ridge regressor, we can arrange that
+the target transformation gives better performance:
 
 ````@julia
-y, X = unpack(data, ==(:target); rng=123)
-schema(X)
+pipe_original = deepcopy(pipe)
+pipe.ridge_regressor.lambda = 0.45
+
+evaluations = evaluate(
+    [
+        "default lambda" => pipe_original,
+        "new lambda" => pipe,
+        "new lambda & normalized target" => norm_pipe],
+    X,
+    y;
+    resampling=CV(nfolds=4, rng=123),
+    repeats=2,
+    measure=mav,
+)
 ````
 
 ````
-┌──────────────┬───────────────────┬──────────────────────────────────┐
-│ names        │ scitypes          │ types                            │
-├──────────────┼───────────────────┼──────────────────────────────────┤
-│ OverallQual  │ OrderedFactor{10} │ CategoricalValue{Int64, UInt32}  │
-│ GrLivArea    │ Continuous        │ Float64                          │
-│ Neighborhood │ Multiclass{25}    │ CategoricalValue{String, UInt32} │
-│ x1stFlrSF    │ Continuous        │ Float64                          │
-│ TotalBsmtSF  │ Continuous        │ Float64                          │
-│ BsmtFinSF1   │ Continuous        │ Float64                          │
-│ LotArea      │ Continuous        │ Float64                          │
-│ GarageCars   │ Count             │ Int64                            │
-│ MSSubClass   │ Multiclass{15}    │ CategoricalValue{String, UInt32} │
-│ GarageArea   │ Continuous        │ Float64                          │
-│ YearRemodAdd │ Count             │ Int64                            │
-│ YearBuilt    │ Count             │ Int64                            │
-└──────────────┴───────────────────┴──────────────────────────────────┘
+3-element Vector{PerformanceEvaluation{M, Vector{StatisticalMeasuresBase.RobustMeasure{StatisticalMeasuresBase.FussyMeasure{StatisticalMeasuresBase.RobustMeasure{StatisticalMeasuresBase.Multimeasure{StatisticalMeasuresBase.SupportsMissingsMeasure{StatisticalMeasures.LPLossOnScalars{Int64}}, Nothing, StatisticalMeasuresBase.Mean, typeof(identity)}}, Nothing}}}, Vector{Float64}, Vector{Float64}, Vector{typeof(predict)}, Vector{Vector{Float64}}, Vector{Vector{Vector{Float64}}}, FittedParamsPerFold, ReportPerFold, CV} where {M, FittedParamsPerFold, ReportPerFold}}:
+ PerformanceEvaluation("default lambda", 180000.0 ± 635.0)
+ PerformanceEvaluation("new lambda", 180000.0 ± 1470.0)
+ PerformanceEvaluation("new lambda & normalized target", 18500.0 ± 443.0)
+````
+
+Here's a pretty view of these results:
+
+````@julia
+describe.(evaluations) |> pretty
+````
 
 ````
+┌────────────────────────────────┬──────────────────────┐
+│ tag                            │ LPLoss               │
+│ String                         │ Measurement{Float64} │
+│ Textual                        │ Continuous           │
+├────────────────────────────────┼──────────────────────┤
+│ default lambda                 │ 179980.0±630.0       │
+│ new lambda                     │ 180100.0±1500.0      │
+│ new lambda & normalized target │ 18460.0±440.0        │
+└────────────────────────────────┴──────────────────────┘
+
+````
+
+Finding optimal hyper-parameter values is the subject of the next lesson.
 
 ---
 

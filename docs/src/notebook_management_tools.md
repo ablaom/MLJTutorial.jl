@@ -5,6 +5,6 @@ NotebookManagementTools
 set_path_to_literate
 path_to_literate
 generate
-dirs
-dirs_containing
+notebook_dirs
+notebook_dirs_containing
 ```

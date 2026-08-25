@@ -12,60 +12,80 @@ using Pkg
 Pkg.status()
 
 
-# # PART 1. REGRESSIONS
+# # Part I. Regression
 
 using MLJ
-using UnicodePlots
+using UnicodePlots # for pretty display of labeled probability vectors
 
-# load data and inspect the schema:
+# Load data and inspect the schema:
 data = load_boston()
 schema(data) # 'MedV'= median value of owner-occupied homes in $1000s.
 
-# split off target variable:
+# Split off target variable:
 y, X = unpack(data, ==(:MedV))
 schema(X)
+
+#-
+
 first(y, 5)
 
-# split observations (row indices) in ration 60:40
+# Split observations (row indices) in ration 60:40
 train, test = partition(1:length(y), 0.6)
 
-# choose a model:
+# Choose a model:
 models(matching(X, y))
+
+#-
+
 Regressor = @iload RandomForestRegressor pkg=DecisionTree
 model = Regressor()
-@doc Regressor
 
-# train on `train` rows:
+# Inspect the documentation of this mode by running `@doc Regressor` or `?Regressor` in
+# the REPL.
+
+# Train on `train` rows:
 mach = machine(model, X, y)
-fit!(mach, rows=train)
+fit!(mach, rows=train);
 
-# inspect the machine:
+# Inspect the trained machine:
+
 fitted_params(mach)
+
+#-
+
 report(mach)
 
-# predict on some "new" data
-predict(mach, X)
+# Predict on some "new" data
 
-# predict in the `test` rows:
-ypred = predict(mach, rows=test)
+predict(mach, X)[1:3]
 
-# get the mean absolute error:
+# Predict in the `test` rows:
+ypred = predict(mach, rows=test);
+
+# Get the mean absolute error:
 mae(ypred, y[test])
 
-# other options for the metric:
+# `mae` is actually just an alias:
+
 mae
+
+# List other pertitent metrics:
+
 measures(ypred, y)
 
-# get performance estimates in one hit:
+# Get performance estimates in one hit:
 evaluate!(mach; resampling=[(train, test),], measures=[mae, RSquared()])
 
-# something fancier:
-evaluate(model, X, y;
-         resampling=CV(nfolds=10),
-         measures=[mae, RSquared()],
-         )
-# Dietterich's 5 x 2 test:
+# Something fancier:
 evaluate(
+    model, X, y;
+    resampling=CV(nfolds=6),
+    measures=[mae, RSquared()],
+)
+
+# Dietterich's 5 x 2 test:
+
+e = evaluate(
     model, X, y;
     resampling=CV(nfolds=2, shuffle=true),
     repeats=5,
@@ -73,18 +93,30 @@ evaluate(
     acceleration=CPUThreads(),
 )
 
+#-
 
-# # BREAK OFF FOR SCITYPE DICUSSSION
+e.uncertainty_radius_95
+
+# # Interlude on scientific types
 
 typeof(3.14)
+
+#-
+
 scitype(3.14)
+
+#-
+
 scitype(3.143f0)
+
+#-
+
 scitype(["cat", "mouse", "dog"])
 
 
-# # PART 2. CLASSIFICATION
+# # Part II. Classification
 
-# new data set for classification, the Adult Dataset (census data):
+# New data set for classification, the Adult Dataset (census data):
 using Downloads, CSV
 url = "https://raw.githubusercontent.com/"*
     "saravrajavelu/Adult-Income-Analysis/refs/heads/master/"*
@@ -93,18 +125,21 @@ file = Downloads.download(url)
 data = CSV.read(file, NamedTuple)
 schema(data)
 
-data.income
+#-
 
-# fix some of the incorrect scitypes:
-data = coerce(data,
-              :age=>Continuous,
-              :occupation=>Multiclass,
-              :gender=>Multiclass,
-              Symbol("educational-num")=>OrderedFactor,
-              :income=>Multiclass,
+data.income[1:5]
+
+# Fix some of the incorrect scitypes:
+data = coerce(
+    data,
+    :age=>Continuous,
+    :occupation=>Multiclass,
+    :gender=>Multiclass,
+    Symbol("educational-num")=>OrderedFactor,
+    :income=>Multiclass,
 );
 
-# split off target, dump some features, and shuffle the observations:
+# Split off target, dump some features, and shuffle the observations:
 y, X = unpack(
     data,
     ==(:income),
@@ -113,38 +148,50 @@ y, X = unpack(
 );
 scitype(y)
 
-# split observations (row indices) in ration 60:40
+# Split observations (row indices) in ration 60:40
 train, test = partition(1:length(y), 0.6)
 
-# what models are available?
+# What models are available?
 models(matching(X, y))
 
-# one hot encoding:
+# One-hot encoding:
 model_hot = OneHotEncoder()
-localmodels()
+
+# List all (non-composite) models currently installed using `localmodels()`.
+
+# Training and applying our one-hot encoder:
+
 mach = machine(model_hot, X) |> fit!
 Xhot = transform(mach, X)
 schema(Xhot)
 
-# choose a supervised model:
-models(matching(Xhot,y))
+# See a selection of compatible supervised models by running
+# `models(matching(Xhot,y))`. We'll choose a random forest model:
+
 model = (@load RandomForestClassifier pkg=DecisionTree)()
 
-# evaluate by hand:
+# Evaluate by hand:
 mach = machine(model, Xhot, y)
 fit!(mach, rows=train)
 yprob = predict(mach, rows=test);
 first(yprob, 5)
-first(yprob)
+
+#-
+
+yprob[3]
+
+#-
+
 ypoint = mode.(yprob)
 ypoint = predict_mode(mach, rows=test) # same thing
 accuracy(ypoint, y[test])
+
+#-
 log_loss(yprob, y[test])
 
-# shortcut:
-evaluate(model, Xhot, y;
-         resampling=Holdout(fraction_train=0.6),
-         measures = [accuracy, log_loss],
-         )
-
-
+# Evaluate with one command:
+evaluate(
+    model, Xhot, y;
+    resampling=Holdout(fraction_train=0.6),
+    measures = [accuracy, log_loss],
+)

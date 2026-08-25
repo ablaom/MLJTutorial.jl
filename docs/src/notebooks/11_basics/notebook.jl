@@ -5,7 +5,7 @@
 # To run the code in this tutorial in a live Julia session, first follow the instructions
 # given [here](@ref instructions).
 
-# We start by inspecting the packages and their exact versions in the currently active
+# We start by inspecting the packages, and their exact versions, in the currently active
 # package environment:
 
 using Pkg

@@ -3,16 +3,18 @@
 Tutorials for introducing the machine learning toolbox [MLJ](https://juliaml.ai) (Machine
 Learning in Julia)
 
-- Based on tutorials originally part of a 3.5 hour [online workshop](https://github.com/ablaom/MachineLearningInJulia2020) delivered in 2020.
+Two collections of tutorials are hosted here:
 
-- Updated August 2026.
+- Tutorials for use with the *Using MLJ* series of instructional videos
+- The original, but updated, *MLJTutorial* series, part of a 3.5 hour [online
+  workshop](https://github.com/ablaom/MachineLearningInJulia2020) delivered in 2020.
 
 
 ## Prerequisites
 
 - Familiarity with basic data manipulation in Julia: vectors, tuples, dictionaries,
-  arrays, generating random numbers, tabular data (e.g., DataDrames.jl) basic stats,
-  Distributions.jl.
+  arrays, generating random numbers, tabular data (e.g., DataDrames.jl) basic linear
+  algebra and statistics.
   
 - Familiarity with [Julia package management](https://docs.julialang.org/en/v1/stdlib/Pkg/)
 
@@ -20,13 +22,22 @@ Learning in Julia)
 
 ## The tutorials
 
-### Basic
+### *Using MLJ* (video series)
+
+- [Lesson 1. Basics](@ref)
+- [Lesson 2. Model Composition](@ref)
+- [Lesson 3. Model Tuning](@ref)
+
+
+### *MLJTutorial* (original series)
+
+#### Basic
 
 - [Tutorial 1. Data Representation](@ref)
 - [Tutorial 2. Selecting, Training and Evaluating Models](@ref)
 - [Tutorial 3. Transformers and Pipelines](@ref)
 
-### Advanced
+#### Advanced
 
 - [Tutorial 4. Tuning hyperparameters](@ref)
 - [Tutorial 5. Advanced Model Composition](@ref)
@@ -71,7 +82,7 @@ use with Julia 1.12 or later:
 Visit the [MLJ Learn page](https://juliaai.github.io/MLJ.jl/dev/learning_mlj/) for
 additional learning resources.
 
----
+--
 
-This repository is maintained with the help of [NotebookManagementTools](@ref), an
-experimental, unregistered package embedded in the repository.
+This site makes use of an experimental, unregistered package
+[NotebookManagementTools.jl](@ref).

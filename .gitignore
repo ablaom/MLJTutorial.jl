@@ -8,7 +8,7 @@ sandbox/
 /docs/site/
 /docs/Manifest.toml
 .vscode
-
+*.jls
 slides/src/AnthonyFeedback.txt
 slides/src/IQVIA_logo.png
 slides/src/MLJLogo2.svg

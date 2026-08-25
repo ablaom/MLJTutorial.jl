@@ -1,17 +1,21 @@
 using Test
 using NotebookManagementTools
 
-root = joinpath(@__DIR__, "..")
+root = joinpath(@__DIR__, "dummy_tutorials")
+path1 = joinpath(root, "nested", "good_tutorial", "Project.toml")
+path2 = joinpath(pwd(), "tutorial_without_scripts", "Project.toml")
+path3 = joinpath(root, "bad_tutorial", "Project.toml")
 
-testfile = joinpath(root, "test", "runtests.jl")
-srcfile = joinpath(root, "src", "NotebookManagementTools.jl")
-
-@testset "dirs_containing" begin
-    @test dirs_containing([testfile,]; root) == [dirname(testfile),]
-    @test dirs_containing([srcfile,]; root) == [dirname(srcfile),]
-    dirs = dirs_containing([testfile, srcfile, testfile, srcfile]; root)
+@testset "notebook_dirs_containing" begin
+    dirs = notebook_dirs(; root)
+    @test dirname(path1) in dirs
+    @test !(dirname(path2) in dirs)
+    @test length(dirs) == 4
+    dirs = notebook_dirs_containing([path1, path2, path3]; root)
+    @test dirname(path1) in dirs
+    @test !(dirname(path2) in dirs)
+    @test dirname(path3) in dirs
     @test length(dirs) == 2
-    @test Set(dirs) == Set([dirname(srcfile), dirname(testfile)])
 end
 
 true

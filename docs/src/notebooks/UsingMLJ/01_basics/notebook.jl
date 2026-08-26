@@ -2,6 +2,8 @@
 
 # Notebook supporting the video series "Using MLJ".
 
+# [Slides](slides.pdf) from the video.
+
 # To run the code in this tutorial in a live Julia session, first follow the instructions
 # given [here](@ref instructions).
 

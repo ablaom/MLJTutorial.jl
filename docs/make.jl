@@ -30,7 +30,7 @@ makedocs(
     ),
     pages=[
         "Home" =>                   "index.md",
-        "Using MLJ (Video tutorials)" => [
+        "Using MLJ (video series)" => [
             "1\\. Basics"  =>
                 "notebooks/UsingMLJ/01_basics/notebook.md",
             "2\\. Model Composition" =>

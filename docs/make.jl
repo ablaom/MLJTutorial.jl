@@ -8,6 +8,7 @@ using NotebookManagementTools
 makedocs(
     modules=Module[NotebookManagementTools,],
     format = Documenter.HTML(
+        prettyurls=true,
         collapselevel = 1,
         assets = [
             "assets/favicon.ico",

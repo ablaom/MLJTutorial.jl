@@ -30,19 +30,28 @@ makedocs(
     pages=[
         "Home" =>                   "index.md",
         "Using MLJ (Video tutorials)" => [
-            "1\\. Basics"  => "notebooks/11_basics/notebook.md",
-            "2\\. Model Composition" => "notebooks/12_model_composition/notebook.md",
-            "3\\. ModelTuning" => "notebooks/13_model_tuning/notebook.md",
+            "1\\. Basics"  =>
+                "notebooks/UsingMLJ/01_basics/notebook.md",
+            "2\\. Model Composition" =>
+                "notebooks/UsingMLJ/02_model_composition/notebook.md",
+            "3\\. ModelTuning" =>
+                "notebooks/UsingMLJ/03_model_tuning/notebook.md",
         ],
         "MLJTutorial (original series)" => [
-            "1\\. Data Representation" => "notebooks/01_data_representation/notebook.md",
-            "2\\. Models" =>              "notebooks/02_models/notebook.md",
-            "3\\. Pipelines" =>           "notebooks/03_pipelines/notebook.md",
-            "4\\. Tuning" =>              "notebooks/04_tuning/notebook.md",
-            "5\\. Composition" =>         "notebooks/05_composition/notebook.md",
-            "Solutions to Exercises" => "notebooks/99_solution_to_exercises/notebook.md",
+            "1\\. Data Representation" =>
+                "notebooks/MLJTutorial/01_data_representation/notebook.md",
+            "2\\. Models" =>
+                "notebooks/MLJTutorial/02_models/notebook.md",
+            "3\\. Pipelines" =>
+                "notebooks/MLJTutorial/03_pipelines/notebook.md",
+            "4\\. Tuning" =>
+                "notebooks/MLJTutorial/04_tuning/notebook.md",
+            "5\\. Composition" =>
+                "notebooks/MLJTutorial/05_composition/notebook.md",
+            "Solutions to Exercises" =>
+                "notebooks/MLJTutorial/99_solution_to_exercises/notebook.md",
         ],
-        "Lightning Tour" => "notebooks/lightning_tour/notebook.md",
+        "Lightning Tour of MLJ" => "notebooks/lightning_tour/notebook.md",
     ],
     sitename=REPO_NAME,
     warnonly = [:cross_references, :missing_docs],

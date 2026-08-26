@@ -6,6 +6,8 @@ EditURL = "notebook.jl"
 
 Notebook supporting the video series "Using MLJ".
 
+[Slides](slides.pdf) from the video.
+
 To run the code in this tutorial in a live Julia session, first follow the instructions
 given [here](@ref instructions).
 
@@ -143,7 +145,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-669
+Tag: DeterministicPipeline-821
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -207,7 +209,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: TransformedTargetModelDeterministic-132
+Tag: TransformedTargetModelDeterministic-135
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

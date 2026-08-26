@@ -23,11 +23,6 @@ using MLJ
 iris = OpenML.load(61); # a column dictionary table
 ````
 
-````
-[ Info: Downloading dataset 61.
-
-````
-
 To describe the dataset, with no need to load it first, run
 `OpenML.describe_dataset(61)`.
 
@@ -625,8 +620,8 @@ mach = machine(model, X, y)
 untrained Machine; caches model-specific representations of data
   model: NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …)
   args: 
-    1:	Source @505 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
-    2:	Source @059 ⏎ AbstractVector{ScientificTypesBase.Multiclass{3}}
+    1:	Source @349 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
+    2:	Source @279 ⏎ AbstractVector{ScientificTypesBase.Multiclass{3}}
 
 ````
 
@@ -652,18 +647,18 @@ fit!(mach, rows=train, verbosity=2);
 ````
 [ Info: Training machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
 [ Info: MLJFlux: converting input data to Float32
-[ Info: Loss is 1.106
-[ Info: Loss is 1.096
-[ Info: Loss is 1.09
-[ Info: Loss is 1.08
-[ Info: Loss is 1.073
-[ Info: Loss is 1.054
-[ Info: Loss is 1.061
-[ Info: Loss is 1.036
-[ Info: Loss is 1.026
-[ Info: Loss is 1.003
-[ Info: Loss is 0.9871
-[ Info: Loss is 0.9638
+[ Info: Loss is 1.26
+[ Info: Loss is 1.264
+[ Info: Loss is 1.095
+[ Info: Loss is 1.125
+[ Info: Loss is 1.105
+[ Info: Loss is 1.045
+[ Info: Loss is 1.083
+[ Info: Loss is 1.031
+[ Info: Loss is 1.011
+[ Info: Loss is 1.005
+[ Info: Loss is 0.9551
+[ Info: Loss is 0.9027
 
 ````
 
@@ -676,9 +671,9 @@ yhat[1:3]
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.376, Iris-versicolor=>0.322, Iris-virginica=>0.302)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.518, Iris-versicolor=>0.315, Iris-virginica=>0.167)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.512, Iris-versicolor=>0.317, Iris-virginica=>0.171)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.326, Iris-versicolor=>0.352, Iris-virginica=>0.322)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.523, Iris-versicolor=>0.27, Iris-virginica=>0.207)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.583, Iris-versicolor=>0.242, Iris-virginica=>0.175)
 ````
 
 We'll have more to say on the form of this prediction shortly.
@@ -701,7 +696,7 @@ report(mach)
 ````
 
 ````
-(training_losses = Float32[1.105516, 1.1064824, 1.0963646, 1.0899975, 1.0800945, 1.0732424, 1.054435, 1.0611892, 1.0356965, 1.0255092, 1.0031275, 0.9870628, 0.96378404],)
+(training_losses = Float32[1.1916269, 1.2595081, 1.2638797, 1.0949055, 1.1247584, 1.1047212, 1.0447887, 1.0825068, 1.0314159, 1.0110303, 1.0049721, 0.9550546, 0.90272266],)
 ````
 
 You save a machine like this:
@@ -720,9 +715,9 @@ yhat[1:3]
 
 ````
 3-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.366, Iris-versicolor=>0.322, Iris-virginica=>0.312)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.515, Iris-versicolor=>0.316, Iris-virginica=>0.168)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.374, Iris-versicolor=>0.322, Iris-virginica=>0.305)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.344, Iris-versicolor=>0.343, Iris-virginica=>0.313)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.567, Iris-versicolor=>0.25, Iris-virginica=>0.183)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.307, Iris-versicolor=>0.362, Iris-virginica=>0.331)
 ````
 
 Machines remember the last set of hyperparameters used during fit,
@@ -736,11 +731,11 @@ fit!(mach, rows=train, verbosity=2);
 ````
 
 ````
-[ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
-[ Info: Loss is 0.9864
-[ Info: Loss is 0.9672
-[ Info: Loss is 0.9449
-[ Info: Loss is 0.9555
+[ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …) (with warm restart if possible).
+[ Info: Loss is 0.9559
+[ Info: Loss is 0.9499
+[ Info: Loss is 0.9003
+[ Info: Loss is 0.8681
 
 ````
 
@@ -770,11 +765,11 @@ fit!(mach, rows=train, verbosity=2);
 ````
 
 ````
-[ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
-[ Info: Loss is 0.9086
-[ Info: Loss is 0.9264
-[ Info: Loss is 0.9286
-[ Info: Loss is 0.8889
+[ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …) (with warm restart if possible).
+[ Info: Loss is 0.8828
+[ Info: Loss is 0.8078
+[ Info: Loss is 0.6947
+[ Info: Loss is 0.7066
 
 ````
 
@@ -787,28 +782,28 @@ fit!(mach, rows=train, verbosity=2);
 ````
 
 ````
-[ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …).
+[ Info: Updating machine(NeuralNetworkClassifier(builder = Short(n_hidden = 0, …), …), …) (with warm restart if possible).
 [ Info: MLJFlux: converting input data to Float32
-[ Info: Loss is 1.205
-[ Info: Loss is 1.002
-[ Info: Loss is 0.8946
-[ Info: Loss is 0.8962
-[ Info: Loss is 0.8291
-[ Info: Loss is 0.7841
-[ Info: Loss is 0.7918
-[ Info: Loss is 0.7609
-[ Info: Loss is 0.7345
-[ Info: Loss is 0.6576
-[ Info: Loss is 0.8205
-[ Info: Loss is 0.6344
-[ Info: Loss is 0.5965
-[ Info: Loss is 0.6961
-[ Info: Loss is 0.6019
-[ Info: Loss is 0.6176
-[ Info: Loss is 0.6944
-[ Info: Loss is 0.6157
-[ Info: Loss is 0.5218
-[ Info: Loss is 0.5873
+[ Info: Loss is 1.112
+[ Info: Loss is 0.956
+[ Info: Loss is 0.8259
+[ Info: Loss is 0.798
+[ Info: Loss is 0.7984
+[ Info: Loss is 0.6783
+[ Info: Loss is 0.7237
+[ Info: Loss is 0.6277
+[ Info: Loss is 0.6809
+[ Info: Loss is 0.6505
+[ Info: Loss is 0.6879
+[ Info: Loss is 0.647
+[ Info: Loss is 0.6651
+[ Info: Loss is 0.6758
+[ Info: Loss is 0.592
+[ Info: Loss is 0.5368
+[ Info: Loss is 0.6453
+[ Info: Loss is 0.586
+[ Info: Loss is 0.5853
+[ Info: Loss is 0.7015
 
 ````
 
@@ -827,7 +822,7 @@ yhat[1]
 ````
 
 ````
-UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.106, Iris-versicolor=>0.607, Iris-virginica=>0.287)
+UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.126, Iris-versicolor=>0.553, Iris-virginica=>0.321)
 ````
 
 What's going on here?
@@ -858,7 +853,7 @@ pdf(yhat[1], "Iris-virginica")
 ````
 
 ````
-0.2869514f0
+0.32070398f0
 ````
 
 To get the most likely observation, we do
@@ -879,10 +874,10 @@ broadcast(pdf, yhat[1:4], "Iris-versicolor")
 
 ````
 4-element Vector{Float32}:
- 0.60706484
- 0.0019000835
- 0.0019024607
- 0.0021122482
+ 0.5534321
+ 0.0062265852
+ 0.0061432095
+ 0.0064291335
 ````
 
 ````@julia
@@ -921,10 +916,10 @@ pdf(yhat, L)[1:4, :]
 
 ````
 4×3 Matrix{Float32}:
- 0.105984  0.607065    0.286951
- 0.9981    0.00190008  7.28908f-11
- 0.998098  0.00190246  7.42093f-11
- 0.997888  0.00211225  8.8793f-11
+ 0.125864  0.553432    0.320704
+ 0.993768  0.00622659  5.39445f-6
+ 0.993851  0.00614321  5.45017f-6
+ 0.993565  0.00642913  5.93318f-6
 ````
 
 However, in a typical MLJ workflow, this is not as useful as you might imagine. In
@@ -936,7 +931,7 @@ log_loss(yhat, y[test])
 ````
 
 ````
-0.37777010080199586
+0.34828146237704943
 ````
 
 To apply a deterministic measure, we first need to obtain point-estimates:
@@ -973,15 +968,15 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-642
+Tag: NeuralNetworkClassifier-775
 Extract:
 ┌─────────────────────────┬──────────────┬─────────────┐
 │ measure                 │ operation    │ measurement │
 ├─────────────────────────┼──────────────┼─────────────┤
-│ LogLoss(                │ predict      │ 0.378       │
+│ LogLoss(                │ predict      │ 0.348       │
 │   tol = 2.22045e-16)    │              │             │
 │ MisclassificationRate() │ predict_mode │ 0.0444      │
-│ BrierScore()            │ predict      │ -0.206      │
+│ BrierScore()            │ predict      │ -0.188      │
 └─────────────────────────┴──────────────┴─────────────┘
 
 ````
@@ -1002,23 +997,23 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-150
+Tag: NeuralNetworkClassifier-264
 Extract:
 ┌───┬─────────────────────────┬──────────────┬─────────────┐
 │   │ measure                 │ operation    │ measurement │
 ├───┼─────────────────────────┼──────────────┼─────────────┤
-│ A │ LogLoss(                │ predict      │ 0.314       │
+│ A │ LogLoss(                │ predict      │ 0.3         │
 │   │   tol = 2.22045e-16)    │              │             │
-│ B │ MisclassificationRate() │ predict_mode │ 0.0333      │
-│ C │ BrierScore()            │ predict      │ -0.162      │
+│ B │ MisclassificationRate() │ predict_mode │ 0.0267      │
+│ C │ BrierScore()            │ predict      │ -0.153      │
 └───┴─────────────────────────┴──────────────┴─────────────┘
-┌───┬────────────────────────────────────────────────────────┬─────────┐
-│   │ per_fold                                               │ 1.96*SE │
-├───┼────────────────────────────────────────────────────────┼─────────┤
-│ A │ [0.323, 0.326, 0.249, 0.316, 0.298, 0.369]             │ 0.0347  │
-│ B │ [0.04, 0.04, 0.0, 0.04, 0.04, 0.04]                    │ 0.0143  │
-│ C │ Float32[-0.188, -0.156, -0.11, -0.168, -0.147, -0.202] │ 0.0285  │
-└───┴────────────────────────────────────────────────────────┴─────────┘
+┌───┬─────────────────────────────────────────────────────────┬─────────┐
+│   │ per_fold                                                │ 1.96*SE │
+├───┼─────────────────────────────────────────────────────────┼─────────┤
+│ A │ [0.346, 0.294, 0.24, 0.287, 0.291, 0.341]               │ 0.0346  │
+│ B │ [0.04, 0.0, 0.0, 0.04, 0.04, 0.04]                      │ 0.0181  │
+│ C │ Float32[-0.183, -0.151, -0.118, -0.155, -0.134, -0.174] │ 0.0215  │
+└───┴─────────────────────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -1040,22 +1035,22 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: NeuralNetworkClassifier-961
+Tag: NeuralNetworkClassifier-535
 Extract:
 ┌───┬─────────────────────────┬──────────────┬─────────────┐
 │   │ measure                 │ operation    │ measurement │
 ├───┼─────────────────────────┼──────────────┼─────────────┤
-│ A │ LogLoss(                │ predict      │ 0.317       │
+│ A │ LogLoss(                │ predict      │ 0.309       │
 │   │   tol = 2.22045e-16)    │              │             │
-│ B │ MisclassificationRate() │ predict_mode │ 0.0489      │
-│ C │ BrierScore()            │ predict      │ -0.172      │
+│ B │ MisclassificationRate() │ predict_mode │ 0.0444      │
+│ C │ BrierScore()            │ predict      │ -0.165      │
 └───┴─────────────────────────┴──────────────┴─────────────┘
 ┌───┬───────────────────────────────────────────────────────────────────────────
 │   │ per_fold                                                                 ⋯
 ├───┼───────────────────────────────────────────────────────────────────────────
-│ A │ [0.311, 0.328, 0.325, 0.343, 0.353, 0.195, 0.315, 0.402, 0.235, 0.347, 0 ⋯
-│ B │ [0.0, 0.04, 0.04, 0.04, 0.08, 0.04, 0.12, 0.08, 0.0, 0.04, 0.16, 0.08, 0 ⋯
-│ C │ Float32[-0.164, -0.183, -0.172, -0.182, -0.184, -0.0885, -0.181, -0.252, ⋯
+│ A │ [0.252, 0.298, 0.334, 0.376, 0.331, 0.174, 0.375, 0.262, 0.425, 0.306, 0 ⋯
+│ B │ [0.0, 0.04, 0.04, 0.0, 0.08, 0.04, 0.12, 0.0, 0.12, 0.0, 0.08, 0.08, 0.0 ⋯
+│ C │ Float32[-0.108, -0.161, -0.189, -0.199, -0.183, -0.078, -0.237, -0.115,  ⋯
 └───┴───────────────────────────────────────────────────────────────────────────
                                                                2 columns omitted
 
@@ -1082,51 +1077,51 @@ predict(mach, rows=test) # and predict missing targets
 
 ````
 45-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{3}, String, UInt32, Float32}:
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.159, Iris-versicolor=>0.569, Iris-virginica=>0.273)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00299, Iris-virginica=>1.26e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.0031, Iris-virginica=>1.31e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00345, Iris-virginica=>1.53e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.187, Iris-versicolor=>0.583, Iris-virginica=>0.23)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00342, Iris-versicolor=>0.201, Iris-virginica=>0.795)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00271, Iris-virginica=>1.09e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00294, Iris-virginica=>1.22e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0345, Iris-versicolor=>0.408, Iris-virginica=>0.558)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.225, Iris-versicolor=>0.615, Iris-virginica=>0.16)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00141, Iris-versicolor=>0.148, Iris-virginica=>0.85)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00378, Iris-versicolor=>0.208, Iris-virginica=>0.788)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00167, Iris-versicolor=>0.157, Iris-virginica=>0.842)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.111, Iris-versicolor=>0.532, Iris-virginica=>0.356)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00312, Iris-virginica=>1.33e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.248, Iris-versicolor=>0.622, Iris-virginica=>0.13)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00268, Iris-versicolor=>0.185, Iris-virginica=>0.813)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00373, Iris-versicolor=>0.207, Iris-virginica=>0.789)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0279, Iris-versicolor=>0.39, Iris-virginica=>0.582)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.159, Iris-versicolor=>0.57, Iris-virginica=>0.272)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.32, Iris-versicolor=>0.612, Iris-virginica=>0.0684)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.121, Iris-versicolor=>0.542, Iris-virginica=>0.338)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.158, Iris-versicolor=>0.575, Iris-virginica=>0.267)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00221, Iris-versicolor=>0.173, Iris-virginica=>0.825)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.996, Iris-versicolor=>0.00421, Iris-virginica=>1.98e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00177, Iris-versicolor=>0.16, Iris-virginica=>0.838)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.203, Iris-versicolor=>0.601, Iris-virginica=>0.195)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0213, Iris-versicolor=>0.352, Iris-virginica=>0.627)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00501, Iris-versicolor=>0.227, Iris-virginica=>0.768)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00425, Iris-versicolor=>0.216, Iris-virginica=>0.78)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.117, Iris-versicolor=>0.551, Iris-virginica=>0.332)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.996, Iris-versicolor=>0.00408, Iris-virginica=>1.98e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.124, Iris-versicolor=>0.552, Iris-virginica=>0.325)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.176, Iris-versicolor=>0.59, Iris-virginica=>0.234)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00218, Iris-versicolor=>0.172, Iris-virginica=>0.826)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.026, Iris-versicolor=>0.38, Iris-virginica=>0.594)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00351, Iris-versicolor=>0.202, Iris-virginica=>0.794)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.221, Iris-versicolor=>0.608, Iris-virginica=>0.171)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00321, Iris-virginica=>1.42e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.997, Iris-versicolor=>0.00322, Iris-virginica=>1.39e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00416, Iris-versicolor=>0.215, Iris-virginica=>0.781)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.996, Iris-versicolor=>0.00389, Iris-virginica=>1.82e-6)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0206, Iris-versicolor=>0.355, Iris-virginica=>0.624)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.19, Iris-versicolor=>0.591, Iris-virginica=>0.219)
- UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.019, Iris-versicolor=>0.345, Iris-virginica=>0.636)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0582, Iris-versicolor=>0.613, Iris-virginica=>0.329)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.861, Iris-versicolor=>0.139, Iris-virginica=>2.27e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.861, Iris-versicolor=>0.139, Iris-virginica=>2.25e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.861, Iris-versicolor=>0.139, Iris-virginica=>2.32e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.101, Iris-versicolor=>0.638, Iris-virginica=>0.262)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000501, Iris-versicolor=>0.322, Iris-virginica=>0.677)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.862, Iris-versicolor=>0.138, Iris-virginica=>2.19e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.861, Iris-versicolor=>0.139, Iris-virginica=>2.23e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00278, Iris-versicolor=>0.417, Iris-virginica=>0.581)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.175, Iris-versicolor=>0.705, Iris-virginica=>0.121)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000271, Iris-versicolor=>0.293, Iris-virginica=>0.707)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000617, Iris-versicolor=>0.332, Iris-virginica=>0.668)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000271, Iris-versicolor=>0.293, Iris-virginica=>0.707)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0179, Iris-versicolor=>0.554, Iris-virginica=>0.428)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.861, Iris-versicolor=>0.139, Iris-virginica=>2.26e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.229, Iris-versicolor=>0.692, Iris-virginica=>0.0787)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00035, Iris-versicolor=>0.304, Iris-virginica=>0.695)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00057, Iris-versicolor=>0.327, Iris-virginica=>0.672)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00244, Iris-versicolor=>0.431, Iris-virginica=>0.567)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0529, Iris-versicolor=>0.627, Iris-virginica=>0.32)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.456, Iris-versicolor=>0.52, Iris-virginica=>0.025)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0248, Iris-versicolor=>0.563, Iris-virginica=>0.412)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0567, Iris-versicolor=>0.631, Iris-virginica=>0.313)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000357, Iris-versicolor=>0.304, Iris-virginica=>0.696)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.86, Iris-versicolor=>0.14, Iris-virginica=>2.46e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000315, Iris-versicolor=>0.299, Iris-virginica=>0.701)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.137, Iris-versicolor=>0.681, Iris-virginica=>0.182)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00145, Iris-versicolor=>0.368, Iris-virginica=>0.631)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000633, Iris-versicolor=>0.33, Iris-virginica=>0.669)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000541, Iris-versicolor=>0.325, Iris-virginica=>0.675)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0267, Iris-versicolor=>0.608, Iris-virginica=>0.365)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.859, Iris-versicolor=>0.141, Iris-virginica=>2.5e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0286, Iris-versicolor=>0.595, Iris-virginica=>0.376)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.0801, Iris-versicolor=>0.681, Iris-virginica=>0.239)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000397, Iris-versicolor=>0.308, Iris-virginica=>0.691)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00206, Iris-versicolor=>0.407, Iris-virginica=>0.591)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000578, Iris-versicolor=>0.327, Iris-virginica=>0.673)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.163, Iris-versicolor=>0.677, Iris-virginica=>0.159)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.86, Iris-versicolor=>0.14, Iris-virginica=>2.36e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.861, Iris-versicolor=>0.139, Iris-virginica=>2.29e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.000514, Iris-versicolor=>0.324, Iris-virginica=>0.675)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.86, Iris-versicolor=>0.14, Iris-virginica=>2.46e-5)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00217, Iris-versicolor=>0.402, Iris-virginica=>0.595)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.105, Iris-versicolor=>0.665, Iris-virginica=>0.23)
+ UnivariateFinite{ScientificTypesBase.Multiclass{3}}(Iris-setosa=>0.00213, Iris-versicolor=>0.394, Iris-virginica=>0.604)
 ````
 
 ### On learning curves
@@ -1155,7 +1150,7 @@ curve = learning_curve(
 ````
 
 ````
-(parameter_name = "epochs", parameter_scale = :log10, parameter_values = [1, 2, 3, 4, 5, 7, 9, 11, 14, 17, 22, 28, 36, 45, 57, 73, 92, 117, 149, 189, 240, 304, 386, 489, 621, 788, 1000], measurements = [1.0688572877232012, 0.9775668502403386, 0.8957729763444537, 0.8502722820013228, 0.7900654567779567, 0.7161783875903127, 0.6783388511485662, 0.6626694886542754, 0.6302097642164451, 0.6216974806422221, 0.5637847854496398, 0.4898889856077138, 0.42644719180744134, 0.3904612622351922, 0.3374627553349284, 0.31244659954260495, 0.2809301635554485, 0.32667948553139114, 0.23659671315739095, 0.261564989893, 0.28363801902151037, 0.2689894678615147, 0.2256241953963682, 0.2701070883877704, 0.2769876324354052, 0.2150057484379753, 0.2835758104810806])
+(parameter_name = "epochs", parameter_scale = :log10, parameter_values = [1, 2, 3, 4, 5, 7, 9, 11, 14, 17, 22, 28, 36, 45, 57, 73, 92, 117, 149, 189, 240, 304, 386, 489, 621, 788, 1000], measurements = [1.111156089821348, 1.0700709387079042, 0.9654213051156569, 0.7987407638383827, 0.7353224819445598, 0.6529747863732195, 0.6318405554955887, 0.595818336142071, 0.5393476088831022, 0.4943156316169653, 0.4174354705621964, 0.38884838985217013, 0.39369007051862065, 0.3647384156335919, 0.359887172450028, 0.3532344763756229, 0.32913273359038286, 0.31897275199585756, 0.30467143370908584, 0.3141807552139779, 0.3029691697619851, 0.2797903625280317, 0.27856668232394777, 0.30296982606074646, 0.29201234896665745, 0.29135670161334065, 0.2789644455136249])
 ````
 
 ````@julia
@@ -1168,7 +1163,7 @@ savefig("learning_curve.png")
 ````
 
 ````
-"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/02_models/learning_curve.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/MLJTutorial/02_models/learning_curve.png"
 ````
 
 ![](learning_curve.png)
@@ -1206,7 +1201,7 @@ small = salary[1]
 ````
 
 ````
-CategoricalArrays.CategoricalValue{String, UInt32} "huge" (3/3)
+CategoricalArrays.CategoricalValue{String, UInt32} "big" (2/3)
 ````
 
 ````@julia
@@ -1218,16 +1213,16 @@ y4 = [n_devices(row.salary) for row in eachrow(X4)]
 
 ````
 10-element Vector{Int64}:
- 1
- 1
- 5
- 6
  2
  3
- 1
+ 6
  2
+ 4
+ 0
  5
- 1
+ 3
+ 3
+ 5
 ````
 
 (b) What models can be applied if you coerce the salary to a
@@ -1253,10 +1248,10 @@ pretty(data)
 │ Int64 │ Float64    │ Float64    │ CategoricalValue{String, UInt32} │
 │ Count │ Continuous │ Continuous │ OrderedFactor{2}                 │
 ├───────┼────────────┼────────────┼──────────────────────────────────┤
-│ 1     │ 0.259146   │ 0.0350593  │ male                             │
-│ 2     │ 0.509949   │ 0.0537315  │ female                           │
-│ 3     │ 0.922383   │ 0.801738   │ female                           │
-│ 4     │ 0.828869   │ 0.777606   │ male                             │
+│ 1     │ 0.298465   │ 0.585094   │ male                             │
+│ 2     │ 0.37493    │ 0.274844   │ female                           │
+│ 3     │ 0.730784   │ 0.576014   │ female                           │
+│ 4     │ 0.0385893  │ 0.511037   │ male                             │
 └───────┴────────────┴────────────┴──────────────────────────────────┘
 
 ````

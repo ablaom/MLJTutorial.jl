@@ -31,8 +31,8 @@ x = rand(100);
 ````
 
 ````
-mean(x) = 0.5049271509171457
-std(x) = 0.2930352399455027
+mean(x) = 0.5269514940826583
+std(x) = 0.2881181888587139
 
 ````
 
@@ -46,7 +46,7 @@ xhat = transform(mach, x);
 
 ````
 [ Info: Training machine(Standardizer(features = Symbol[], …), …).
-mean(xhat) = -1.9095836023552692e-16
+mean(xhat) = 2.042810365310288e-16
 std(xhat) = 1.0
 
 ````
@@ -500,7 +500,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-586
+Tag: DeterministicPipeline-793
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -537,10 +537,10 @@ fit!(mach);
 ````
 
 ````
-[ Info: Updating machine(DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …).
+[ Info: Updating machine(DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …) (with warm restart if possible).
 [ Info: Not retraining machine(:continuous_encoder, …). Use `force=true` to force.
 [ Info: Not retraining machine(:pca, …). Use `force=true` to force.
-[ Info: Updating machine(:ridge_regressor, …).
+[ Info: Updating machine(:ridge_regressor, …) (with warm restart if possible).
 ┌ Info: Solver: MLJLinearModels.Analytical
 │   iterative: Bool false
 └   max_inner: Int64 200
@@ -558,9 +558,9 @@ fit!(mach);
 ````
 
 ````
-[ Info: Updating machine(DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …).
+[ Info: Updating machine(DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …) (with warm restart if possible).
 [ Info: Not retraining machine(:continuous_encoder, …). Use `force=true` to force.
-[ Info: Updating machine(:pca, …).
+[ Info: Updating machine(:pca, …) (with warm restart if possible).
 [ Info: Training machine(:ridge_regressor, …).
 ┌ Info: Solver: MLJLinearModels.Analytical
 │   iterative: Bool false
@@ -629,7 +629,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-488
+Tag: DeterministicPipeline-725
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -669,7 +669,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-307
+Tag: DeterministicPipeline-889
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -696,7 +696,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-882
+Tag: DeterministicPipeline-697
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

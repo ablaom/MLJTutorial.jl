@@ -50,8 +50,8 @@ A = rand(2, 3)
 
 ````
 2×3 Matrix{Float64}:
- 0.0383784  0.758964  0.664543
- 0.455437   0.655434  0.552125
+ 0.914738  0.496846  0.820211
+ 0.861651  0.137943  0.0848741
 ````
 
 ````@julia
@@ -77,8 +77,8 @@ Asparse = sparse(A)
 
 ````
 2×3 SparseArrays.SparseMatrixCSC{Float64, Int64} with 6 stored entries:
- 0.0383784  0.758964  0.664543
- 0.455437   0.655434  0.552125
+ 0.914738  0.496846  0.820211
+ 0.861651  0.137943  0.0848741
 ````
 
 ````@julia
@@ -95,8 +95,8 @@ C = coerce(A, Multiclass)
 
 ````
 2×3 CategoricalArrays.CategoricalArray{Float64,2,UInt32}:
- 0.0383784  0.758964  0.664543
- 0.455437  0.655434  0.552125
+ 0.914738  0.496846  0.820211
+ 0.861651  0.137943  0.0848741
 ````
 
 ````@julia
@@ -326,16 +326,16 @@ y4 = [n_devices(row.salary) for row in eachrow(X4)]
 
 ````
 10-element Vector{Int64}:
- 1
- 1
- 5
- 2
- 2
- 2
+ 6
+ 4
+ 3
  0
- 5
- 5
- 0
+ 1
+ 3
+ 4
+ 2
+ 4
+ 2
 ````
 
 4(a)
@@ -411,10 +411,10 @@ pretty(X)
 │ Float64    │ Float64    │
 │ Continuous │ Continuous │
 ├────────────┼────────────┤
-│ 0.349626   │ 0.992532   │
-│ 0.371278   │ 0.939846   │
-│ 0.777363   │ 0.870885   │
-│ 0.574214   │ 0.606785   │
+│ 0.854463   │ 0.918396   │
+│ 0.200975   │ 0.744715   │
+│ 0.395544   │ 0.378125   │
+│ 0.0622448  │ 0.592871   │
 └────────────┴────────────┘
 
 ````
@@ -589,18 +589,18 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestClassifier-945
+Tag: RandomForestClassifier-194
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 1.08        │
+│ LogLoss(             │ predict   │ 1.11        │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
 ┌─────────────────────────────────────────┬─────────┐
 │ per_fold                                │ 1.96*SE │
 ├─────────────────────────────────────────┼─────────┤
-│ [0.746, 1.35, 1.79, 1.27, 0.706, 0.611] │ 0.407   │
+│ [1.29, 1.38, 1.82, 0.792, 0.709, 0.651] │ 0.408   │
 └─────────────────────────────────────────┴─────────┘
 
 ````
@@ -633,7 +633,7 @@ savefig("exercise_6ci.png")
 ````
 
 ````
-"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/99_solution_to_exercises/exercise_6ci.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/MLJTutorial/99_solution_to_exercises/exercise_6ci.png"
 ````
 
 ![](exercise_6ci.png)
@@ -660,7 +660,7 @@ err_forest =
 ````
 
 ````
-0.9994802279518762
+0.9936115038285649
 ````
 
 #### Exercise 7
@@ -724,19 +724,19 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-894
+Tag: ProbabilisticPipeline-833
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 0.814       │
+│ LogLoss(             │ predict   │ 0.801       │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
-┌────────────────────────────────────────────┬─────────┐
-│ per_fold                                   │ 1.96*SE │
-├────────────────────────────────────────────┼─────────┤
-│ [0.964, 0.893, 0.824, 0.719, 0.755, 0.724] │ 0.0872  │
-└────────────────────────────────────────────┴─────────┘
+┌───────────────────────────────────────────┬─────────┐
+│ per_fold                                  │ 1.96*SE │
+├───────────────────────────────────────────┼─────────┤
+│ [0.848, 0.953, 0.754, 0.78, 0.813, 0.657] │ 0.0867  │
+└───────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -757,7 +757,7 @@ savefig("exercise_7c.png")
 ````
 
 ````
-"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/99_solution_to_exercises/exercise_7c.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/MLJTutorial/99_solution_to_exercises/exercise_7c.png"
 ````
 
 ![](exercise_7c.png)
@@ -808,7 +808,7 @@ savefig("exercise_8c.png")
 ````
 
 ````
-"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/99_solution_to_exercises/exercise_8c.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/MLJTutorial/99_solution_to_exercises/exercise_8c.png"
 ````
 
 ![](exercise_8c.png)
@@ -827,7 +827,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-142
+Tag: DeterministicPipeline-485
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -853,7 +853,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicTunedModel-393
+Tag: DeterministicTunedModel-142
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

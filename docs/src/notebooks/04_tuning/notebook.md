@@ -144,7 +144,7 @@ savefig("learning_curve2.png")
 ````
 
 ````
-"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/04_tuning/learning_curve2.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/MLJTutorial/04_tuning/learning_curve2.png"
 ````
 
 ![](learning_curve2.png)
@@ -366,7 +366,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-133
+Tag: ProbabilisticPipeline-973
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
@@ -392,7 +392,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticTunedModel-228
+Tag: ProbabilisticTunedModel-287
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │

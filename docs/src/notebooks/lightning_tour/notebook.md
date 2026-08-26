@@ -243,8 +243,8 @@ mach = machine(self_tuning_pipe, X, y)
 untrained Machine; does not cache data
   model: DeterministicTunedModel(model = DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …)
   args: 
-    1:	Source @691 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
-    2:	Source @950 ⏎ AbstractVector{ScientificTypesBase.Continuous}
+    1:	Source @630 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
+    2:	Source @583 ⏎ AbstractVector{ScientificTypesBase.Continuous}
 
 ````
 
@@ -258,9 +258,9 @@ first(yhat, 3)
 
 ````
 3-element Vector{Float32}:
- -0.75853795
- -0.5854095
- -0.99169284
+ 2.114296
+ 2.5297465
+ 2.18611
 ````
 
 Evaluating the "self-tuning" pipeline model's performance using all data and 5-fold
@@ -281,20 +281,20 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicTunedModel-103
+Tag: DeterministicTunedModel-323
 Extract:
 ┌───┬────────────┬───────────┬─────────────┐
 │   │ measure    │ operation │ measurement │
 ├───┼────────────┼───────────┼─────────────┤
-│ A │ LPLoss(    │ predict   │ 0.187       │
+│ A │ LPLoss(    │ predict   │ 0.0923      │
 │   │   p = 1)   │           │             │
-│ B │ RSquared() │ predict   │ 0.939       │
+│ B │ RSquared() │ predict   │ 0.857       │
 └───┴────────────┴───────────┴─────────────┘
 ┌───┬─────────────────────────────────────┬─────────┐
 │   │ per_fold                            │ 1.96*SE │
 ├───┼─────────────────────────────────────┼─────────┤
-│ A │ [0.182, 0.244, 0.111, 0.212, 0.187] │ 0.0481  │
-│ B │ [0.925, 0.899, 0.974, 0.943, 0.953] │ 0.0278  │
+│ A │ [0.097, 0.05, 0.0769, 0.108, 0.129] │ 0.0297  │
+│ B │ [0.818, 0.965, 0.906, 0.776, 0.819] │ 0.0752  │
 └───┴─────────────────────────────────────┴─────────┘
 
 ````
@@ -316,7 +316,7 @@ describe.(evaluations) |> pretty
 
 ````
 [ Info: Performing evaluations using 1 thread.
-Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:28[KEvaluating over 5 folds:  60%[===============>         ]  ETA: 0:00:17[KEvaluating over 5 folds:  80%[====================>    ]  ETA: 0:00:07[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:35[K
+Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:06[KEvaluating over 5 folds:  60%[===============>         ]  ETA: 0:00:05[KEvaluating over 5 folds:  80%[====================>    ]  ETA: 0:00:03[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:12[K
 [ Info: Performing evaluations using 1 thread.
 Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:01[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:00[K
 ┌─────────┬──────────────────────┬──────────────────────┐
@@ -324,8 +324,8 @@ describe.(evaluations) |> pretty
 │ String  │ Measurement{Float64} │ Measurement{Float64} │
 │ Textual │ Continuous           │ Continuous           │
 ├─────────┼──────────────────────┼──────────────────────┤
-│ booster │ 0.187±0.048          │ 0.939±0.028          │
-│ dummy   │ 0.88±0.11            │ -0.11±0.11           │
+│ booster │ 0.092±0.03           │ 0.857±0.075          │
+│ dummy   │ 0.292±0.054          │ -0.076±0.089         │
 └─────────┴──────────────────────┴──────────────────────┘
 
 ````

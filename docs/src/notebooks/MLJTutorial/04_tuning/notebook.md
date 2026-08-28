@@ -144,7 +144,7 @@ savefig("learning_curve2.png")
 ````
 
 ````
-"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/04_tuning/learning_curve2.png"
+"/home/runner/work/MLJTutorial.jl/MLJTutorial.jl/docs/src/notebooks/MLJTutorial/04_tuning/learning_curve2.png"
 ````
 
 ![](learning_curve2.png)
@@ -366,7 +366,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-133
+Tag: ProbabilisticPipeline-992
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
@@ -392,7 +392,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticTunedModel-228
+Tag: ProbabilisticTunedModel-915
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
@@ -487,6 +487,7 @@ DeterministicPipeline(
         nrounds = 70, 
         bagging_size = 1, 
         early_stopping_rounds = 9223372036854775807, 
+        early_stopping_tolerance = 0.0, 
         L2 = 1.0, 
         lambda = 0.0, 
         gamma = 0.0, 
@@ -506,17 +507,19 @@ DeterministicPipeline(
 ````
 
 (a) Construct a bounded range `r1` for the `evo_tree_booster`
-parameter `max_depth`, varying between 1 and 12.
+parameter `max_depth`, varying between 4 and 14.
 
 (b) For the `colsample` parameter of the `EvoTreeRegressor`, define the range
 
 ````@julia
-r2 = range(model, :(evo_tree_regressor.colsample), lower=0.5, upper=1.0)
+r2 = range(model, :(evo_tree_regressor.nbins), values = [32, 64, 128])
 ````
 
 ````
-NumericRange(0.5 ≤ evo_tree_regressor.colsample ≤ 1.0; origin=0.75, unit=0.25)
+NominalRange(evo_tree_regressor.nbins = 32, 64, 128)
 ````
+
+(a)
 
 Optimize `model` over these the parameter ranges `r1` and `r2` using a random search
 with uniform priors (the default). Use `Holdout()` resampling, and implement your search

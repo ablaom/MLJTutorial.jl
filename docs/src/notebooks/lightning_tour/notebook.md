@@ -27,6 +27,7 @@ EvoTreeRegressor(
   nrounds = 100, 
   bagging_size = 1, 
   early_stopping_rounds = 9223372036854775807, 
+  early_stopping_tolerance = 0.0, 
   L2 = 1.0, 
   lambda = 0.0, 
   gamma = 0.0, 
@@ -56,6 +57,7 @@ EvoTreeRegressor(
   nrounds = 50, 
   bagging_size = 1, 
   early_stopping_rounds = 9223372036854775807, 
+  early_stopping_tolerance = 0.0, 
   L2 = 1.0, 
   lambda = 0.0, 
   gamma = 0.0, 
@@ -100,6 +102,7 @@ DeterministicIteratedModel(
         nrounds = 50, 
         bagging_size = 1, 
         early_stopping_rounds = 9223372036854775807, 
+        early_stopping_tolerance = 0.0, 
         L2 = 1.0, 
         lambda = 0.0, 
         gamma = 0.0, 
@@ -243,8 +246,8 @@ mach = machine(self_tuning_pipe, X, y)
 untrained Machine; does not cache data
   model: DeterministicTunedModel(model = DeterministicPipeline(continuous_encoder = ContinuousEncoder(drop_last = false, …), …), …)
   args: 
-    1:	Source @691 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
-    2:	Source @950 ⏎ AbstractVector{ScientificTypesBase.Continuous}
+    1:	Source @763 ⏎ ScientificTypesBase.Table{AbstractVector{ScientificTypesBase.Continuous}}
+    2:	Source @207 ⏎ AbstractVector{ScientificTypesBase.Continuous}
 
 ````
 
@@ -258,9 +261,9 @@ first(yhat, 3)
 
 ````
 3-element Vector{Float32}:
- -0.75853795
- -0.5854095
- -0.99169284
+ -2.2105958
+  0.38274634
+ -1.1552228
 ````
 
 Evaluating the "self-tuning" pipeline model's performance using all data and 5-fold
@@ -281,20 +284,20 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicTunedModel-103
+Tag: DeterministicTunedModel-807
 Extract:
 ┌───┬────────────┬───────────┬─────────────┐
 │   │ measure    │ operation │ measurement │
 ├───┼────────────┼───────────┼─────────────┤
-│ A │ LPLoss(    │ predict   │ 0.187       │
+│ A │ LPLoss(    │ predict   │ 0.23        │
 │   │   p = 1)   │           │             │
-│ B │ RSquared() │ predict   │ 0.939       │
+│ B │ RSquared() │ predict   │ 0.957       │
 └───┴────────────┴───────────┴─────────────┘
 ┌───┬─────────────────────────────────────┬─────────┐
 │   │ per_fold                            │ 1.96*SE │
 ├───┼─────────────────────────────────────┼─────────┤
-│ A │ [0.182, 0.244, 0.111, 0.212, 0.187] │ 0.0481  │
-│ B │ [0.925, 0.899, 0.974, 0.943, 0.953] │ 0.0278  │
+│ A │ [0.224, 0.198, 0.295, 0.189, 0.247] │ 0.0417  │
+│ B │ [0.974, 0.967, 0.929, 0.963, 0.953] │ 0.0172  │
 └───┴─────────────────────────────────────┴─────────┘
 
 ````
@@ -316,7 +319,7 @@ describe.(evaluations) |> pretty
 
 ````
 [ Info: Performing evaluations using 1 thread.
-Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:28[KEvaluating over 5 folds:  60%[===============>         ]  ETA: 0:00:17[KEvaluating over 5 folds:  80%[====================>    ]  ETA: 0:00:07[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:35[K
+Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:12[KEvaluating over 5 folds:  60%[===============>         ]  ETA: 0:00:09[KEvaluating over 5 folds:  80%[====================>    ]  ETA: 0:00:04[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:21[K
 [ Info: Performing evaluations using 1 thread.
 Evaluating over 5 folds:  40%[==========>              ]  ETA: 0:00:01[KEvaluating over 5 folds: 100%[=========================] Time: 0:00:00[K
 ┌─────────┬──────────────────────┬──────────────────────┐
@@ -324,8 +327,8 @@ describe.(evaluations) |> pretty
 │ String  │ Measurement{Float64} │ Measurement{Float64} │
 │ Textual │ Continuous           │ Continuous           │
 ├─────────┼──────────────────────┼──────────────────────┤
-│ booster │ 0.187±0.048          │ 0.939±0.028          │
-│ dummy   │ 0.88±0.11            │ -0.11±0.11           │
+│ booster │ 0.23±0.042           │ 0.957±0.017          │
+│ dummy   │ 1.29±0.2             │ -0.13±0.17           │
 └─────────┴──────────────────────┴──────────────────────┘
 
 ````

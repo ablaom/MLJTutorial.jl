@@ -70,7 +70,7 @@ scitype(v[1:2])
 
 # #### Exercise 2 solution
 
-# From the question statement:
+# From the question statement, we have:
 
 quality = ["good", "poor", "poor", "excellent", missing, "good", "excellent"]
 

@@ -59,9 +59,13 @@ function generate(
     # fencing:
     literate_config = "codefence" => Pair("````@julia", "````" )
 
-    # Note the use of '$ ⋯ ' to interpolate into a Julia command. Naive use of
-    # $ doesn't work.
-    cmd = `julia
+    # get julia minor version:
+    version = join(split(string(VERSION), ".")[1:2], ".")
+
+    # Note the use of '$ ⋯ ' to interpolate into a Julia code execution block. Naive use
+    # of $ doesn't work.
+
+    cmd = `julia +$version
                --startup-file=no
                --color=yes
                --project=$notebook_dir -e '
@@ -92,13 +96,14 @@ function generate(
                    using Literate
 
                    if '$testing'
+                       @info "Testing '$name'."
                        @testset "'$name'" begin
                            include("'$test_file'")
                            @test true
                        end
                    end
 
-                   @info "Generating markdown for '$name'... "
+                   @info "Generating markdown for '$name'."
 
                    Literate.markdown(
                        "'$script_file'",

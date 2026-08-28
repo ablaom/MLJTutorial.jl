@@ -65,7 +65,7 @@ function generate(
     # Note the use of '$ ⋯ ' to interpolate into a Julia code execution block. Naive use
     # of $ doesn't work.
 
-    cmd = `julia +$version
+    cmd = `julia
                --startup-file=no
                --color=yes
                --project=$notebook_dir -e '

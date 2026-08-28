@@ -72,5 +72,4 @@ using NotebookManagementTools
 generate(joinpath("docs", "src", "notebooks", "02_models"))
 ```
 
-but change "02_models" to the tutorial you are testing. If you are adding a brand new
-tutorial, *do commit* the generated markdown, but for updates this is discouraged.
+but change "02_models" to the tutorial you are testing. 

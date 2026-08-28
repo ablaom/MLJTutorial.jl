@@ -1,4 +1,4 @@
-# # Solutions to Exercises 
+# # Solutions to Exercises
 
 using MLJ, Downloads, CSV, DataFrames, Plots
 nothing #hide
@@ -330,11 +330,11 @@ EvoTreeRegressor = @load EvoTreeRegressor
 tree_booster = EvoTreeRegressor(nrounds = 70)
 model = ContinuousEncoder |> tree_booster
 
-r2 = range(model, :(evo_tree_regressor.colsample), lower=0.5, upper=1.0)
+r2 = range(model, :(evo_tree_regressor.nbins), values = [32, 64, 128])
 
 # (a)
 
-r1 = range(model, :(evo_tree_regressor.max_depth), lower=1, upper=12)
+r1 = range(model, :(evo_tree_regressor.max_depth), lower=4, upper=14)
 
 # (b)
 

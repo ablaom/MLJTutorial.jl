@@ -237,11 +237,13 @@ tree_booster = EvoTreeRegressor(nrounds = 70)
 model = ContinuousEncoder |> tree_booster
 
 # (a) Construct a bounded range `r1` for the `evo_tree_booster`
-# parameter `max_depth`, varying between 1 and 12.
+# parameter `max_depth`, varying between 4 and 14.
 
 # (b) For the `colsample` parameter of the `EvoTreeRegressor`, define the range
 
-r2 = range(model, :(evo_tree_regressor.colsample), lower=0.5, upper=1.0)
+r2 = range(model, :(evo_tree_regressor.nbins), values = [32, 64, 128])
+
+# (a)
 
 # Optimize `model` over these the parameter ranges `r1` and `r2` using a random search
 # with uniform priors (the default). Use `Holdout()` resampling, and implement your search

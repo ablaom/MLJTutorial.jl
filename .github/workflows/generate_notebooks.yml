@@ -100,8 +100,6 @@ jobs:
             added to the parent pull request, \#${{ github.event.pull_request.number }}.
 
           delete-branch: true
-          add-paths: |
-            **/notebook.md
 
       - name: Post comment flagging further action required
         if: steps.spawn_pr.outputs.pull-request-operation == 'created'

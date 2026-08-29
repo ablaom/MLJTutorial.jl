@@ -59,13 +59,10 @@ function generate(
     # fencing:
     literate_config = "codefence" => Pair("````@julia", "````" )
 
-    # get minor julia version to spawn:
-    version = join(split(string(VERSION), ".")[1:2], ".")
-
     # Note the use of '$ ⋯ ' to interpolate into a Julia code execution block. Naive use
     # of $ doesn't work.
 
-    cmd = `julia +$version
+    cmd = `julia
                --startup-file=no
                --color=yes
                --project=$notebook_dir -e '

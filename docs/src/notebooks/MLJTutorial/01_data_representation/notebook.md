@@ -290,7 +290,7 @@ csv_file = Downloads.download(url)
 ````
 
 ````
-"/tmp/jl_AutsNd/horse.csv"
+"/tmp/jl_nAeUTc/horse.csv"
 ````
 
 Entering these lines of code downloads the data to a temporary file at the location
@@ -531,8 +531,8 @@ A = rand(2, 3)
 
 ````
 2×3 Matrix{Float64}:
- 0.56044  0.53664   0.852799
- 0.83311  0.655101  0.199531
+ 0.84235   0.324562  0.731728
+ 0.233998  0.746378  0.485095
 ````
 
 ````@julia
@@ -550,8 +550,8 @@ Asparse = sparse(A)
 
 ````
 2×3 SparseArrays.SparseMatrixCSC{Float64, Int64} with 6 stored entries:
- 0.56044  0.53664   0.852799
- 0.83311  0.655101  0.199531
+ 0.84235   0.324562  0.731728
+ 0.233998  0.746378  0.485095
 ````
 
 ````@julia

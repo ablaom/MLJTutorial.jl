@@ -186,8 +186,8 @@ fitted_params(mach)
 ````
 (forest = Ensemble of Decision Trees
 Trees:      100
-Avg Leaves: 146.77
-Avg Depth:  14.49,)
+Avg Leaves: 147.07
+Avg Depth:  14.67,)
 ````
 
 ````@julia
@@ -206,9 +206,9 @@ predict(mach, X)[1:3]
 
 ````
 3-element Vector{Float64}:
- 27.016000000000005
- 22.846999999999998
- 34.468999999999994
+ 26.394000000000002
+ 22.337
+ 34.722
 ````
 
 Predict in the `test` rows:
@@ -224,7 +224,7 @@ mae(ypred, y[test])
 ````
 
 ````
-4.553524752475247
+4.623326732673267
 ````
 
 `mae` is actually just an alias:
@@ -270,14 +270,14 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestRegressor-998
+Tag: RandomForestRegressor-413
 Extract:
 ┌────────────┬───────────┬─────────────┐
 │ measure    │ operation │ measurement │
 ├────────────┼───────────┼─────────────┤
-│ LPLoss(    │ predict   │ 4.55        │
+│ LPLoss(    │ predict   │ 4.62        │
 │   p = 1)   │           │             │
-│ RSquared() │ predict   │ 0.313       │
+│ RSquared() │ predict   │ 0.323       │
 └────────────┴───────────┴─────────────┘
 
 ````
@@ -298,20 +298,20 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestRegressor-838
+Tag: RandomForestRegressor-666
 Extract:
 ┌───┬────────────┬───────────┬─────────────┐
 │   │ measure    │ operation │ measurement │
 ├───┼────────────┼───────────┼─────────────┤
-│ A │ LPLoss(    │ predict   │ 3.06        │
+│ A │ LPLoss(    │ predict   │ 3.0         │
 │   │   p = 1)   │           │             │
-│ B │ RSquared() │ predict   │ 0.644       │
+│ B │ RSquared() │ predict   │ 0.656       │
 └───┴────────────┴───────────┴─────────────┘
 ┌───┬──────────────────────────────────────────┬─────────┐
 │   │ per_fold                                 │ 1.96*SE │
 ├───┼──────────────────────────────────────────┼─────────┤
-│ A │ [2.19, 2.5, 3.49, 2.23, 5.0, 2.98]       │ 0.937   │
-│ B │ [0.742, 0.792, 0.702, 0.848, 0.42, 0.36] │ 0.179   │
+│ A │ [2.24, 2.29, 3.32, 2.41, 4.73, 3.03]     │ 0.834   │
+│ B │ [0.726, 0.838, 0.7, 0.819, 0.472, 0.376] │ 0.166   │
 └───┴──────────────────────────────────────────┴─────────┘
 
 ````
@@ -334,21 +334,21 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestRegressor-818
+Tag: RandomForestRegressor-199
 Extract:
 ┌───┬────────────┬───────────┬─────────────┐
 │   │ measure    │ operation │ measurement │
 ├───┼────────────┼───────────┼─────────────┤
 │ A │ LPLoss(    │ predict   │ 2.45        │
 │   │   p = 1)   │           │             │
-│ B │ RSquared() │ predict   │ 0.836       │
+│ B │ RSquared() │ predict   │ 0.842       │
 └───┴────────────┴───────────┴─────────────┘
-┌───┬────────────────────────────────────────────────────────────────────────┬──
-│   │ per_fold                                                               │ ⋯
-├───┼────────────────────────────────────────────────────────────────────────┼──
-│ A │ [2.47, 2.34, 2.26, 2.94, 2.59, 2.29, 2.49, 2.22, 2.45, 2.43]           │ ⋯
-│ B │ [0.801, 0.878, 0.856, 0.743, 0.831, 0.876, 0.867, 0.833, 0.866, 0.806] │ ⋯
-└───┴────────────────────────────────────────────────────────────────────────┴──
+┌───┬───────────────────────────────────────────────────────────────────────┬───
+│   │ per_fold                                                              │  ⋯
+├───┼───────────────────────────────────────────────────────────────────────┼───
+│ A │ [2.49, 2.49, 2.6, 2.47, 2.35, 2.52, 2.43, 2.35, 2.52, 2.24]           │  ⋯
+│ B │ [0.817, 0.855, 0.835, 0.83, 0.853, 0.808, 0.863, 0.856, 0.835, 0.867] │  ⋯
+└───┴───────────────────────────────────────────────────────────────────────┴───
                                                                 1 column omitted
 
 ````
@@ -359,8 +359,8 @@ e.uncertainty_radius_95
 
 ````
 2-element Vector{Float64}:
- 0.1351854798171381
- 0.027918917100305033
+ 0.06904375445230268
+ 0.013098268581533108
 ````
 
 # Interlude on scientific types
@@ -605,8 +605,8 @@ first(yprob, 5)
 5-element CategoricalDistributions.UnivariateFiniteVector{ScientificTypesBase.Multiclass{2}, InlineStrings.String7, UInt32, Float64}:
  UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>1.0, >50K=>0.0)
  UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>1.0, >50K=>0.0)
- UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>0.94, >50K=>0.06)
- UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>0.25, >50K=>0.75)
+ UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>0.98, >50K=>0.02)
+ UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>0.24, >50K=>0.76)
  UnivariateFinite{ScientificTypesBase.Multiclass{2}}(<=50K=>1.0, >50K=>0.0)
 ````
 
@@ -617,8 +617,8 @@ yprob[3]
 ````
          UnivariateFinite{ScientificTypesBase.Multiclass{2}} 
          ┌                                        ┐ 
-   <=50K ┤■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 0.94   
-    >50K ┤■■ 0.06                                   
+   <=50K ┤■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 0.98   
+    >50K ┤■ 0.02                                    
          └                                        ┘ 
 ````
 
@@ -629,7 +629,7 @@ accuracy(ypoint, y[test])
 ````
 
 ````
-0.7822593028612377
+0.7822081179300814
 ````
 
 ````@julia
@@ -637,7 +637,7 @@ log_loss(yprob, y[test])
 ````
 
 ````
-1.4905981300833329
+1.5659651402227337
 ````
 
 Evaluate with one command:
@@ -656,13 +656,13 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestClassifier-838
+Tag: RandomForestClassifier-400
 Extract:
 ┌──────────────────────┬──────────────┬─────────────┐
 │ measure              │ operation    │ measurement │
 ├──────────────────────┼──────────────┼─────────────┤
-│ Accuracy()           │ predict_mode │ 0.78        │
-│ LogLoss(             │ predict      │ 1.54        │
+│ Accuracy()           │ predict_mode │ 0.781       │
+│ LogLoss(             │ predict      │ 1.53        │
 │   tol = 2.22045e-16) │              │             │
 └──────────────────────┴──────────────┴─────────────┘
 

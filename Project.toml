@@ -1,4 +1,3 @@
-version = "0.1.0"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
 
 [workspace]

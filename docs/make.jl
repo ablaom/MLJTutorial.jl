@@ -35,7 +35,7 @@ makedocs(
                 "notebooks/UsingMLJ/01_basics/notebook.md",
             "2\\. Model Composition" =>
                 "notebooks/UsingMLJ/02_model_composition/notebook.md",
-            "3\\. ModelTuning" =>
+            "3\\. Model Tuning" =>
                 "notebooks/UsingMLJ/03_model_tuning/notebook.md",
         ],
         "MLJTutorial (original series)" => [

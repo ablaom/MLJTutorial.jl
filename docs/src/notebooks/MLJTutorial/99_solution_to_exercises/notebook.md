@@ -50,8 +50,8 @@ A = rand(2, 3)
 
 ````
 2×3 Matrix{Float64}:
- 0.436654  0.811629   0.363581
- 0.781021  0.0747531  0.439646
+ 0.441502  0.871795  0.685263
+ 0.535322  0.850152  0.76627
 ````
 
 ````@julia
@@ -77,8 +77,8 @@ Asparse = sparse(A)
 
 ````
 2×3 SparseArrays.SparseMatrixCSC{Float64, Int64} with 6 stored entries:
- 0.436654  0.811629   0.363581
- 0.781021  0.0747531  0.439646
+ 0.441502  0.871795  0.685263
+ 0.535322  0.850152  0.76627
 ````
 
 ````@julia
@@ -95,8 +95,8 @@ C = coerce(A, Multiclass)
 
 ````
 2×3 CategoricalArrays.CategoricalArray{Float64,2,UInt32}:
- 0.436654  0.811629  0.363581
- 0.781021  0.0747531  0.439646
+ 0.441502  0.871795  0.685263
+ 0.535322  0.850152  0.76627
 ````
 
 ````@julia
@@ -326,16 +326,16 @@ y4 = [n_devices(row.salary) for row in eachrow(X4)]
 
 ````
 10-element Vector{Int64}:
- 5
- 1
- 4
- 2
- 2
- 2
- 0
  4
  3
+ 2
+ 4
+ 6
  1
+ 3
+ 2
+ 2
+ 2
 ````
 
 4(a)
@@ -411,10 +411,10 @@ pretty(X)
 │ Float64    │ Float64    │
 │ Continuous │ Continuous │
 ├────────────┼────────────┤
-│ 0.961707   │ 0.368005   │
-│ 0.834368   │ 0.482366   │
-│ 0.543462   │ 0.680675   │
-│ 0.41441    │ 0.273404   │
+│ 0.256611   │ 0.672213   │
+│ 0.385614   │ 0.149492   │
+│ 0.873735   │ 0.269848   │
+│ 0.753635   │ 0.206412   │
 └────────────┴────────────┘
 
 ````
@@ -589,7 +589,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: RandomForestClassifier-171
+Tag: RandomForestClassifier-372
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
@@ -597,11 +597,11 @@ Extract:
 │ LogLoss(             │ predict   │ 1.1         │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
-┌───────────────────────────────────────┬─────────┐
-│ per_fold                              │ 1.96*SE │
-├───────────────────────────────────────┼─────────┤
-│ [1.28, 1.38, 1.76, 0.778, 0.72, 0.66] │ 0.391   │
-└───────────────────────────────────────┴─────────┘
+┌─────────────────────────────────────────┬─────────┐
+│ per_fold                                │ 1.96*SE │
+├─────────────────────────────────────────┼─────────┤
+│ [0.762, 1.39, 1.79, 1.31, 0.697, 0.629] │ 0.411   │
+└─────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -660,7 +660,7 @@ err_forest =
 ````
 
 ````
-1.285130671948529
+0.987927309743752
 ````
 
 #### Exercise 7
@@ -725,19 +725,19 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: ProbabilisticPipeline-956
+Tag: ProbabilisticPipeline-616
 Extract:
 ┌──────────────────────┬───────────┬─────────────┐
 │ measure              │ operation │ measurement │
 ├──────────────────────┼───────────┼─────────────┤
-│ LogLoss(             │ predict   │ 0.92        │
+│ LogLoss(             │ predict   │ 0.847       │
 │   tol = 2.22045e-16) │           │             │
 └──────────────────────┴───────────┴─────────────┘
-┌──────────────────────────────────────────┬─────────┐
-│ per_fold                                 │ 1.96*SE │
-├──────────────────────────────────────────┼─────────┤
-│ [0.943, 1.27, 0.779, 0.792, 0.95, 0.786] │ 0.166   │
-└──────────────────────────────────────────┴─────────┘
+┌───────────────────────────────────────────┬─────────┐
+│ per_fold                                  │ 1.96*SE │
+├───────────────────────────────────────────┼─────────┤
+│ [0.888, 1.15, 0.847, 0.812, 0.782, 0.608] │ 0.154   │
+└───────────────────────────────────────────┴─────────┘
 
 ````
 
@@ -828,7 +828,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicPipeline-792
+Tag: DeterministicPipeline-942
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │
@@ -854,7 +854,7 @@ PerformanceEvaluation object with these fields:
   measurement, uncertainty_radius_95, per_fold, per_observation,
   fitted_params_per_fold, report_per_fold,
   train_test_rows, resampling, repeats
-Tag: DeterministicTunedModel-143
+Tag: DeterministicTunedModel-175
 Extract:
 ┌──────────┬───────────┬─────────────┐
 │ measure  │ operation │ measurement │

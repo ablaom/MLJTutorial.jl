@@ -59,7 +59,7 @@ Tutorials based on a 3.5 hour [online
 ## [Running tutorial code for yourself](@id instructions)
 
 You can find the annotated Julia scripts from which tutorials are generated in [these
-directories](https://github.com/ablaom/MLJTutorial.jl/tree/dev/docs/src/notebooks). Package
+directories](https://github.com/JuliaAI/MLJTutorial.jl/tree/dev/docs/src/notebooks). Package
 environment files for this repository are structured using Julia's package workspaces. To
 use with Julia 1.12 or later:
 

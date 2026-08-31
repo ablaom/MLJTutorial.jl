@@ -46,8 +46,8 @@ In more detail, to amend a tutorial:
 
 1. Edit the julia script for that tutorial and check it executes using an instantiated
    package environment based on the Project.toml in the same folder.
-2. Optionally, test markdown generation for that tutorial (see below) but do not commit any
-   new markdown you generate.
+2. Optionally, test markdown generation for that tutorial (see below) but **do not commit any
+   new markdown you generate**.
 3. Post a pull request.
 4. Follow the instructions that should appear in the pull request conversation, after CI
    concludes.

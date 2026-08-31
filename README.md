@@ -1,7 +1,7 @@
 # MLJTutorial.jl
 
 Tutorials for introducing the machine learning toolbox
-[MLJ](https://alan-turing-institute.github.io/MLJ.jl/dev/) (Machine
+[MLJ](https://JuliaAI.github.io/MLJ.jl/stable/) (Machine
 Learning in Julia) 
 
 <div align="center">
@@ -12,7 +12,7 @@ Based on tutorials originally part of a 3.5 hour [online
 workshop](https://github.com/ablaom/MachineLearningInJulia2020).
 
 
-## The tutorials are [here](https://ablaom.github.io/MLJTutorial.jl/dev/).
+## The tutorials are [here](https://JuliaAI.github.io/MLJTutorial.jl/dev/).
 
 
 ### Legacy Pluto notebooks
